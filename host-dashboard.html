@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>LikeStays.co | Partner Host Console</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE & LANGUAGE ENGINE -->
+    <script src="likestays-engine.js"></script>
+    <script src="language-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            height: 100%;
+            background-color: #F2F5F3;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        #app-layout-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #F2F5F3;
+            position: relative;
+        }
+
+        .landing-card-shadow {
+            background-color: #FFFFFF;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .landing-card-shadow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 45px rgba(13, 78, 47, 0.08);
+            border-color: rgba(13, 78, 47, 0.15);
+        }
+
+        .neu-flat { background: #FFFFFF; box-shadow: 2px 2px 8px #D2DCD4, -2px -2px 8px #FFFFFF; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint">
+
+    <!-- 🌟 LUXURY FLOATING TOAST -->
+    <div id="status-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <div id="app-layout-wrapper" class="relative flex flex-col justify-between">
+
+        <!-- ================= MAIN HOST DASHBOARD ================= -->
+        <div class="flex-grow flex flex-col justify-between">
+            
+            <!-- TOP STICKY HEADER -->
+            <header class="h-16 shrink-0 bg-white flex justify-between items-center px-4 sm:px-8 border-b border-gray-150/60 z-30 shadow-xs">
+                <!-- SWITCH TO GUEST BUTTON -->
+                <button onclick="switchToGuestPortal()" class="text-xs font-black text-luxuryGreen uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer hover:scale-105 active:scale-95 transition-transform bg-softMint px-3 py-2 rounded-xl border border-gray-200">
+                    <span class="text-sm">🔄</span> 
+                    <span>Switch to Guest Side</span>
+                </button>
+                
+                <!-- 🌐 DUAL GLOBAL CONTROLS: 40+ LANGUAGES & 150 CURRENCIES -->
+                <div class="flex items-center space-x-2">
+                    <!-- 40+ LANGUAGES BUTTON -->
+                    <button type="button" id="header-lang-btn" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
+                        <span id="header-lang-flag">🇺🇸</span>
+                        <span id="header-lang-text">EN</span>
+                        <span class="text-[8px]">▼</span>
+                    </button>
+
+                    <!-- 150 CURRENCIES BUTTON -->
+                    <button type="button" id="header-curr-btn" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
+                        <span id="header-curr-flag">🇺🇸</span>
+                        <span id="header-curr-text">USD ($)</span>
+                        <span class="text-[8px]">▼</span>
+                    </button>
+
+                    <div class="hidden sm:flex items-center space-x-2 text-left leading-tight pl-2">
+                        <span id="host-name-label" class="text-xs font-black text-luxuryGreen">Host Console</span>
+                        <span class="text-[9px] font-bold text-gray-400 block">Verified Partner</span>
+                    </div>
+                    <span class="bg-luxuryGreen text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-xl shadow-xs tracking-wider">
+                        HOST
+                    </span>
+                </div>
+            </header>
+
+            <!-- DASHBOARD CONTENT (3 CORE BUTTONS + SWITCH ROLE) -->
+            <main class="flex-grow p-5 sm:p-8 space-y-8 animate-fade-in max-w-4xl mx-auto w-full">
+                
+                <!-- BRANDING TITLE -->
+                <div class="text-left space-y-1 pt-2">
+                    <div class="flex items-center space-x-2 text-luxuryGreen cursor-pointer" onclick="window.location.href='index.html'">
+                        <div class="w-7 h-7 rounded-xl bg-white flex items-center justify-center shadow-xs border border-gray-150">
+                            <svg class="w-4 h-4 text-luxuryGreen" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 22V10a8 8 0 1116 0v12"/>
+                            </svg>
+                        </div>
+                        <span class="font-extrabold text-sm tracking-tight">LikeStays<span class="text-luxuryLightGreen">.co</span></span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black text-luxuryGreen tracking-tight pt-1">Partner Host Dashboard</h1>
+                    <p class="text-xs text-gray-400 font-bold">Manage properties, live bookings, and traveler reservations.</p>
+                </div>
+
+                <!-- 🌟 3 CORE CLEAN ACTION CARDS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+                    
+                    <!-- 1. ADD LISTING -->
+                    <div onclick="window.location.href='add-listing.html'" class="landing-card-shadow p-6 flex flex-col justify-between space-y-5 cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-luxuryGreen flex items-center justify-center text-xl border border-emerald-100 shadow-inner">
+                            ➕
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-sm font-black text-luxuryGreen uppercase tracking-wide">Add Listing</h3>
+                            <p class="text-[10px] text-gray-400 font-bold leading-relaxed">Publish a new hotel, villa, or apartment listing.</p>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-black text-luxuryGreen pt-2 border-t border-gray-100">
+                            <span>Create Stay</span>
+                            <span>➔</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. MY LISTINGS -->
+                    <div onclick="window.location.href='my-listings.html'" class="landing-card-shadow p-6 flex flex-col justify-between space-y-5 cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-luxuryGreen flex items-center justify-center text-xl border border-emerald-100 shadow-inner">
+                            🏡
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-sm font-black text-luxuryGreen uppercase tracking-wide">My Listings</h3>
+                            <p class="text-[10px] text-gray-400 font-bold leading-relaxed">Edit stays, launch offers, and manage rates.</p>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-black text-luxuryGreen pt-2 border-t border-gray-100">
+                            <span>View All Stays</span>
+                            <span>➔</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. BOOKINGS -->
+                    <div onclick="window.location.href='bookings.html'" class="landing-card-shadow p-6 flex flex-col justify-between space-y-5 cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-luxuryGreen flex items-center justify-center text-xl border border-emerald-100 shadow-inner">
+                            📅
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-sm font-black text-luxuryGreen uppercase tracking-wide">Bookings</h3>
+                            <p class="text-[10px] text-gray-400 font-bold leading-relaxed">Check upcoming guest stays & confirmations.</p>
+                        </div>
+                        <div class="flex items-center justify-between text-xs font-black text-luxuryGreen pt-2 border-t border-gray-100">
+                            <span>View Reservations</span>
+                            <span>➔</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 🌟 BRAND LINK — HOST'S PERSONAL SUBDOMAIN -->
+                <div class="landing-card-shadow p-5 sm:p-6 space-y-3 text-left">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-luxuryGreen flex items-center justify-center text-xl border border-emerald-100 shrink-0">
+                            🔗
+                        </div>
+                        <div>
+                            <h4 class="text-xs sm:text-sm font-black text-luxuryGreen uppercase tracking-wider">Your Brand Link</h4>
+                            <p class="text-[10px] text-gray-400 font-bold">اپنا مختصر، برانڈڈ لنک بنائیں — اپنی تمام properties ایک جگہ دکھائیں</p>
+                        </div>
+                    </div>
+
+                    <div id="brand-link-current-display" class="hidden bg-emerald-50 border border-emerald-100 rounded-2xl p-3 text-center">
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wide">آپ کا لائیو لنک</p>
+                        <p id="brand-link-current-url" class="text-sm font-black text-luxuryGreen font-mono"></p>
+                    </div>
+
+                    <div id="brand-link-setup-form" class="flex items-center space-x-2">
+                        <input type="text" id="brand-link-input" placeholder="e.g. sunset-villas" class="flex-1 p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                        <button type="button" onclick="saveHostBrandLink()" class="neu-btn-green text-white font-black text-xs px-4 py-3 rounded-xl uppercase tracking-wider cursor-pointer shrink-0">Save</button>
+                    </div>
+                    <p id="brand-link-status-msg" class="text-[9px] font-bold pt-0.5"></p>
+                </div>
+
+                <!-- 🌟 4. PROMINENT BOTTOM SWITCH CARD -->
+                <div onclick="switchToGuestPortal()" class="landing-card-shadow p-5 sm:p-6 flex items-center justify-between space-x-4 cursor-pointer bg-gradient-to-r from-white via-white to-emerald-50/60 border border-emerald-200/80">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-11 h-11 rounded-2xl bg-emerald-100/60 text-luxuryGreen flex items-center justify-center text-xl shrink-0">
+                            🔄
+                        </div>
+                        <div class="text-left space-y-0.5">
+                            <h4 class="text-xs sm:text-sm font-black text-luxuryGreen uppercase tracking-wider">Switch to Guest Side</h4>
+                            <p class="text-[10px] text-gray-400 font-bold">Explore stays, view pricing, and browse LikeStays as a traveler.</p>
+                        </div>
+                    </div>
+                    <span class="text-base text-luxuryGreen font-black shrink-0 pr-2">➔</span>
+                </div>
+
+            </main>
+
+            <!-- FOOTER -->
+            <footer class="h-12 shrink-0 bg-white border-t border-gray-150 flex items-center justify-center text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                🛡️ LIKESTAYS.CO PARTNER NETWORK
+            </footer>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com", // ⚠️ یہی رہنے دیں — یہ Google Sign-in کے لیے ضروری ہے، Cloudflare منتقلی کے بعد بھی
+
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkHostSession();
+            loadHostBrandLink();
+        });
+
+        function checkHostSession() {
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (!user) {
+                    const localUser = localStorage.getItem('likestays_active_user') || localStorage.getItem('likestays_user_profile');
+                    if (!localUser) {
+                        window.location.href = 'auth.html';
+                        return;
+                    }
+                }
+
+                if (user && user.displayName) {
+                    const label = document.getElementById('host-name-label');
+                    if (label) label.innerText = user.displayName;
+                }
+            });
+        }
+
+        function switchToGuestPortal() {
+            window.location.href = "index.html";
+        }
+
+        // ================= 🔗 BRAND LINK (HOST'S PERSONAL SUBDOMAIN) =================
+        function getActiveHostUid() {
+            const user = firebase.auth().currentUser;
+            if (user && user.uid) return user.uid;
+            try {
+                const profileStr = localStorage.getItem('likestays_active_user') || localStorage.getItem('likestays_user_profile');
+                if (profileStr) {
+                    const p = JSON.parse(profileStr);
+                    if (p.uid) return p.uid;
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function slugifyBrand(text) {
+            return String(text || '').toLowerCase().trim()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function loadHostBrandLink() {
+            const hostUid = getActiveHostUid();
+            if (!hostUid) return;
+
+            firebase.database().ref(`hostProfiles/${hostUid}/brandSlug`).once('value').then(snap => {
+                const slug = snap.val();
+                if (slug) {
+                    document.getElementById('brand-link-current-display').classList.remove('hidden');
+                    document.getElementById('brand-link-current-url').innerText = `${slug}.likestays.co`;
+                    document.getElementById('brand-link-input').value = slug;
+                }
+            });
+        }
+
+        function saveHostBrandLink() {
+            const hostUid = getActiveHostUid();
+            const statusMsg = document.getElementById('brand-link-status-msg');
+            const rawInput = document.getElementById('brand-link-input').value;
+            const slug = slugifyBrand(rawInput);
+
+            if (!hostUid) {
+                statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
+                statusMsg.innerText = "⚠️ پہلے sign in کریں۔";
+                return;
+            }
+            if (!slug || slug.length < 3) {
+                statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
+                statusMsg.innerText = "⚠️ کم از کم 3 حروف کا نام لکھیں (صرف انگریزی حروف/نمبر)۔";
+                return;
+            }
+
+            statusMsg.className = "text-[9px] font-bold pt-0.5 text-gray-400";
+            statusMsg.innerText = "چیک ہو رہا ہے...";
+
+            const registryRef = firebase.database().ref(`brandSlugRegistry/${slug}`);
+            registryRef.once('value').then(snap => {
+                const existingOwner = snap.val();
+                if (existingOwner && existingOwner !== hostUid) {
+                    statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
+                    statusMsg.innerText = "❌ یہ نام پہلے سے کسی اور host نے لے رکھا ہے، دوسرا نام آزمائیں۔";
+                    return;
+                }
+
+                // پہلے سے موجود پرانا برانڈ نام (اگر تھا) کی رجسٹری صاف کریں
+                firebase.database().ref(`hostProfiles/${hostUid}/brandSlug`).once('value').then(oldSnap => {
+                    const oldSlug = oldSnap.val();
+                    const updates = {};
+                    if (oldSlug && oldSlug !== slug) {
+                        updates[`brandSlugRegistry/${oldSlug}`] = null;
+                    }
+                    updates[`brandSlugRegistry/${slug}`] = hostUid;
+                    updates[`hostProfiles/${hostUid}/brandSlug`] = slug;
+
+                    firebase.database().ref().update(updates).then(() => {
+                        return propagateBrandSlugToHostProperties(hostUid, slug);
+                    }).then(() => {
+                        document.getElementById('brand-link-current-display').classList.remove('hidden');
+                        document.getElementById('brand-link-current-url').innerText = `${slug}.likestays.co`;
+                        statusMsg.className = "text-[9px] font-bold pt-0.5 text-emerald-700";
+                        statusMsg.innerText = "✅ محفوظ ہو گیا! اب یہ لنک لائیو ہے۔";
+                    });
+                });
+            });
+        }
+
+        // ہوسٹ کی تمام موجودہ properties میں brandSlug شامل کرنا — تاکہ index.html کا
+        // subdomain-matching سسٹم ان سب کو sunset-villas.likestays.co پر دکھا سکے
+        function propagateBrandSlugToHostProperties(hostUid, slug) {
+            return firebase.database().ref('properties')
+                .orderByChild('hostUid').equalTo(hostUid)
+                .once('value')
+                .then(snap => {
+                    const val = snap.val();
+                    if (!val) return;
+                    const updates = {};
+                    Object.keys(val).forEach(propId => {
+                        updates[`properties/${propId}/hostBrandSlug`] = slug;
+                    });
+                    return firebase.database().ref().update(updates);
+                });
+        }
+    </script>
+</body>
+</html>

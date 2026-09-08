@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | My Active Listings</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE & LANGUAGE ENGINE -->
+    <script src="likestays-engine.js"></script>
+    <script src="language-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        inputBg: '#F0F4F2',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background-color: #F2F5F3 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #FFFFFF; box-shadow: 5px 5px 14px #D2DCD4, -5px -5px 14px #FFFFFF; }
+        .neu-inset { background: #F2F5F3; box-shadow: inset 2.5px 2.5px 5px #D2DCD4, inset -2.5px -2.5px 5px #FFFFFF; }
+        .neu-btn-green { background: linear-gradient(135deg, #0D4E2F 0%, #155E39 100%); box-shadow: 0 4px 12px rgba(13, 78, 47, 0.3); }
+        .neu-btn-green:active { transform: scale(0.97); }
+        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 6px #D2DCD4, -2px -2px 6px #FFFFFF; }
+
+        .landing-input {
+            background-color: #F0F4F2;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            color: #0D4E2F;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .property-card-3d {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop-in { animation: popIn 0.2s ease-out forwards; }
+
+        /* ================= ⚡ 4 DISTINCT LUXURY OFFER ANIMATIONS ================= */
+        
+        /* 1. EMERALD LUXE: LUXURY SHIMMER WAVE */
+        @keyframes luxuryShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .theme-emerald {
+            background: linear-gradient(110deg, #0D4E2F 15%, #1E6F45 35%, #D4AF37 50%, #1E6F45 65%, #0D4E2F 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            color: #FFFFFF;
+        }
+
+        /* 2. CHAMPAGNE GOLD: BREATHING PULSE & GLOW */
+        @keyframes goldBreatheGlow {
+            0%, 100% { 
+                box-shadow: 0 0 6px rgba(212, 175, 55, 0.4), 0 0 12px rgba(212, 175, 55, 0.2); 
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 14px rgba(212, 175, 55, 0.85), 0 0 24px rgba(212, 175, 55, 0.5); 
+                transform: scale(1.03);
+            }
+        }
+        .theme-gold {
+            background: linear-gradient(135deg, #8C6D1F 0%, #C89F2D 50%, #735310 100%);
+            animation: goldBreatheGlow 2s infinite ease-in-out;
+            border: 1px solid rgba(255, 235, 150, 0.85);
+            color: #FFFFFF;
+        }
+
+        /* 3. ELECTRIC CYBER: DYNAMIC GRADIENT STREAM */
+        @keyframes electricFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .theme-electric {
+            background: linear-gradient(270deg, #0F172A, #2563EB, #0284C7, #0F172A);
+            background-size: 400% 400%;
+            animation: electricFlow 4s ease infinite;
+            border: 1px solid rgba(96, 165, 250, 0.8);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+            color: #FFFFFF;
+        }
+
+        /* 4. RUBY VIP: SMOOTH FLOATING LEVITATION */
+        @keyframes rubyFloating {
+            0%, 100% { 
+                transform: translateY(0px); 
+                box-shadow: 0 4px 10px rgba(185, 28, 28, 0.4); 
+            }
+            50% { 
+                transform: translateY(-3.5px); 
+                box-shadow: 0 8px 18px rgba(220, 38, 38, 0.7); 
+            }
+        }
+        .theme-ruby {
+            background: linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #991B1B 100%);
+            animation: rubyFloating 2.2s infinite ease-in-out;
+            border: 1px solid rgba(254, 202, 202, 0.8);
+            color: #FFFFFF;
+        }
+
+        @keyframes beaconPing {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,255,255,0.8)); }
+            50% { transform: scale(1.25); filter: drop-shadow(0 0 6px rgba(255,255,255,1)); }
+        }
+        .spark-icon {
+            display: inline-block;
+            animation: beaconPing 1.4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint text-gray-800 pb-28">
+
+    <!-- 🌟 LUXURY TOAST (NO BROWSER ALERTS) -->
+    <div id="listing-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Success</span>
+    </div>
+
+    <!-- STICKY HEADER -->
+    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2.5 px-3 sm:px-6">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <button type="button" onclick="window.location.href='host-dashboard.html'" class="neu-circle-btn px-3 py-1.5 rounded-xl flex items-center space-x-1.5 text-luxuryGreen font-extrabold text-xs cursor-pointer hover:scale-105">
+                <span>◀</span> <span class="uppercase tracking-wider">Dashboard</span>
+            </button>
+
+            <!-- ADD NEW PROPERTY -->
+            <button type="button" onclick="window.location.href='add-listing.html'" class="neu-btn-green text-white px-3.5 py-1.5 rounded-xl text-xs font-black flex items-center space-x-1.5 cursor-pointer hover:scale-105">
+                <span>➕</span> <span>Add Property</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 space-y-6">
+        <div class="flex justify-between items-end border-b border-gray-200/60 pb-3 text-left">
+            <div>
+                <span class="text-[9px] uppercase tracking-widest text-goldWarm font-black">Partner Portfolio</span>
+                <h1 class="text-base sm:text-xl font-black text-luxuryGreen">My Listed Properties</h1>
+            </div>
+            <span id="total-stays-count-badge" class="text-[10px] font-black uppercase text-emerald-800 bg-white px-3 py-1 rounded-xl border border-gray-200 shadow-sm">
+                0 Properties
+            </span>
+        </div>
+
+        <!-- LISTINGS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-left" id="my-listings-cards-container"></div>
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- ⚡ ADVANCE STAY OFFERS SCHEDULER & QUEUE MANAGER MODAL -->
+    <!-- ========================================================================= -->
+    <div id="flash-deal-config-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-4 animate-pop-in text-left max-h-[90vh] flex flex-col justify-between">
+            
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2.5 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl">⚡</span>
+                    <div>
+                        <h3 class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Manage Advance Stay Offers</h3>
+                        <p id="modal-deal-prop-name" class="text-[9px] text-gray-400 font-bold truncate max-w-[240px]">Property Name</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeFlashDealModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+            </div>
+
+            <div class="overflow-y-auto no-scrollbar space-y-4 flex-grow pr-0.5">
+                
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[9.5px] font-black uppercase text-luxuryGreen block">Active & Upcoming Offers Queue</span>
+                        <span id="queue-active-count-tag" class="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border">0 Active</span>
+                    </div>
+                    <div id="active-deals-queue-container" class="space-y-2"></div>
+                </div>
+
+                <div class="bg-softMint/50 p-4 rounded-3xl border border-gray-200 space-y-3.5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-black uppercase text-luxuryGreen">➕ Schedule A New Offer</span>
+                        <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-black">Auto-Rotates Live</span>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-amber-50 to-amber-100/70 p-3 rounded-2xl border-2 border-amber-300 space-y-1 text-left text-amber-950 shadow-xs">
+                        <span class="font-black uppercase text-amber-900 text-[9px] block flex items-center space-x-1">
+                            <span>💡</span> <span>Advance Booking & Auto-Expiry Policy:</span>
+                        </span>
+                        <p class="text-[8.5px] font-semibold text-amber-900/90 leading-relaxed">
+                            This offer will be displayed for advance booking and will <strong>automatically disappear the exact moment its start time begins</strong>. Scheduled offers rotate automatically.
+                        </p>
+                    </div>
+
+                    <!-- 4 DISTINCT ANIMATION THEMES -->
+                    <div class="space-y-1.5">
+                        <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-bold block">Select Offer Animation Style (4 Themes)</label>
+                        <div class="grid grid-cols-2 gap-2 text-left">
+                            
+                            <!-- 1. EMERALD LUXE -->
+                            <label class="p-2.5 rounded-xl border border-gray-200 cursor-pointer flex items-center space-x-2 bg-white hover:border-luxuryGreen transition-all">
+                                <input type="radio" name="offer-theme" value="emerald" checked onchange="handleThemeSelection('emerald')" class="accent-luxuryGreen">
+                                <div class="theme-emerald text-[8px] font-black px-2.5 py-1 rounded-full truncate shadow-xs">
+                                    <span>🟢 Shimmer Wave</span>
+                                </div>
+                            </label>
+
+                            <!-- 2. CHAMPAGNE GOLD -->
+                            <label class="p-2.5 rounded-xl border border-gray-200 cursor-pointer flex items-center space-x-2 bg-white hover:border-luxuryGreen transition-all">
+                                <input type="radio" name="offer-theme" value="gold" onchange="handleThemeSelection('gold')" class="accent-luxuryGreen">
+                                <div class="theme-gold text-[8px] font-black px-2.5 py-1 rounded-full truncate shadow-xs">
+                                    <span>🟡 Pulsing Glow</span>
+                                </div>
+                            </label>
+
+                            <!-- 3. ELECTRIC CYBER -->
+                            <label class="p-2.5 rounded-xl border border-gray-200 cursor-pointer flex items-center space-x-2 bg-white hover:border-luxuryGreen transition-all">
+                                <input type="radio" name="offer-theme" value="electric" onchange="handleThemeSelection('electric')" class="accent-luxuryGreen">
+                                <div class="theme-electric text-[8px] font-black px-2.5 py-1 rounded-full truncate shadow-xs">
+                                    <span>🔵 Electric Stream</span>
+                                </div>
+                            </label>
+
+                            <!-- 4. RUBY VIP -->
+                            <label class="p-2.5 rounded-xl border border-gray-200 cursor-pointer flex items-center space-x-2 bg-white hover:border-luxuryGreen transition-all">
+                                <input type="radio" name="offer-theme" value="ruby" onchange="handleThemeSelection('ruby')" class="accent-luxuryGreen">
+                                <div class="theme-ruby text-[8px] font-black px-2.5 py-1 rounded-full truncate shadow-xs">
+                                    <span>🔴 Floating Bounce</span>
+                                </div>
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-bold">Offer Title / Tagline</label>
+                        <input type="text" id="deal-title-input" placeholder="e.g. Afternoon Pool Pass / Weekend Stay Deal" class="w-full p-3 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="space-y-1 bg-white p-3 rounded-2xl border border-gray-200/70 shadow-xs">
+                            <span class="text-[8.5px] font-black text-luxuryGreen uppercase block">Start Date & Time (24h)</span>
+                            <div class="space-y-1.5 pt-0.5">
+                                <input type="date" id="deal-start-date" class="w-full p-2 neu-inset bg-softMint rounded-xl text-xs font-black text-luxuryGreen outline-none border-none cursor-pointer">
+                                <div class="flex items-center space-x-1">
+                                    <span class="text-[8px] text-gray-400 font-bold">Start:</span>
+                                    <input type="time" id="deal-start-time" value="14:00" class="w-full p-1.5 neu-inset bg-softMint rounded-xl text-xs font-black text-luxuryGreen outline-none border-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1 bg-white p-3 rounded-2xl border border-gray-200/70 shadow-xs">
+                            <span class="text-[8.5px] font-black text-red-600 uppercase block">End Date & Time (24h)</span>
+                            <div class="space-y-1.5 pt-0.5">
+                                <input type="date" id="deal-end-date" class="w-full p-2 neu-inset bg-softMint rounded-xl text-xs font-black text-luxuryGreen outline-none border-none cursor-pointer">
+                                <div class="flex items-center space-x-1">
+                                    <span class="text-[8px] text-gray-400 font-bold">End:</span>
+                                    <input type="time" id="deal-end-time" value="18:00" class="w-full p-1.5 neu-inset bg-softMint rounded-xl text-xs font-black text-luxuryGreen outline-none border-none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-bold">Total Fixed Package Price (<span id="deal-modal-curr-code" class="text-luxuryGreen font-black">PKR</span>)</label>
+                        <div class="flex items-center neu-inset bg-white rounded-xl px-3">
+                            <span id="deal-modal-curr-symbol" class="text-xs font-black text-luxuryGreen mr-1">Rs </span>
+                            <input type="number" id="deal-price-input" placeholder="e.g. 5000" class="w-full p-3 bg-transparent outline-none text-luxuryGreen text-xs font-black border-none">
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="addNewDealToPropertyQueue()" class="w-full neu-btn-green text-white py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider shadow-md cursor-pointer hover:scale-102 active:scale-95 transition-transform">
+                        ➕ Add to Offer Queue (Auto-Rotates)
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-gray-150 shrink-0 text-right">
+                <button type="button" onclick="closeFlashDealModal()" class="px-4 py-2 neu-flat bg-softMint text-luxuryGreen text-[10px] font-black rounded-xl uppercase tracking-wider cursor-pointer">
+                    Done & Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🗑️ IN-APP DELETE CONFIRMATION MODAL -->
+    <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[35000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl space-y-4 text-center border border-gray-200 animate-pop-in">
+            <div class="w-14 h-14 rounded-full bg-red-50 text-red-600 flex items-center justify-center text-2xl mx-auto border border-red-200">
+                🗑️
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-sm font-black text-luxuryGreen">Delete Property Listing?</h3>
+                <p id="delete-modal-prop-name" class="text-xs text-gray-500 font-bold truncate">Property Name</p>
+                <p class="text-[9px] text-gray-400 font-medium">This action will remove the stay from LikeStays Cloud.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button type="button" onclick="closeDeleteConfirmModal()" class="py-3 bg-gray-150 text-gray-700 font-black text-xs uppercase rounded-xl cursor-pointer hover:bg-gray-200">
+                    Cancel
+                </button>
+                <button type="button" onclick="executeDeletePropertyLive()" class="py-3 bg-red-600 text-white font-black text-xs uppercase rounded-xl cursor-pointer hover:bg-red-700 shadow-md">
+                    Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com",
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        let myPropertiesList = [];
+        let currentEditingDealPropertyId = null;
+        let pendingDeletePropertyId = null;
+        let selectedOfferTheme = 'emerald';
+
+        // 🌟 LUXURY TOAST (NO BROWSER ALERTS)
+        function showListingToast(msg, icon = '✨') {
+            const toast = document.getElementById('listing-toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+            toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+            }, 2800);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadHostPropertiesFeed();
+        });
+
+        function handleThemeSelection(themeName) {
+            selectedOfferTheme = themeName;
+        }
+
+        function getActiveCurrencyConfig() {
+            try {
+                const cached = localStorage.getItem('likestays_user_locale');
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    return { symbol: parsed.symbol || 'Rs ', code: parsed.currency || 'PKR', rate: parsed.currency === 'PKR' ? 280 : 1 };
+                }
+            } catch (e) {}
+            return { symbol: 'Rs ', code: 'PKR', rate: 280 };
+        }
+
+        function getActiveHostUid() {
+            try {
+                const user = firebase.auth().currentUser;
+                if (user && user.uid) return user.uid;
+                const profileStr = localStorage.getItem('likestays_user_profile') || localStorage.getItem('likestays_active_user');
+                if (profileStr) {
+                    const p = JSON.parse(profileStr);
+                    if (p.uid) return p.uid;
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        // ================= 🔥 LOAD REAL HOST PROPERTIES =================
+        function loadHostPropertiesFeed() {
+            const hostUid = getActiveHostUid();
+
+            try {
+                const saved = JSON.parse(localStorage.getItem('likestays_host_listings_drafts') || "[]");
+                myPropertiesList = saved;
+            } catch(e) { myPropertiesList = []; }
+            renderPropertiesCardsGrid();
+
+            try {
+                // ⚡ صرف اسی host کی properties منگواتا ہے — پوری فہرست نہیں (Firebase میں hostUid پر index ضروری ہے، دیکھیں rules نوٹ)
+                const isRealHostUid = hostUid && hostUid !== "host_verified_user" && hostUid !== "host_session";
+                const propertiesQuery = isRealHostUid
+                    ? firebase.database().ref('properties').orderByChild('hostUid').equalTo(hostUid)
+                    : firebase.database().ref('properties'); // ٹیسٹ/خاص اکاؤنٹس کے لیے مکمل فہرست
+
+                propertiesQuery.on('value', (snapshot) => {
+                    const val = snapshot.val();
+                    if (val) {
+                        const matchedStays = Object.keys(val).map(k => ({ id: k, ...val[k] }));
+
+                        myPropertiesList = isRealHostUid
+                            ? matchedStays.filter(p => p.hostUid === hostUid || String(p.host?.uid) === String(hostUid) || p.hostUid === "host_verified_user")
+                            : matchedStays;
+
+                        try {
+                            localStorage.setItem('likestays_host_listings_drafts', JSON.stringify(myPropertiesList));
+                        } catch(e) {}
+
+                        renderPropertiesCardsGrid();
+                    } else {
+                        myPropertiesList = [];
+                        renderPropertiesCardsGrid();
+                    }
+                });
+            } catch(e) {
+                console.warn("Firebase fetch notice:", e);
+            }
+        }
+
+        function getActiveUpcomingDealsForStay(prop) {
+            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+            if (!deals || !Array.isArray(deals) || deals.length === 0) {
+                return { activeDeals: [], currentActive: null, moreCount: 0 };
+            }
+
+            const now = new Date().getTime();
+
+            const validUpcomingDeals = deals.filter(d => {
+                if (!d || d.enabled === false || !d.startDate) return false;
+                const timeStr = d.startTime || '14:00';
+                const startDateTime = new Date(`${d.startDate}T${timeStr}:00`).getTime();
+                return startDateTime > now;
+            });
+
+            validUpcomingDeals.sort((a, b) => {
+                const aStart = new Date(`${a.startDate}T${a.startTime || '14:00'}:00`).getTime();
+                const bStart = new Date(`${b.startDate}T${b.startTime || '14:00'}:00`).getTime();
+                if (aStart !== bStart) return aStart - bStart;
+
+                const aEnd = new Date(`${a.endDate || a.startDate}T${a.endTime || '18:00'}:00`).getTime();
+                const bEnd = new Date(`${b.endDate || b.startDate}T${b.endTime || '18:00'}:00`).getTime();
+                return (aEnd - aStart) - (bEnd - bStart);
+            });
+
+            return {
+                activeDeals: validUpcomingDeals,
+                currentActive: validUpcomingDeals.length > 0 ? validUpcomingDeals[0] : null,
+                moreCount: validUpcomingDeals.length > 1 ? (validUpcomingDeals.length - 1) : 0
+            };
+        }
+
+        function formatOfferTimingLabel24h(deal) {
+            const formatStr = (d) => {
+                if (!d) return '';
+                if (d.includes('-')) {
+                    const p = d.split('-');
+                    if (p.length === 3) {
+                        const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                        return `${parseInt(p[2])} ${m[parseInt(p[1])-1] || ''}`;
+                    }
+                }
+                return d;
+            };
+
+            const sDate = formatStr(deal.startDate);
+            const eDate = formatStr(deal.endDate);
+            const isSameDay = (deal.startDate === deal.endDate) || !deal.endDate;
+
+            return isSameDay ? `${sDate} (${deal.startTime} - ${deal.endTime})` : `${sDate} - ${eDate}`;
+        }
+
+        // ================= RENDER PROPERTY CARDS =================
+        function renderPropertiesCardsGrid() {
+            const container = document.getElementById('my-listings-cards-container');
+            const badge = document.getElementById('total-stays-count-badge');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const config = getActiveCurrencyConfig();
+            if (badge) badge.innerText = `${myPropertiesList.length} Properties`;
+
+            if (myPropertiesList.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-20 text-center space-y-4 neu-flat p-8 rounded-[32px] bg-white border border-gray-200/80 animate-fade-in max-w-md mx-auto">
+                        <div class="w-16 h-16 rounded-full bg-softMint flex items-center justify-center text-3xl mx-auto border border-gray-200">
+                            🏡
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-sm font-black text-luxuryGreen uppercase tracking-wider">No Properties Listed Yet</h3>
+                            <p class="text-[10px] text-gray-400 font-bold leading-relaxed">
+                                Upload your stays to start hosting guests worldwide.
+                            </p>
+                        </div>
+                        <button type="button" onclick="window.location.href='add-listing.html'" class="neu-btn-green text-white text-xs font-black px-6 py-3.5 rounded-2xl uppercase tracking-wider cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-transform inline-flex items-center space-x-2">
+                            <span>➕</span> <span>Create Your First Listing ➔</span>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            myPropertiesList.forEach(prop => {
+                const photosList = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=80&w=600"]);
+                const priceVal = prop.dailyPrice || prop.price || 5000;
+                const formattedPrice = `${prop.currencySymbol || config.symbol}${Math.round(priceVal).toLocaleString()}`;
+                const isHidden = prop.status === "Hidden" || prop.status === "Draft";
+
+                const dealStats = getActiveUpcomingDealsForStay(prop);
+                const currentDeal = dealStats.currentActive;
+
+                const slidesHTML = photosList.map(img => {
+                    const src = img.startsWith('http') || img.startsWith('data:') ? img : `https://images.unsplash.com/${img}?auto=format&fit=crop&q=80&w=600`;
+                    return `<img src="${src}" class="w-full h-full object-cover shrink-0 snap-center pointer-events-none">`;
+                }).join('');
+
+                const dotsHTML = photosList.map((_, i) => `
+                    <span class="carousel-dot-${prop.id} w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white scale-125' : 'bg-white/60'} transition-all"></span>
+                `).join('');
+
+                // ⚡ 4 DISTINCT LUXURY OFFER THEMES
+                let flashPillHTML = '';
+                if (currentDeal) {
+                    const dealPrice = Math.round(currentDeal.discountPrice || currentDeal.price || 0);
+                    const priceFormatted = dealPrice >= 1000 ? `${(dealPrice/1000).toFixed(1).replace('.0','')}k` : dealPrice;
+                    const timingText = formatOfferTimingLabel24h(currentDeal);
+                    const themeClass = `theme-${currentDeal.theme || 'emerald'}`;
+
+                    flashPillHTML = `
+                        <div class="absolute top-2.5 left-2.5 z-20 flex items-center space-x-1.5 ${themeClass} text-[8.5px] font-black px-3 py-1 rounded-full shadow-lg">
+                            <span class="spark-icon text-amber-300">⚡</span>
+                            <span>OFFER: ${timingText}</span>
+                            <span>•</span>
+                            <span class="font-extrabold">${prop.currencySymbol || config.symbol}${priceFormatted}</span>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML += `
+                    <div class="property-card-3d neu-flat bg-white rounded-3xl overflow-hidden flex flex-col justify-between border border-gray-150 animate-fade-in">
+                        
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
+                            <div id="carousel-slides-${prop.id}" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth">
+                                ${slidesHTML}
+                            </div>
+
+                            ${flashPillHTML}
+
+                            <span class="absolute top-2.5 right-2.5 z-10 text-[8px] font-black uppercase px-2.5 py-1 rounded-xl shadow-md ${isHidden ? 'bg-gray-600 text-white' : 'bg-luxuryGreen text-white'}">
+                                ${prop.status || 'Active'}
+                            </span>
+
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1 z-10 pointer-events-none">
+                                ${dotsHTML}
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 space-y-2 text-left">
+                            <div class="flex justify-between items-center text-[9px] font-bold text-gray-400">
+                                <span class="text-luxuryGreen font-extrabold">🏡 ${prop.category || 'Stay'}</span>
+                                <span class="text-gray-500 font-semibold">👥 Max ${prop.maxGuests || 8} Guests</span>
+                            </div>
+
+                            <h3 class="text-xs font-black text-luxuryGreen truncate">${prop.name}</h3>
+                            
+                            <div class="flex justify-between items-center text-[9.5px] font-bold pt-0.5">
+                                <span class="text-gray-400 truncate max-w-[130px]">📍 ${prop.location || prop.city || 'Prime Location'}</span>
+                                <div class="flex items-center space-x-1.5 shrink-0">
+                                    <span class="text-emerald-700 font-black text-[8px] bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md">🛡️ Free Cancel</span>
+                                    ${dealStats.moreCount > 0 ? `
+                                        <button type="button" onclick="openFlashDealModal('${prop.id}')" class="text-luxuryGreen font-black text-[8px] bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-md hover:bg-emerald-100 cursor-pointer">
+                                            ⚡ +${dealStats.moreCount} More
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 pt-1.5 border-t border-gray-100">
+                                <span class="text-luxuryGreen font-black text-xs">${formattedPrice} <span class="text-[8px] font-normal text-gray-400">/ night</span></span>
+                                ${currentDeal ? `<span class="text-emerald-700 font-black text-[8.5px] bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">⚡ Offer Live</span>` : `<span class="text-gray-400 font-bold text-[8.5px]">Standard Pricing</span>`}
+                            </div>
+                        </div>
+
+                        <!-- 🌟 CLEAN ACTION BUTTONS (WITHOUT SUBDOMAIN COMPLICATION) -->
+                        <div class="p-3 pt-0 space-y-2 text-[9.5px] font-black uppercase">
+                            
+                            <!-- ⚡ MANAGE OFFERS BUTTON -->
+                            <button type="button" onclick="openFlashDealModal('${prop.id}')" class="w-full py-2.5 neu-flat bg-softMint hover:bg-emerald-50 text-luxuryGreen rounded-xl border border-gray-200 flex items-center justify-center space-x-1.5 cursor-pointer active:scale-95 shadow-xs">
+                                <span>⚡</span> <span>Manage Advance Offers (${dealStats.activeDeals.length} Scheduled)</span>
+                            </button>
+
+                            <!-- ✏️ EDIT, HIDE & DELETE BUTTONS -->
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <button type="button" onclick="startEditingProperty('${prop.id}')" class="py-2.5 neu-btn-green text-white rounded-xl flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-xs hover:scale-102 transition-transform">
+                                    <span>✏️</span> <span>Edit</span>
+                                </button>
+
+                                <button type="button" onclick="toggleHideProperty('${prop.id}')" class="py-2.5 neu-flat bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-xs">
+                                    <span>${isHidden ? '👁️' : '🙈'}</span> <span>${isHidden ? 'Unhide' : 'Hide'}</span>
+                                </button>
+
+                                <button type="button" onclick="openDeleteConfirmModal('${prop.id}')" class="py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl border border-red-100 flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-xs">
+                                    <span>🗑️</span> <span>Delete</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+            });
+        }
+
+        // ================= ⚡ MANAGE ADVANCE OFFERS MODAL =================
+        function openFlashDealModal(propId) {
+            currentEditingDealPropertyId = propId;
+            const prop = myPropertiesList.find(p => String(p.id) === String(propId));
+            if (!prop) return;
+
+            const config = getActiveCurrencyConfig();
+            document.getElementById('modal-deal-prop-name').innerText = prop.name;
+            document.getElementById('deal-modal-curr-symbol').innerText = prop.currencySymbol || config.symbol;
+            document.getElementById('deal-modal-curr-code').innerText = prop.currency || config.code;
+
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            document.getElementById('deal-start-date').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('deal-end-date').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('deal-start-time').value = '14:00';
+            document.getElementById('deal-end-time').value = '18:00';
+            document.getElementById('deal-title-input').value = 'Advance Stay Deal';
+            document.getElementById('deal-price-input').value = Math.round((prop.dailyPrice || 5000) * 0.7);
+
+            selectedOfferTheme = 'emerald';
+            const defaultRadio = document.querySelector('input[name="offer-theme"][value="emerald"]');
+            if (defaultRadio) defaultRadio.checked = true;
+
+            renderActiveDealsQueue(prop);
+            document.getElementById('flash-deal-config-modal').classList.remove('hidden');
+        }
+
+        function renderActiveDealsQueue(prop) {
+            const container = document.getElementById('active-deals-queue-container');
+            const tag = document.getElementById('queue-active-count-tag');
+            const config = getActiveCurrencyConfig();
+            const curSymbol = prop.currencySymbol || config.symbol;
+            
+            const stats = getActiveUpcomingDealsForStay(prop);
+            const deals = stats.activeDeals;
+
+            if (tag) tag.innerText = `${deals.length} Active / Scheduled`;
+
+            if (deals.length === 0) {
+                container.innerHTML = `<div class="p-3.5 bg-softMint/50 rounded-2xl text-center text-[9px] text-gray-400 font-bold">No active advance offers in queue. Schedule one below!</div>`;
+                return;
+            }
+
+            container.innerHTML = deals.map((d, idx) => {
+                const themeClass = `theme-${d.theme || 'emerald'}`;
+                const isFeatured = idx === 0;
+
+                return `
+                    <div class="flex items-center justify-between p-3 bg-white border ${isFeatured ? 'border-2 border-luxuryGreen shadow-sm' : 'border-gray-200'} rounded-2xl text-xs">
+                        <div class="space-y-1 min-w-0 pr-2">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="text-luxuryGreen font-black text-[10px] truncate">${d.title}</span>
+                                <span class="${themeClass} text-[7px] font-black px-2 py-0.5 rounded-full">${isFeatured ? '⭐ FEATURED (ACTIVE)' : 'QUEUED'}</span>
+                            </div>
+                            <p class="text-[8.5px] text-gray-400 font-bold">${formatOfferTimingLabel24h(d)}</p>
+                        </div>
+                        <div class="flex items-center space-x-2.5 shrink-0">
+                            <span class="text-xs font-black text-luxuryGreen">${curSymbol}${Math.round(d.discountPrice).toLocaleString()}</span>
+                            <button type="button" onclick="deleteSingleDeal('${d.id}')" class="w-6 h-6 rounded-full bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center font-bold text-[10px] cursor-pointer" title="Remove Deal">✕</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addNewDealToPropertyQueue() {
+            if (!currentEditingDealPropertyId) return;
+            const prop = myPropertiesList.find(p => String(p.id) === String(currentEditingDealPropertyId));
+            if (!prop) return;
+
+            const title = document.getElementById('deal-title-input').value.trim() || "Advance Stay Deal";
+            const sDate = document.getElementById('deal-start-date').value;
+            const sTime = document.getElementById('deal-start-time').value || '14:00';
+            const eDate = document.getElementById('deal-end-date').value;
+            const eTime = document.getElementById('deal-end-time').value || '18:00';
+            const price = parseInt(document.getElementById('deal-price-input').value) || 1000;
+
+            if (!sDate || !eDate) {
+                showListingToast("Please select both Start Date and End Date.", "⚠️");
+                return;
+            }
+
+            const startDateTime = new Date(`${sDate}T${sTime}:00`).getTime();
+            const now = new Date().getTime();
+
+            if (startDateTime <= now) {
+                showListingToast("Start time must be in the future for advance booking.", "⚠️");
+                return;
+            }
+
+            if (!prop.flashDeals) prop.flashDeals = [];
+
+            const newDealObj = {
+                id: `deal_${Date.now()}`,
+                title: title,
+                startDate: sDate,
+                startTime: sTime,
+                endDate: eDate,
+                endTime: eTime,
+                discountPrice: price,
+                theme: selectedOfferTheme || 'emerald',
+                enabled: true
+            };
+
+            prop.flashDeals.push(newDealObj);
+            
+            try {
+                firebase.database().ref(`properties/${prop.id}/flashDeals`).set(prop.flashDeals);
+            } catch(e) {}
+
+            syncMyListingsToLocalStorage();
+            renderActiveDealsQueue(prop);
+            renderPropertiesCardsGrid();
+            showListingToast("Advance offer published live to Cloud! 🎉", "⚡");
+        }
+
+        function deleteSingleDeal(dealId) {
+            if (!currentEditingDealPropertyId) return;
+            const prop = myPropertiesList.find(p => String(p.id) === String(currentEditingDealPropertyId));
+            if (!prop || !prop.flashDeals) return;
+
+            prop.flashDeals = prop.flashDeals.filter(d => d.id !== dealId);
+            
+            try {
+                firebase.database().ref(`properties/${prop.id}/flashDeals`).set(prop.flashDeals);
+            } catch(e) {}
+
+            syncMyListingsToLocalStorage();
+            renderActiveDealsQueue(prop);
+            renderPropertiesCardsGrid();
+            showListingToast("Offer removed from queue.", "✓");
+        }
+
+        function closeFlashDealModal() { document.getElementById('flash-deal-config-modal').classList.add('hidden'); }
+
+        // ================= ✏️ EDITING PROPERTY (FULL PRELOAD TO ADD-LISTING) =================
+        function startEditingProperty(propId) {
+            const prop = myPropertiesList.find(p => String(p.id) === String(propId));
+            if (prop) {
+                try {
+                    localStorage.setItem('likestays_active_edit_payload', JSON.stringify(prop));
+                    localStorage.setItem('likestays_editing_prop_id', String(propId));
+                } catch(e) {}
+            }
+            window.location.href = `add-listing.html?editId=${propId}`;
+        }
+
+        // ================= 👁️ HIDE / UNHIDE PROPERTY =================
+        function toggleHideProperty(propId) {
+            const target = myPropertiesList.find(p => String(p.id) === String(propId));
+            if (!target) return;
+            target.status = (target.status === "Hidden" || target.status === "Draft") ? "Active" : "Hidden";
+
+            try {
+                firebase.database().ref(`properties/${target.id}/status`).set(target.status);
+            } catch(e) {}
+
+            syncMyListingsToLocalStorage();
+            renderPropertiesCardsGrid();
+            showListingToast(`Listing status set to ${target.status}!`, "✓");
+        }
+
+        // ================= 🗑️ IN-APP DELETE MODAL & EXECUTION =================
+        function openDeleteConfirmModal(propId) {
+            pendingDeletePropertyId = propId;
+            const target = myPropertiesList.find(p => String(p.id) === String(propId));
+            document.getElementById('delete-modal-prop-name').innerText = target ? target.name : "Property Listing";
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+        }
+
+        function closeDeleteConfirmModal() {
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+            pendingDeletePropertyId = null;
+        }
+
+        function executeDeletePropertyLive() {
+            if (!pendingDeletePropertyId) return;
+            const propId = pendingDeletePropertyId;
+
+            try {
+                firebase.database().ref(`properties/${propId}`).remove();
+            } catch(e) {}
+
+            myPropertiesList = myPropertiesList.filter(p => String(p.id) !== String(propId));
+            syncMyListingsToLocalStorage();
+            renderPropertiesCardsGrid();
+            closeDeleteConfirmModal();
+            showListingToast("Listing permanently deleted from Cloud.", "🗑️");
+        }
+
+        function syncMyListingsToLocalStorage() {
+            try {
+                localStorage.setItem('likestays_host_listings_drafts', JSON.stringify(myPropertiesList));
+            } catch(e) {}
+        }
+    </script>
+</body>
+</html>s

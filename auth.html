@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | Host Partner Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE & LANGUAGE ENGINE -->
+    <script src="likestays-engine.js"></script>
+    <script src="language-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            height: 100%;
+            background-color: #F2F5F3 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #FFFFFF; box-shadow: 6px 6px 18px #D2DCD4, -6px -6px 18px #FFFFFF; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop-in { animation: popIn 0.25s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-softMint flex flex-col justify-between min-h-screen p-4">
+
+    <!-- FLOATING TOAST -->
+    <div id="auth-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Connecting to Google...</span>
+    </div>
+
+    <!-- HEADER -->
+    <header class="w-full max-w-md mx-auto flex justify-between items-center py-2">
+        <a href="index.html" class="flex items-center space-x-2 cursor-pointer group">
+            <div class="px-3 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-2 shadow-xs transition-transform active:scale-95">
+                <svg class="w-4 h-4 text-luxuryGreen" fill="none" stroke="currentColor" stroke-width="3.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 22V10a8 8 0 1116 0v12"/></svg>
+                <span class="font-cinzel-logo text-luxuryGreen text-xs font-black tracking-wider uppercase">Like Stays</span>
+            </div>
+        </a>
+
+        <a href="index.html" class="text-xs font-extrabold text-luxuryGreen hover:underline">
+            Explore Stays ➔
+        </a>
+    </header>
+
+    <!-- CENTER LUXURY CARD (ONLY GOOGLE SIGN IN) -->
+    <main class="w-full max-w-md mx-auto my-auto animate-pop-in">
+        <div class="neu-flat rounded-[36px] p-6 sm:p-8 border border-gray-200 text-center space-y-6">
+            
+            <div class="space-y-1.5">
+                <div class="w-14 h-14 rounded-2xl bg-softMint border border-gray-200 flex items-center justify-center text-2xl mx-auto shadow-inner">
+                    🏠
+                </div>
+                <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black block">Partner Host Portal</span>
+                <h1 class="text-xl sm:text-2xl font-black text-luxuryGreen">Welcome Partner Host</h1>
+                <p class="text-xs text-gray-400 font-bold leading-relaxed max-w-xs mx-auto">
+                    Sign in with your Google account to manage listings, guest bookings, and payouts.
+                </p>
+            </div>
+
+            <!-- 1-CLICK GOOGLE SIGN IN BUTTON -->
+            <div class="pt-2">
+                <button type="button" onclick="handleOneClickGoogleAuth()" id="btn-google-auth" class="w-full py-4 px-4 bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-luxuryGreen rounded-2xl flex items-center justify-center space-x-3 cursor-pointer shadow-md active:scale-95 transition-all group">
+                    <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span class="text-xs sm:text-sm font-black text-gray-800 group-hover:text-luxuryGreen">
+                        Continue with Google
+                    </span>
+                </button>
+            </div>
+
+            <div class="pt-2 border-t border-gray-150">
+                <p class="text-[9px] text-gray-400 font-semibold leading-tight">
+                    🔒 By continuing, you agree to the LikeStays Host Partner Terms & Safety Policy.
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full text-center py-2 text-[8.5px] font-bold text-gray-400 uppercase tracking-wider">
+        🛡️ LIKESTAYS SECURE HOST AUTHENTICATION
+    </footer>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com", // ⚠️ یہی رہنے دیں — یہ Google Sign-in کے لیے ضروری ہے، Cloudflare منتقلی کے بعد بھی
+
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref') || urlParams.get('refCode');
+            if (refParam) {
+                localStorage.setItem('likestays_captured_ref_code', refParam.toUpperCase());
+            }
+        });
+
+        function showAuthToast(msg, icon = '✨') {
+            const toast = document.getElementById('auth-toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+            toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // ================= 🔴 1-CLICK GOOGLE SIGN IN =================
+        function handleOneClickGoogleAuth() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+
+            const btn = document.getElementById('btn-google-auth');
+            btn.disabled = true;
+            showAuthToast("Connecting to Google...", "⏳");
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    const refCode = (localStorage.getItem('likestays_captured_ref_code') || "LIKESTAYS").toUpperCase();
+
+                    firebase.database().ref(`hosts/${user.uid}`).once('value').then((snap) => {
+                        const existingHost = snap.val();
+
+                        if (!existingHost) {
+                            const initialProfile = {
+                                uid: user.uid,
+                                name: user.displayName || "Partner Host",
+                                fullName: user.displayName || "Partner Host",
+                                email: user.email || "",
+                                phone: user.phoneNumber || "",
+                                whatsapp: "",
+                                govId: "",
+                                socialLink1: "",
+                                socialLink2: "",
+                                extraContactLink: "",
+                                city: "",
+                                country: "",
+                                referralCode: refCode,
+                                adminCode: refCode,
+                                referenceCode: refCode,
+                                avatar: user.photoURL || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150",
+                                role: "host",
+                                isHost: true,
+                                isHostVerified: false,
+                                createdAt: new Date().toISOString()
+                            };
+
+                            firebase.database().ref(`hosts/${user.uid}`).set(initialProfile);
+                            firebase.database().ref(`users/${user.uid}`).update(initialProfile);
+                            
+                            localStorage.setItem('likestays_active_user', JSON.stringify(initialProfile));
+                            localStorage.setItem('likestays_user_profile', JSON.stringify(initialProfile));
+
+                            showAuthToast("Google Sign-In Successful! Opening Profile...", "🎉");
+                            setTimeout(() => {
+                                window.location.href = "host-dashboard.html?openProfile=true";
+                            }, 800);
+                        } else {
+                            localStorage.setItem('likestays_active_user', JSON.stringify(existingHost));
+                            localStorage.setItem('likestays_user_profile', JSON.stringify(existingHost));
+
+                            showAuthToast("Welcome Back! Opening Console...", "✓");
+                            setTimeout(() => {
+                                window.location.href = "host-dashboard.html";
+                            }, 800);
+                        }
+                    });
+                })
+                .catch((error) => {
+                    btn.disabled = false;
+                    showAuthToast(error.message || "Google Sign-In failed.", "⚠️");
+                });
+        }
+    </script>
+</body>
+</html>
