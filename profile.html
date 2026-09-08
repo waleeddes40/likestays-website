@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | Profile & Travel Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE & LANGUAGE ENGINE -->
+    <script src="likestays-engine.js"></script>
+    <script src="language-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        inputBg: '#F0F4F2',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background-color: #F2F5F3;
+            overflow-x: hidden !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #FFFFFF; box-shadow: 4px 4px 12px #D2DCD4, -4px -4px 12px #FFFFFF; }
+        .neu-inset { background: #F2F5F3; box-shadow: inset 2px 2px 5px #D2DCD4, inset -2px -2px 5px #FFFFFF; }
+        .neu-btn-green { background: linear-gradient(135deg, #0D4E2F 0%, #155E39 100%); box-shadow: 0 4px 12px rgba(13, 78, 47, 0.3); }
+        .neu-btn-green:active { transform: scale(0.98); }
+        
+        .neu-social-circle {
+            background: #FFFFFF;
+            box-shadow: 2px 2px 6px #D2DCD4, -2px -2px 6px #FFFFFF;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .neu-social-circle:hover {
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 0 4px 10px rgba(13, 78, 47, 0.2);
+        }
+
+        .landing-card-shadow {
+            background-color: #FFFFFF;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop-in { animation: popIn 0.2s ease-out forwards; }
+        
+        .bottom-sheet {
+            transform: translateY(100%);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 88% !important;
+            overflow-y: auto !important;
+        }
+        .bottom-sheet.sheet-open { transform: translateY(0); }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint text-gray-800 pb-28">
+
+    <!-- FLOATING TOAST -->
+    <div id="profile-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-4 py-2.5 rounded-2xl shadow-xl backdrop-blur-md text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Success</span>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="w-full max-w-5xl mx-auto flex flex-col min-h-screen">
+
+        <!-- HEADER -->
+        <header class="h-14 shrink-0 px-4 sm:px-6 border-b border-gray-150/40 flex justify-between items-center bg-white z-20">
+            <a href="index.html" class="flex items-center space-x-2 cursor-pointer">
+                <div class="w-7 h-7 rounded-xl bg-softMint flex items-center justify-center shadow-xs text-luxuryGreen border border-gray-150/60">
+                    <svg class="w-4 h-4 text-luxuryGreen" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 22V10a8 8 0 1116 0v12"/>
+                    </svg>
+                </div>
+                <span class="text-xs font-black text-luxuryGreen tracking-tight">LikeStays<span class="text-luxuryLightGreen">.co</span></span>
+            </a>
+            
+            <button type="button" onclick="window.location.href='index.html'" class="text-xs font-extrabold text-luxuryGreen hover:underline">
+                Explore Stays ➔
+            </button>
+        </header>
+
+        <!-- MAIN VIEWPORT -->
+        <main class="flex-grow p-4 sm:p-6 space-y-6 animate-fade-in" id="main-scroller-viewport">
+            
+            <!-- ========================================================================= -->
+            <!-- 🏨 VIEW A: HOTEL DEDICATED CONCIERGE HUB (ONLY FOR SUBDOMAIN GUESTS) -->
+            <!-- ========================================================================= -->
+            <div id="subdomain-hotel-profile-view" class="hidden space-y-5 max-w-5xl mx-auto animate-fade-in">
+                
+                <!-- HOTEL BRANDING CARD -->
+                <div class="landing-card-shadow p-5 sm:p-6 bg-gradient-to-r from-emerald-50/80 via-white to-softMint border-2 border-luxuryGreen space-y-3.5 text-left shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-150 pb-3">
+                        <div class="flex items-center space-x-3.5 min-w-0">
+                            <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-xs border border-emerald-200 shrink-0">
+                                🏢
+                            </div>
+                            <div class="space-y-0.5 min-w-0">
+                                <span class="text-[8px] uppercase tracking-widest text-goldWarm font-black block">Official Hotel Portal</span>
+                                <h2 id="sub-hotel-title" class="text-base sm:text-lg font-black text-luxuryGreen truncate">Hotel Name</h2>
+                                <p id="sub-hotel-address" class="text-[9.5px] text-gray-500 font-bold truncate">📍 Location Loading...</p>
+                            </div>
+                        </div>
+
+                        <span class="text-[8.5px] font-black uppercase px-3 py-1 rounded-full border bg-emerald-100 text-emerald-900 border-emerald-300 self-start sm:self-auto shrink-0">
+                            ✓ Verified Hotel Partner
+                        </span>
+                    </div>
+
+                    <!-- 4 DIRECT RECEPTION & CONCIERGE BUTTONS -->
+                    <div class="space-y-1.5">
+                        <span class="text-[8px] uppercase tracking-wider text-gray-400 font-black block">Direct Front Desk & Concierge Contacts:</span>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-black">
+                            <a id="sub-btn-call" href="#" class="p-2.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl flex items-center justify-center space-x-1.5 hover:bg-gray-50 shadow-2xs">
+                                <span>📞</span> <span>Call Desk</span>
+                            </a>
+                            <a id="sub-btn-whatsapp" href="#" target="_blank" class="p-2.5 bg-emerald-700 text-white rounded-xl flex items-center justify-center space-x-1.5 hover:bg-emerald-800 shadow-2xs">
+                                <span>💬</span> <span>WhatsApp</span>
+                            </a>
+                            <a id="sub-btn-email" href="#" class="p-2.5 bg-luxuryGreen text-white rounded-xl flex items-center justify-center space-x-1.5 hover:bg-luxuryLightGreen shadow-2xs">
+                                <span>📧</span> <span>Email</span>
+                            </a>
+                            <a id="sub-btn-extra" href="#" target="_blank" class="p-2.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl flex items-center justify-center space-x-1.5 hover:bg-softMint shadow-2xs">
+                                <span>🌐</span> <span>4th Channel</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- TIMINGS, FACILITIES & RULES OVERVIEW -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[10px] text-gray-600">
+                        <div class="p-3 bg-white rounded-2xl border space-y-0.5">
+                            <span class="text-[7.5px] uppercase font-bold text-gray-400 block">Check-in / Out:</span>
+                            <strong id="sub-hotel-timings" class="text-luxuryGreen font-black text-[11px]">14:00 - 11:00</strong>
+                        </div>
+                        <div class="p-3 bg-white rounded-2xl border space-y-0.5 sm:col-span-2">
+                            <span class="text-[7.5px] uppercase font-bold text-gray-400 block">Key Highlights:</span>
+                            <strong id="sub-hotel-facilities" class="text-gray-800 font-bold truncate block">Free WiFi, Generator Backup, Parking, Pool</strong>
+                        </div>
+                    </div>
+
+                    <!-- WELCOME NOTE -->
+                    <div id="sub-welcome-note-box" class="hidden p-3 bg-white/90 rounded-2xl border border-emerald-200 text-[10px] text-gray-700 space-y-0.5">
+                        <span class="text-[7.5px] uppercase font-black text-luxuryGreen block">Management Announcement:</span>
+                        <p id="sub-hotel-welcome-note" class="font-medium italic leading-relaxed text-gray-600"></p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 🌅 WELCOME HERO BANNER (GUEST-FIRST — DESTINATION IMAGE) -->
+            <!-- ========================================================================= -->
+            <div id="general-hero-banner" class="relative rounded-[32px] overflow-hidden max-w-5xl mx-auto h-44 sm:h-56 shadow-lg">
+                <img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&q=80&w=1200" class="absolute inset-0 w-full h-full object-cover" alt="Luxury stays worldwide">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-5 sm:p-6 text-left space-y-1">
+                    <span class="text-[8px] uppercase tracking-widest text-goldWarm font-black block">Welcome Back</span>
+                    <h2 class="text-lg sm:text-2xl font-black text-white leading-tight">Where to next?</h2>
+                    <p class="text-[10px] sm:text-xs text-white/80 font-bold">Hourly & daily stays, 150+ currencies, direct host contact.</p>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 🧳 GENERAL TRAVEL HUB (BOOKINGS & ACTIVITIES) -->
+            <!-- ========================================================================= -->
+            <div class="landing-card-shadow p-5 sm:p-6 space-y-3.5 text-xs font-bold text-gray-600 text-left max-w-5xl mx-auto">
+                <span class="text-[9.5px] font-black uppercase text-gray-400 tracking-wider block border-b border-gray-100 pb-2">My Travel Hub</span>
+                
+                <!-- 1. My Bookings -->
+                <button onclick="window.location.href='my-bookings.html'" class="w-full flex justify-between items-center text-left hover:text-luxuryLightGreen transition-colors cursor-pointer border-none bg-transparent py-1">
+                    <div class="flex items-center space-x-3 text-luxuryGreen">
+                        <span class="text-base">🧳</span> 
+                        <span class="font-extrabold text-xs">My Bookings & Trips</span>
+                    </div>
+                    <span class="text-gray-400 text-xs font-bold">View Vouchers ➔</span>
+                </button>
+
+                <!-- 2. My Favorites -->
+                <button onclick="window.location.href='favorites.html'" class="w-full flex justify-between items-center text-left hover:text-luxuryLightGreen transition-colors border-t border-gray-100 pt-3.5 pb-1 cursor-pointer border-none bg-transparent">
+                    <div class="flex items-center space-x-3 text-luxuryGreen">
+                        <span class="text-base">❤️</span> 
+                        <span class="font-extrabold text-xs">My Saved Favorite Stays</span>
+                    </div>
+                    <span class="text-gray-400 text-xs font-bold">View Saved ➔</span>
+                </button>
+
+                <!-- 3. Payment Guidelines -->
+                <button onclick="togglePaymentDrawer(true)" class="w-full flex justify-between items-center text-left hover:text-luxuryLightGreen transition-colors border-t border-gray-100 pt-3.5 cursor-pointer border-none bg-transparent">
+                    <div class="flex items-center space-x-3 text-luxuryGreen">
+                        <span class="text-base">💳</span> 
+                        <span class="font-extrabold text-xs">Payment & Token Escrow Policy</span>
+                    </div>
+                    <span class="text-gray-400 text-xs font-bold">Read Policy ➔</span>
+                </button>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- ⭐ COMPLETED STAY REVIEWS SECTION -->
+            <!-- ========================================================================= -->
+            <div class="landing-card-shadow p-5 sm:p-6 space-y-4 text-left border border-gray-150 max-w-5xl mx-auto">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-2.5">
+                    <div>
+                        <span class="text-[8px] uppercase tracking-widest text-goldWarm font-black block">Trip Experiences</span>
+                        <h3 class="text-xs sm:text-sm font-black text-luxuryGreen">Your Stay Reviews</h3>
+                    </div>
+                    <span id="pending-reviews-count-badge" class="text-[8.5px] font-black uppercase text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+                        0 Reviews
+                    </span>
+                </div>
+
+                <div id="profile-pending-reviews-feed" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                    <div class="p-6 text-center text-xs text-gray-400 font-bold col-span-full">
+                        Checking for completed stays...
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 🌟 WHY CHOOSE LIKESTAYS — GUEST BENEFITS FIRST, PROMINENT -->
+            <!-- ========================================================================= -->
+            <div id="general-platform-benefits-box" class="landing-card-shadow p-5 sm:p-7 space-y-4 text-left border border-gray-200 max-w-5xl mx-auto shadow-sm">
+                <div class="border-b border-gray-150 pb-2.5">
+                    <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black block">Why Choose LikeStays</span>
+                    <h3 class="text-sm sm:text-base font-black text-luxuryGreen">Built for Travelers Like You</h3>
+                </div>
+
+                <!-- GUEST VALUE — large, prominent, first -->
+                <div class="p-4 sm:p-5 bg-softMint/60 rounded-3xl border border-gray-200 space-y-2">
+                    <strong class="text-luxuryGreen font-black flex items-center space-x-1.5 text-sm">
+                        <span>🧳</span> <span>For Travelers & Guests</span>
+                    </strong>
+                    <ul class="text-[10.5px] sm:text-[11px] text-gray-600 space-y-1.5 font-semibold leading-relaxed grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+                        <li>• <b>Token Advance:</b> Pay only 15% token; pay 85% balance at property.</li>
+                        <li>• <b>0% Booking Fee:</b> No hidden taxes or service charges.</li>
+                        <li>• <b>Hourly & Daily Stays:</b> Ultimate booking flexibility.</li>
+                        <li>• <b>150+ Currencies & 40+ Languages:</b> Localized pricing worldwide.</li>
+                        <li>• <b>Direct 4 Host Channels:</b> Unlocked upon booking.</li>
+                    </ul>
+                </div>
+
+                <!-- HOST + SAAS VALUE — small, condensed, pushed toward the end -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 opacity-90">
+                    <div class="p-3 bg-emerald-50/50 rounded-2xl border border-emerald-100 space-y-1">
+                        <strong class="text-emerald-950 font-black flex items-center space-x-1.5 text-[10px]">
+                            <span>🏠</span> <span>For Hosts</span>
+                        </strong>
+                        <p class="text-[9px] text-gray-500 font-semibold leading-relaxed">Direct payouts, 5-15% commission, verified badge & regional support.</p>
+                    </div>
+                    <div class="p-3 bg-amber-50/40 rounded-2xl border border-amber-100 space-y-1">
+                        <strong class="text-amber-950 font-black flex items-center space-x-1.5 text-[10px]">
+                            <span>🌐</span> <span>Hotel Websites (SaaS)</span>
+                        </strong>
+                        <p class="text-[9px] text-amber-900/70 font-semibold leading-relaxed">Instant branded hotel site, 0% commission, own subdomain.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== 🌐 OFFICIAL SOCIAL MEDIA BUTTONS ========================================== -->
+            <div id="general-social-links-box" class="landing-card-shadow p-5 sm:p-7 space-y-4 text-center border border-gray-150 max-w-5xl mx-auto">
+                <div class="space-y-1">
+                    <span class="text-[10.5px] font-black uppercase tracking-widest text-luxuryGreen">Connect with Like Stays Official</span>
+                    <p class="text-[9.5px] font-bold text-gray-400">Official Social Channels & Inquiries</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center items-center gap-3 pt-1">
+                    <a href="https://facebook.com" target="_blank" class="w-8 h-8 rounded-full neu-social-circle flex items-center justify-center" title="Facebook"><svg class="w-4 h-4 fill-luxuryGreen" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                    <a href="https://instagram.com" target="_blank" class="w-8 h-8 rounded-full neu-social-circle flex items-center justify-center" title="Instagram"><svg class="w-3.5 h-3.5 fill-luxuryGreen" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0 3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 0zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                    <a href="https://whatsapp.com" target="_blank" class="w-8 h-8 rounded-full neu-social-circle flex items-center justify-center" title="WhatsApp"><svg class="w-3.5 h-3.5 fill-luxuryGreen" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741 1.505 1.53-3.649-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.458h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+                    <a href="https://youtube.com" target="_blank" class="w-8 h-8 rounded-full neu-social-circle flex items-center justify-center" title="YouTube"><svg class="w-3.5 h-3.5 fill-luxuryGreen" viewBox="0 0 24 24"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.507 9.388.507 9.388.507s7.518 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+                    <a href="https://x.com" target="_blank" class="w-8 h-8 rounded-full neu-social-circle flex items-center justify-center" title="X (Twitter)"><svg class="w-3.5 h-3.5 fill-luxuryGreen" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                </div>
+
+                <div class="pt-2 border-t border-gray-200/50">
+                    <span class="text-[9px] uppercase tracking-wider text-luxuryLightGreen font-extrabold">Inquiries & VIP Support</span>
+                    <a href="mailto:likestays.co@gmail.com" class="block text-xs font-black text-luxuryGreen hover:underline mt-0.5">
+                        likestays.co@gmail.com
+                    </a>
+                </div>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 🏠 'HOSTING & LISTING' ACTION BUTTON (PLACED AT THE VERY BOTTOM) -->
+            <!-- ========================================================================= -->
+            <div id="bottom-hosting-listing-banner" class="max-w-5xl mx-auto pt-2">
+                <div onclick="handleHostingAndListingClick()" class="neu-flat p-5 sm:p-6 rounded-[32px] flex flex-col sm:flex-row items-center justify-between gap-4 border border-emerald-200/80 bg-gradient-to-r from-emerald-50 via-softMint to-white cursor-pointer hover:border-luxuryGreen group shadow-sm transition-transform active:scale-98">
+                    <div class="flex items-center space-x-3.5 text-left">
+                        <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-xs border border-gray-150 shrink-0">
+                            🏠
+                        </div>
+                        <div class="space-y-0.5">
+                            <h3 class="text-sm sm:text-base font-black text-luxuryGreen uppercase tracking-wide group-hover:text-luxuryLightGreen">Hosting & Listing</h3>
+                            <p class="text-[10.5px] font-bold text-gray-500">Launch stay properties, manage bookings & receive direct payouts.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="neu-btn-green text-white text-xs font-black px-6 py-3.5 rounded-2xl uppercase tracking-wider shrink-0 cursor-pointer shadow-md hover:scale-105 transition-transform flex items-center space-x-1.5">
+                        <span>Open Host Console ➔</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="w-full bg-white/70 border-t border-gray-200/60 p-6 rounded-3xl mt-4 text-center text-[10px] font-bold text-gray-400">
+                <span class="font-cinzel-logo text-luxuryGreen font-black text-xs">Like Stays</span> • &copy; 2026 LikeStays.co. All rights reserved.
+            </footer>
+
+        </main>
+
+        <!-- ========================================================================= -->
+        <!-- ⭐ AIRBNB-STYLE REVIEW MODAL -->
+        <!-- ========================================================================= -->
+        <div id="detailed-review-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[65000] flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-[32px] p-6 shadow-2xl neu-flat border border-gray-200 space-y-4 text-left animate-pop-in max-h-[90vh] overflow-y-auto no-scrollbar">
+                
+                <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
+                    <div>
+                        <span class="text-[8.5px] uppercase tracking-wider text-goldWarm font-black">Stay Review & Experience</span>
+                        <h3 class="text-xs sm:text-sm font-black text-luxuryGreen" id="det-modal-prop-title">Review Your Stay</h3>
+                    </div>
+                    <button type="button" onclick="closeDetailedReviewModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+                </div>
+
+                <form onsubmit="handleDetailedReviewSubmit(event)" class="space-y-3.5 text-xs font-bold text-gray-700">
+                    <input type="hidden" id="rev-hidden-booking-id">
+                    <input type="hidden" id="rev-hidden-prop-id">
+
+                    <div class="space-y-0.5">
+                        <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Your Name *</label>
+                        <input type="text" id="rev-input-guest-name" required placeholder="Enter your full name" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                    </div>
+
+                    <!-- 5 CATEGORIZED RATING BARS -->
+                    <div class="p-3.5 bg-softMint/60 rounded-2xl border border-gray-200 space-y-2.5">
+                        <span class="text-[8.5px] font-black uppercase text-luxuryGreen block">Rate Specific Categories (1 to 5 Stars):</span>
+                        
+                        <div class="flex justify-between items-center text-xs">
+                            <span>🧼 Cleanliness:</span>
+                            <div class="flex space-x-1 cursor-pointer" id="stars-cleanliness">
+                                <span onclick="setCategoryStar('cleanliness', 1)">⭐</span><span onclick="setCategoryStar('cleanliness', 2)">⭐</span><span onclick="setCategoryStar('cleanliness', 3)">⭐</span><span onclick="setCategoryStar('cleanliness', 4)">⭐</span><span onclick="setCategoryStar('cleanliness', 5)">⭐</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span>🎯 Accuracy & Photos:</span>
+                            <div class="flex space-x-1 cursor-pointer" id="stars-accuracy">
+                                <span onclick="setCategoryStar('accuracy', 1)">⭐</span><span onclick="setCategoryStar('accuracy', 2)">⭐</span><span onclick="setCategoryStar('accuracy', 3)">⭐</span><span onclick="setCategoryStar('accuracy', 4)">⭐</span><span onclick="setCategoryStar('accuracy', 5)">⭐</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span>💬 Host Communication:</span>
+                            <div class="flex space-x-1 cursor-pointer" id="stars-communication">
+                                <span onclick="setCategoryStar('communication', 1)">⭐</span><span onclick="setCategoryStar('communication', 2)">⭐</span><span onclick="setCategoryStar('communication', 3)">⭐</span><span onclick="setCategoryStar('communication', 4)">⭐</span><span onclick="setCategoryStar('communication', 5)">⭐</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span>📍 Location & Safety:</span>
+                            <div class="flex space-x-1 cursor-pointer" id="stars-location">
+                                <span onclick="setCategoryStar('location', 1)">⭐</span><span onclick="setCategoryStar('location', 2)">⭐</span><span onclick="setCategoryStar('location', 3)">⭐</span><span onclick="setCategoryStar('location', 4)">⭐</span><span onclick="setCategoryStar('location', 5)">⭐</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs">
+                            <span>💰 Value for Money:</span>
+                            <div class="flex space-x-1 cursor-pointer" id="stars-value">
+                                <span onclick="setCategoryStar('value', 1)">⭐</span><span onclick="setCategoryStar('value', 2)">⭐</span><span onclick="setCategoryStar('value', 3)">⭐</span><span onclick="setCategoryStar('value', 4)">⭐</span><span onclick="setCategoryStar('value', 5)">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-0.5">
+                        <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Public Review Comment *</label>
+                        <textarea id="rev-input-public-comment" rows="3" required placeholder="Describe what you loved about this stay..." class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium resize-none border-none"></textarea>
+                    </div>
+
+                    <div class="space-y-0.5">
+                        <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Private Note for Host (Optional)</label>
+                        <input type="text" id="rev-input-private-note" placeholder="Private suggestion for the host..." class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
+                    </div>
+
+                    <button type="submit" id="btn-submit-detailed-review" class="w-full neu-btn-green text-white font-black text-xs py-3.5 rounded-2xl uppercase tracking-wider shadow-md hover:scale-102 cursor-pointer transition-transform">
+                        Publish Review Live 🚀
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+        <!-- PAYMENT GUIDELINES DRAWER -->
+        <div id="payment-drawer-overlay" class="hidden absolute inset-0 bg-black/40 z-[52000] flex items-end justify-center animate-fade-in">
+            <div id="payment-drawer-modal" class="bottom-sheet bg-white w-full max-w-xl rounded-t-[32px] p-6 pb-8 space-y-4 text-luxuryGreen shadow-2xl relative border-t border-gray-200">
+                <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-1 cursor-grab" id="payment-swipe-handle"></div>
+                <div class="flex justify-between items-center border-b border-gray-150 pb-3">
+                    <span class="text-xs font-black uppercase tracking-widest text-luxuryGreen">Payment Guidelines</span>
+                    <button onclick="togglePaymentDrawer(false)" class="text-gray-400 hover:text-black font-extrabold text-xs cursor-pointer">✕ Close</button>
+                </div>
+                <div class="space-y-3 text-[9.5px] font-bold text-gray-600 text-left leading-normal">
+                    <div class="flex items-start space-x-3"><span class="w-5 h-5 rounded-full bg-luxuryGreen/10 flex items-center justify-center text-luxuryGreen text-[9px] font-black shrink-0">1</span><p>Book your stay request with token deposit.</p></div>
+                    <div class="flex items-start space-x-3 border-t border-gray-100 pt-2.5"><span class="w-5 h-5 rounded-full bg-luxuryGreen/10 flex items-center justify-center text-luxuryGreen text-[9px] font-black shrink-0">2</span><p>Send the advance token directly to the host's payment account.</p></div>
+                    <div class="flex items-start space-x-3 border-t border-gray-100 pt-2.5"><span class="w-5 h-5 rounded-full bg-luxuryGreen/10 flex items-center justify-center text-luxuryGreen text-[9px] font-black shrink-0">3</span><p>Pay remaining balance at property upon check-in arrival.</p></div>
+                </div>
+                <button onclick="togglePaymentDrawer(false)" class="w-full neu-btn-green text-white py-3.5 text-xs font-black uppercase tracking-wider rounded-xl cursor-pointer">I Understand & Agree</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com",
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        const DetailedReviewRatings = { cleanliness: 5, accuracy: 5, communication: 5, location: 5, value: 5 };
+
+        function extractSubdomain() {
+            const host = window.location.hostname.toLowerCase();
+            const parts = host.split('.');
+            if (parts.length > 2 && parts[0] !== 'www' && parts[0] !== 'likestays') {
+                return parts[0];
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('hotel') || urlParams.get('subdomain') || null;
+        }
+
+        function slugifyText(text) {
+            return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setupSwipeDismissGestures();
+            loadGuestPendingReviews();
+            initializeDualProfileMode();
+            
+            if (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.renderBottomNav) {
+                LikeStaysEngine.renderBottomNav('profile');
+            }
+        });
+
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('profile-toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+            toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // ================= 🎯 DUAL PROFILE MODE ENGINE =================
+        function initializeDualProfileMode() {
+            const sub = extractSubdomain();
+
+            if (!sub) {
+                // 🟢 MODE A: GENERAL MARKETPLACE USER (likestays.co)
+                document.getElementById('subdomain-hotel-profile-view').classList.add('hidden');
+                document.getElementById('general-hero-banner').classList.remove('hidden');
+                document.getElementById('general-platform-benefits-box').classList.remove('hidden');
+                document.getElementById('general-social-links-box').classList.remove('hidden');
+                document.getElementById('bottom-hosting-listing-banner').classList.remove('hidden');
+                return;
+            }
+
+            // 🏨 MODE B: SUBDOMAIN HOTEL GUEST (prime.likestays.co)
+            document.getElementById('general-hero-banner').classList.add('hidden');
+            document.getElementById('bottom-hosting-listing-banner').classList.add('hidden');
+            document.getElementById('general-platform-benefits-box').classList.add('hidden');
+            document.getElementById('general-social-links-box').classList.add('hidden');
+
+            // Fetch Subdomain Hotel Info from Firebase
+            firebase.database().ref('hosts').once('value').then(snap => {
+                const allHosts = snap.val() || {};
+                let matchedHost = null;
+
+                for (let k in allHosts) {
+                    const h = allHosts[k];
+                    const cfg = h.hotelPortalConfig || {};
+                    const slug = cfg.slug || h.hotelSlug || slugifyText(cfg.title || h.fullName || h.name);
+                    if (slug === sub) {
+                        matchedHost = h;
+                        break;
+                    }
+                }
+
+                if (matchedHost) {
+                    const cfg = matchedHost.hotelPortalConfig || {};
+                    const title = cfg.title || matchedHost.fullName || matchedHost.name || "Hotel Partner";
+                    const phone = cfg.phone || matchedHost.phone || "";
+                    const whatsapp = cfg.whatsapp || matchedHost.whatsapp || phone;
+                    const email = cfg.email || matchedHost.email || "";
+                    const extra = cfg.extraLink || matchedHost.extraContactLink || "";
+                    const address = cfg.address || `${matchedHost.city || 'City'}, ${matchedHost.country || 'Country'}`;
+                    const facilities = cfg.facilities || "Free High-Speed WiFi, Generator Backup, Swimming Pool, Parking, Elevator";
+                    const welcome = cfg.welcomeNote || "";
+                    const checkin = cfg.checkin || "14:00";
+                    const checkout = cfg.checkout || "11:00";
+
+                    document.getElementById('sub-hotel-title').innerText = title;
+                    document.getElementById('sub-hotel-address').innerText = `📍 ${address}`;
+                    document.getElementById('sub-hotel-timings').innerText = `${checkin} - ${checkout}`;
+                    document.getElementById('sub-hotel-facilities').innerText = facilities;
+
+                    document.getElementById('sub-btn-call').href = phone ? `tel:${phone}` : '#';
+                    
+                    const cleanWa = whatsapp.replace(/[^0-9]/g, '');
+                    document.getElementById('sub-btn-whatsapp').href = cleanWa ? `https://wa.me/${cleanWa}?text=${encodeURIComponent('Hi ' + title + ', I am inquiring about stay suites.')}` : `https://wa.me/`;
+                    document.getElementById('sub-btn-email').href = email ? `mailto:${email}` : '#';
+
+                    if (extra) {
+                        document.getElementById('sub-btn-extra').href = extra.startsWith('http') ? extra : `https://${extra}`;
+                    } else {
+                        document.getElementById('sub-btn-extra').href = '#';
+                    }
+
+                    if (welcome) {
+                        document.getElementById('sub-welcome-note-box').classList.remove('hidden');
+                        document.getElementById('sub-hotel-welcome-note').innerText = `"${welcome}"`;
+                    }
+
+                    document.getElementById('subdomain-hotel-profile-view').classList.remove('hidden');
+                }
+            });
+        }
+
+        // ================= 🏠 CLEAN GOOGLE AUTH REDIRECTION =================
+        function handleHostingAndListingClick() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    window.location.href = "host-dashboard.html";
+                } else {
+                    // Clean redirect to Auth Page with Google Sign-In
+                    window.location.href = "auth.html";
+                }
+            });
+        }
+
+        // ================= ⭐ LOAD COMPLETED STAY REVIEWS =================
+        function loadGuestPendingReviews() {
+            const container = document.getElementById('profile-pending-reviews-feed');
+            const countBadge = document.getElementById('pending-reviews-count-badge');
+            if (!container) return;
+
+            let localGuestBookings = [];
+            try {
+                localGuestBookings = JSON.parse(localStorage.getItem('likestays_my_guest_bookings') || '[]');
+            } catch(e) {}
+
+            const localIds = [...new Set(localGuestBookings.map(b => b.id || b.bookingCode).filter(Boolean))];
+
+            if (localIds.length === 0) {
+                if (countBadge) countBadge.innerText = "0 Reviews";
+                container.innerHTML = `
+                    <div class="p-6 text-center text-xs text-gray-400 font-bold col-span-full space-y-1">
+                        <div>🧳</div>
+                        <p>No completed stay reviews in record.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // ⚡ صرف اسی فون پر محفوظ booking IDs کے لیے مخصوص طور پر منگواتا ہے — پوری bookings لسٹ نہیں
+            Promise.all(localIds.map(id =>
+                firebase.database().ref(`bookings/${id}`).once('value')
+                    .then(s => s.val() ? { id, ...s.val() } : null)
+                    .catch(() => null)
+            )).then(results => {
+                const myStays = results.filter(Boolean);
+
+                if (countBadge) countBadge.innerText = `${myStays.length} Reviews`;
+
+                if (myStays.length === 0) {
+                    container.innerHTML = `
+                        <div class="p-6 text-center text-xs text-gray-400 font-bold col-span-full space-y-1">
+                            <div>🧳</div>
+                            <p>No completed stay reviews in record.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = myStays.map(b => {
+                    const isReviewed = b.isReviewed === true;
+                    const displayCode = b.id.startsWith('LS-') ? `#${b.id}` : (b.bookingCode ? `#${b.bookingCode}` : `#${b.id}`);
+
+                    return `
+                        <div class="p-3.5 bg-softMint/50 rounded-2xl border border-gray-150 space-y-2 flex flex-col justify-between text-left">
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[7.5px] uppercase font-black text-gray-400 font-mono">${displayCode}</span>
+                                    <span class="text-[7.5px] font-black uppercase px-2 py-0.5 rounded-full ${isReviewed ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}">
+                                        ${isReviewed ? '✓ Reviewed' : '⭐ Review Pending'}
+                                    </span>
+                                </div>
+                                <h4 class="text-xs font-black text-luxuryGreen truncate">${b.propName || 'Luxury Stay'}</h4>
+                                <p class="text-[9px] text-gray-400 font-semibold">📍 ${b.propLocation || 'Prime Location'}</p>
+                                <p class="text-[8.5px] text-emerald-800 font-bold">📅 ${b.durationString || 'Stay Dates'}</p>
+                            </div>
+
+                            <div class="pt-1 border-t border-gray-200/60">
+                                ${!isReviewed ? `
+                                    <button type="button" onclick="openDetailedReviewModal('${b.id}', '${b.propId}', '${(b.propName || 'Stay').replace(/'/g, "\\'")}')" class="w-full py-2 bg-white hover:bg-emerald-50 border border-luxuryGreen text-luxuryGreen rounded-xl text-[9px] font-black uppercase cursor-pointer shadow-2xs transition-colors">
+                                        ⭐ Write Detailed Review ➔
+                                    </button>
+                                ` : `
+                                    <span class="text-[8.5px] font-bold text-gray-400 block text-center">Thanks for your review!</span>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            });
+        }
+
+        function openDetailedReviewModal(bookingId, propId, propTitle) {
+            document.getElementById('rev-hidden-booking-id').value = bookingId;
+            document.getElementById('rev-hidden-prop-id').value = propId;
+            document.getElementById('det-modal-prop-title').innerText = `Review: ${propTitle}`;
+
+            ['cleanliness', 'accuracy', 'communication', 'location', 'value'].forEach(cat => setCategoryStar(cat, 5));
+
+            document.getElementById('rev-input-public-comment').value = '';
+            document.getElementById('rev-input-private-note').value = '';
+            document.getElementById('detailed-review-modal').classList.remove('hidden');
+        }
+
+        function closeDetailedReviewModal() {
+            document.getElementById('detailed-review-modal').classList.add('hidden');
+        }
+
+        function setCategoryStar(cat, n) {
+            DetailedReviewRatings[cat] = n;
+            const container = document.getElementById(`stars-${cat}`);
+            if (!container) return;
+            const stars = container.querySelectorAll('span');
+            stars.forEach((s, idx) => {
+                s.style.opacity = idx < n ? '1' : '0.25';
+                s.style.transform = idx < n ? 'scale(1.15)' : 'scale(1)';
+            });
+        }
+
+        function handleDetailedReviewSubmit(e) {
+            e.preventDefault();
+            const bookingId = document.getElementById('rev-hidden-booking-id').value;
+            const propId = document.getElementById('rev-hidden-prop-id').value;
+            const guestName = document.getElementById('rev-input-guest-name').value.trim();
+            const publicComment = document.getElementById('rev-input-public-comment').value.trim();
+            const privateNote = document.getElementById('rev-input-private-note').value.trim();
+
+            if (!guestName || !publicComment) {
+                showToast("Please fill in Name and Review Comment.", "⚠️");
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-detailed-review');
+            btn.innerText = "⏳ Publishing Review...";
+            btn.disabled = true;
+
+            const avgRating = (
+                (DetailedReviewRatings.cleanliness +
+                 DetailedReviewRatings.accuracy +
+                 DetailedReviewRatings.communication +
+                 DetailedReviewRatings.location +
+                 DetailedReviewRatings.value) / 5
+            ).toFixed(1);
+
+            const reviewPayload = {
+                id: `rev_${Date.now()}`,
+                bookingId: bookingId,
+                name: guestName,
+                stars: parseFloat(avgRating),
+                breakdown: { ...DetailedReviewRatings },
+                comment: publicComment,
+                privateNote: privateNote,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+                createdAt: new Date().toISOString()
+            };
+
+            firebase.database().ref(`properties/${propId}/reviews`).once('value').then(snap => {
+                const currentReviews = snap.val() || [];
+                currentReviews.unshift(reviewPayload);
+
+                const totalStars = currentReviews.reduce((acc, r) => acc + (Number(r.stars) || 5), 0);
+                const overallAvg = (totalStars / currentReviews.length).toFixed(1);
+
+                return firebase.database().ref(`properties/${propId}`).update({
+                    reviews: currentReviews,
+                    rating: `⭐ ${overallAvg} (${currentReviews.length})`
+                });
+            }).then(() => {
+                return firebase.database().ref(`bookings/${bookingId}`).update({ isReviewed: true });
+            }).then(() => {
+                closeDetailedReviewModal();
+                showToast("Review Published Live!", "🎉");
+                btn.innerText = "Publish Review Live 🚀";
+                btn.disabled = false;
+                loadGuestPendingReviews();
+            }).catch(() => {
+                showToast("Error submitting review.", "⚠️");
+                btn.disabled = false;
+            });
+        }
+
+        function togglePaymentDrawer(isOpen) {
+            const overlay = document.getElementById('payment-drawer-overlay');
+            const drawer = document.getElementById('payment-drawer-modal');
+            if (isOpen) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => { drawer.classList.add('sheet-open'); }, 15);
+            } else {
+                drawer.classList.remove('sheet-open');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 250);
+            }
+        }
+
+        function setupSwipeDismissGestures() {
+            attachSwipeClose('payment-swipe-handle', 'payment-drawer-modal', 'payment-drawer-overlay');
+        }
+
+        function attachSwipeClose(handleId, drawerId, overlayId) {
+            const handle = document.getElementById(handleId); const drawer = document.getElementById(drawerId); const overlay = document.getElementById(overlayId);
+            if (!handle || !drawer || !overlay) return;
+            let startY = 0, currentY = 0;
+            handle.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; drawer.style.transition = 'none'; }, { passive: true });
+            handle.addEventListener('touchmove', (e) => { currentY = e.touches[0].clientY; const deltaY = currentY - startY; if (deltaY > 0) drawer.style.transform = `translateY(${deltaY}px)`; }, { passive: true });
+            handle.addEventListener('touchend', () => {
+                drawer.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                if (currentY - startY > 80) {
+                    if (overlayId === 'payment-drawer-overlay') togglePaymentDrawer(false);
+                } else { drawer.style.transform = 'translateY(0)'; }
+                startY = 0; currentY = 0;
+            });
+        }
+    </script>
+</body>
+</html>

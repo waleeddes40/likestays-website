@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | My Favorite Stays</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS UNIVERSAL ENGINE & FILTERS -->
+    <script src="likestays-engine.js"></script>
+    <script src="filters.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        softShadowDark: '#D2DCD4',
+                        softShadowLight: '#FFFFFF',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background-color: #F2F5F3 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #F2F5F3; box-shadow: 5px 5px 12px #D2DCD4, -5px -5px 12px #FFFFFF; }
+        .neu-inset { background: #F2F5F3; box-shadow: inset 3px 3px 6px #D2DCD4, inset -3px -3px 6px #FFFFFF; }
+        .neu-btn-green { background: #0D4E2F; box-shadow: 3px 3px 10px rgba(13, 78, 47, 0.35), -3px -3px 10px #FFFFFF; }
+        .neu-btn-green:active { box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4); transform: scale(0.96); }
+        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 6px #D2DCD4, -2px -2px 6px #FFFFFF; }
+        .neu-logo-card { background: #FFFFFF; box-shadow: 3px 3px 8px #D2DCD4, -3px -3px 8px #FFFFFF; }
+
+        .property-card-3d {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .property-card-3d:active { transform: scale(0.98); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop-in { animation: popIn 0.2s ease-out forwards; }
+
+        /* ✨ 4 LUXURY OFFER THEMES */
+        @keyframes luxuryShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .theme-emerald {
+            background: linear-gradient(110deg, #0D4E2F 15%, #1E6F45 35%, #D4AF37 50%, #1E6F45 65%, #0D4E2F 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            color: #FFFFFF;
+        }
+        .theme-gold {
+            background: linear-gradient(110deg, #8C6D1F 10%, #C89F2D 35%, #FFF0AA 50%, #C89F2D 65%, #8C6D1F 90%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            color: #FFFFFF;
+        }
+        .theme-midnight {
+            background: linear-gradient(110deg, #0F172A 15%, #1E293B 35%, #D4AF37 50%, #1E293B 65%, #0F172A 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            color: #FFFFFF;
+        }
+        .theme-ruby {
+            background: linear-gradient(110deg, #7F1D1D 15%, #991B1B 35%, #F87171 50%, #991B1B 65%, #7F1D1D 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(254, 202, 202, 0.7);
+            color: #FFFFFF;
+        }
+
+        /* 🎚️ CUSTOM RANGE SLIDERS */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 5px; cursor: pointer; background: #D2DCD4; border-radius: 9999px; }
+        input[type=range]::-webkit-slider-thumb {
+            height: 18px; width: 18px; border-radius: 50%; background: #0D4E2F; cursor: pointer;
+            -webkit-appearance: none; margin-top: -6.5px; box-shadow: 0 2px 5px rgba(13, 78, 47, 0.35); border: 2px solid #FFFFFF;
+        }
+        input[type=range]::-moz-range-track { width: 100%; height: 5px; cursor: pointer; background: #D2DCD4; border-radius: 9999px; }
+        input[type=range]::-moz-range-thumb { height: 18px; width: 18px; border-radius: 50%; background: #0D4E2F; cursor: pointer; border: 2px solid #FFFFFF; }
+
+        .spark-icon { display: inline-block; }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint text-gray-800 pb-28">
+
+    <!-- BALANCED HEADER -->
+    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2.5 px-3 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+            
+            <div class="flex items-center justify-between w-full md:w-auto shrink-0">
+                <a href="index.html" class="flex items-center cursor-pointer group">
+                    <div class="neu-logo-card px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl flex items-center space-x-2 border border-gray-200/60 transition-transform active:scale-95">
+                        <svg class="w-4 h-4 text-luxuryGreen" fill="none" stroke="currentColor" stroke-width="3.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 22V10a8 8 0 1116 0v12"/></svg>
+                        <span class="font-cinzel-logo text-luxuryGreen text-xs sm:text-sm tracking-wider uppercase">Like Stays</span>
+                    </div>
+                </a>
+
+                <div class="flex items-center space-x-1.5 md:hidden">
+                    <button type="button" onclick="toggleGlobalCurrencyModal(true)" class="neu-flat px-2 py-1 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1 text-[10px] font-bold text-luxuryGreen">
+                        <span id="mobile-curr-flag">🇵🇰</span>
+                        <span id="mobile-curr-text">PKR</span>
+                        <span class="text-[7px]">▼</span>
+                    </button>
+                    <button type="button" onclick="toggleGlobalLangModal(true)" class="neu-flat px-2 py-1 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1 text-[10px] font-bold text-luxuryGreen">
+                        <span id="mobile-lang-flag">🌐</span>
+                        <span id="mobile-lang-text">EN</span>
+                        <span class="text-[7px]">▼</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- UNIFIED SEARCH BAR -->
+            <div class="w-full max-w-xl mx-auto bg-white rounded-full neu-flat px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-1.5 border border-gray-200/70">
+                <div class="flex-1 min-w-[70px] flex items-center space-x-1 pl-1">
+                    <span class="text-[10px]">📍</span>
+                    <input type="text" id="home-search-dest" oninput="executeLiveFavoritesFilter()" placeholder="Search in saved stays..." class="w-full text-[10.5px] font-bold text-luxuryGreen outline-none bg-transparent placeholder-gray-400 truncate">
+                </div>
+                
+                <div class="w-[1px] h-4 bg-gray-200"></div>
+
+                <button type="button" onclick="toggleHomeCalendarModal(true)" class="flex-1 min-w-[85px] text-left flex items-center space-x-1 cursor-pointer outline-none px-0.5">
+                    <span class="text-[10px] text-luxuryGreen">📅</span>
+                    <span id="home-dates-display" class="text-[10px] font-bold text-luxuryGreen truncate">Add Dates</span>
+                </button>
+
+                <div class="w-[1px] h-4 bg-gray-200"></div>
+
+                <button type="button" onclick="toggleGuestsModal(true)" class="flex-1 min-w-[70px] text-left flex items-center space-x-1 cursor-pointer outline-none px-0.5">
+                    <span class="text-[10px] text-luxuryGreen">👥</span>
+                    <span id="home-guests-display-btn" class="text-[10px] font-bold text-luxuryGreen truncate">2 Guests</span>
+                </button>
+
+                <button type="button" onclick="executeLiveFavoritesFilter()" class="neu-btn-green text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] font-black flex items-center space-x-1 hover:scale-105 shrink-0 cursor-pointer">
+                    <span>🔍</span>
+                    <span class="hidden sm:inline">Search</span>
+                </button>
+
+                <div class="w-[1px] h-4 bg-gray-200"></div>
+
+                <button type="button" onclick="openIntegratedFilterModal()" class="p-1 rounded-lg text-luxuryGreen hover:bg-softMint cursor-pointer shrink-0 relative" title="Filters">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4v2m0-6V4"/></svg>
+                    <span id="active-filter-dot" class="hidden absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-amber-500"></span>
+                </button>
+            </div>
+
+            <!-- DESKTOP RIGHT -->
+            <div class="hidden md:flex items-center space-x-2 shrink-0">
+                <button type="button" onclick="toggleGlobalCurrencyModal(true)" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1.5 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
+                    <span id="header-curr-flag">🇵🇰</span>
+                    <span id="header-curr-text">PKR (Rs )</span>
+                    <span class="text-[8px]">▼</span>
+                </button>
+
+                <button type="button" onclick="toggleGlobalLangModal(true)" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1.5 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
+                    <span id="header-lang-flag">🌐</span>
+                    <span id="header-lang-text">English</span>
+                    <span class="text-[8px]">▼</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 space-y-4">
+        <div class="border-b border-gray-200/50 pb-1 text-left flex justify-between items-center">
+            <div>
+                <h2 id="search-title-label" class="text-sm sm:text-base font-black text-luxuryGreen">❤️ My Saved Stays</h2>
+                <p id="search-subtitle-label" class="text-[9px] font-bold text-gray-400">Your curated collection of dream luxury stays</p>
+            </div>
+            <span id="home-stays-count-badge" class="text-[10px] font-extrabold text-luxuryLightGreen bg-white px-2.5 py-1 rounded-xl border border-gray-200 shadow-sm">0 Saved</span>
+        </div>
+
+        <!-- FAVORITES PROPERTY CARDS GRID (100% IDENTICAL TO HOME.HTML) -->
+        <div id="favorites-property-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"></div>
+    </main>
+
+    <!-- ========================================== 📅 2-DATES RANGE CALENDAR (2 SECONDS DELAY) ========================================== -->
+    <div id="home-calendar-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
+        <div class="bg-[#F2F5F3] w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-white space-y-3.5 animate-pop-in text-left">
+            <div class="flex justify-between items-center pb-2 border-b border-gray-200/70">
+                <button type="button" onclick="changeHomeCalendarMonth(-1)" class="w-7 h-7 rounded-lg neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❮</button>
+                <div class="text-center">
+                    <span id="home-calendar-month-label" class="text-xs font-black text-luxuryGreen uppercase tracking-wider block">August 2026</span>
+                    <span id="home-cal-subtext" class="text-[8.5px] font-bold text-gray-400">Select Check-in Date</span>
+                </div>
+                <button type="button" onclick="changeHomeCalendarMonth(1)" class="w-7 h-7 rounded-lg neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❯</button>
+            </div>
+
+            <div class="grid grid-cols-7 text-center text-[9px] font-black text-gray-400 uppercase">
+                <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
+            </div>
+
+            <div id="home-calendar-days-container" class="grid grid-cols-7 gap-1 text-center text-xs font-bold pt-1"></div>
+
+            <div class="flex justify-between items-center text-[8.5px] font-bold text-gray-400 border-t border-gray-200/70 pt-2.5 px-1">
+                <span id="home-cal-summary" class="text-luxuryGreen font-black">Tap check-in then check-out</span>
+                <button type="button" onclick="resetHomeDates()" class="text-red-500 hover:underline cursor-pointer font-bold">✕ Reset</button>
+            </div>
+
+            <button type="button" onclick="toggleHomeCalendarModal(false)" class="w-full neu-flat bg-white text-luxuryGreen text-xs font-black py-2.5 rounded-xl uppercase tracking-wider cursor-pointer border border-gray-200">
+                Done & Close
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== 👥 GUESTS MODAL ========================================== -->
+    <div id="home-guests-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
+        <div class="bg-[#F2F5F3] w-full max-w-xs rounded-3xl p-5 shadow-2xl neu-flat border border-white space-y-4 animate-pop-in text-left">
+            <div class="flex justify-between items-center pb-2 border-b border-gray-200">
+                <span class="text-xs font-black text-luxuryGreen uppercase tracking-wider">Select Guests</span>
+                <button type="button" onclick="toggleGuestsModal(false)" class="text-xs font-bold text-gray-400 hover:text-luxuryGreen">✕</button>
+            </div>
+            <div class="flex justify-between items-center py-2">
+                <div>
+                    <span class="text-xs font-bold text-luxuryGreen block">Total Guests</span>
+                    <span class="text-[9px] text-gray-400">Adults and children</span>
+                </div>
+                <div class="flex items-center space-x-2.5">
+                    <button type="button" onclick="updateModalGuestsCount(-1)" class="w-7 h-7 rounded-full neu-circle-btn flex items-center justify-center text-sm font-black text-luxuryGreen cursor-pointer">-</button>
+                    <span id="modal-guests-num" class="w-5 text-center font-black text-xs text-luxuryGreen">2</span>
+                    <button type="button" onclick="updateModalGuestsCount(1)" class="w-7 h-7 rounded-full neu-circle-btn flex items-center justify-center text-sm font-black text-luxuryGreen cursor-pointer">+</button>
+                </div>
+            </div>
+            <button type="button" onclick="confirmModalGuestsSelection()" class="w-full neu-btn-green text-white text-xs font-bold py-3 rounded-xl uppercase tracking-wider cursor-pointer shadow-md active:scale-95 transition-transform">
+                Confirm Guests
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== ⚙️ ADVANCED FILTERS MODAL ========================================== -->
+    <div id="filter-modal-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full max-w-xl rounded-t-[32px] sm:rounded-[32px] max-h-[88vh] flex flex-col justify-between shadow-2xl border border-gray-200 overflow-hidden animate-pop-in pb-safe text-left">
+            
+            <div class="px-5 py-3.5 border-b border-gray-150 space-y-2 bg-softMint/40 shrink-0">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-black text-luxuryGreen uppercase tracking-widest">Filter Saved Stays</span>
+                    <div class="flex items-center space-x-2">
+                        <button type="button" onclick="resetFiltersInModal()" class="text-[11px] font-bold text-luxuryLightGreen hover:underline cursor-pointer">Clear All</button>
+                        <button type="button" onclick="closeIntegratedFilterModal()" class="text-xs font-black text-gray-400 hover:text-luxuryGreen cursor-pointer">✕</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 overflow-y-auto no-scrollbar space-y-4 text-left flex-grow">
+                
+                <div class="bg-gradient-to-r from-amber-50 to-amber-100/70 p-3 rounded-2xl border border-amber-300 flex items-center justify-between shadow-xs">
+                    <div class="space-y-0.5">
+                        <span class="text-xs font-black text-amber-950 uppercase flex items-center space-x-1">
+                            <span class="spark-icon text-amber-500">⚡</span> <span>Show Only Special Offers</span>
+                        </span>
+                        <p class="text-[8.5px] text-amber-900 font-semibold">Active flash deals and packages</p>
+                    </div>
+                    <input type="checkbox" id="filter-only-offers" onchange="handleOfferToggle(this.checked)" class="w-4 h-4 accent-luxuryGreen cursor-pointer">
+                </div>
+
+                <div class="space-y-1.5">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Booking Rate Type</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" id="btn-filter-rate-daily" onclick="setFilterRateType('daily')" class="p-2.5 rounded-2xl border-2 border-luxuryGreen bg-softMint text-luxuryGreen font-black text-xs flex items-center justify-center space-x-1.5 shadow-xs cursor-pointer">
+                            <span>🌙</span> <span>Daily Stays (/night)</span>
+                        </button>
+                        <button type="button" id="btn-filter-rate-hourly" onclick="setFilterRateType('hourly')" class="p-2.5 rounded-2xl border border-gray-200 bg-white text-gray-500 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer hover:border-luxuryGreen">
+                            <span>⏱️</span> <span>Hourly Stays (/hr)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DUAL PRICE RANGE CONTROLS -->
+                <div class="neu-flat bg-white p-4 rounded-2xl border border-gray-150 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-black uppercase text-luxuryGreen">Price Range Filter</span>
+                        <span id="filter-range-live-summary" class="text-xs font-black text-emerald-800">All Budgets</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <div class="space-y-1 bg-softMint/50 p-2.5 rounded-xl border border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[8px] font-black text-gray-400 uppercase">Min Price</span>
+                                <span id="filter-min-val-label" class="text-[10px] font-black text-luxuryGreen">Rs 0</span>
+                            </div>
+                            <input type="range" id="filter-min-slider" min="0" max="150000" step="500" value="0" oninput="handleMinPriceChange(this.value)" class="cursor-pointer">
+                        </div>
+
+                        <div class="space-y-1 bg-softMint/50 p-2.5 rounded-xl border border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[8px] font-black text-gray-400 uppercase">Max Price</span>
+                                <span id="filter-max-val-label" class="text-[10px] font-black text-luxuryGreen">Rs 300k</span>
+                            </div>
+                            <input type="range" id="filter-max-slider" min="500" max="300000" step="1000" value="300000" oninput="handleMaxPriceChange(this.value)" class="cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center justify-center text-center space-y-1 hover:border-luxuryGreen">
+                        <input type="checkbox" id="filter-self-checkin" onchange="LikeStaysFilter.state.selfCheckinOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
+                        <span class="text-[9px] font-bold text-gray-700 leading-tight">🔑 Self Check-in</span>
+                    </label>
+
+                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center justify-center text-center space-y-1 hover:border-luxuryGreen">
+                        <input type="checkbox" id="filter-pets" onchange="LikeStaysFilter.state.petsOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
+                        <span class="text-[9px] font-bold text-gray-700 leading-tight">🐾 Pets Allowed</span>
+                    </label>
+
+                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center justify-center text-center space-y-1 hover:border-luxuryGreen">
+                        <input type="checkbox" id="filter-smoking" onchange="LikeStaysFilter.state.smokingOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
+                        <span class="text-[9px] font-bold text-gray-700 leading-tight">🚭 Smoking</span>
+                    </label>
+                </div>
+
+                <div class="neu-flat bg-white p-3.5 rounded-2xl border border-gray-150 space-y-2 text-xs font-bold text-gray-600">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Bedrooms Capacity</span>
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <button type="button" onclick="setBedroomFilter(0)" id="btn-bed-0" class="py-2 rounded-xl text-xs font-black bg-luxuryGreen text-white shadow-xs">Any</button>
+                        <button type="button" onclick="setBedroomFilter(1)" id="btn-bed-1" class="py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200">1 Bed</button>
+                        <button type="button" onclick="setBedroomFilter(2)" id="btn-bed-2" class="py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200">2 Beds</button>
+                        <button type="button" onclick="setBedroomFilter(3)" id="btn-bed-3" class="py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200">3+ Beds</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Property Type</span>
+                    <input type="text" id="filter-cat-search" oninput="filterCategoriesInModal()" placeholder="🔍 Search category..." class="w-full text-xs font-bold p-2 bg-softMint rounded-xl border border-gray-200 outline-none text-luxuryGreen">
+                    <div id="modal-categories-list" class="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto no-scrollbar border border-gray-200 rounded-xl p-2 bg-softMint/20"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Amenities</span>
+                    <div id="modal-amenities-list" class="grid grid-cols-2 gap-1.5 max-h-40 overflow-y-auto no-scrollbar border border-gray-200 rounded-xl p-2 bg-softMint/20"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Extra Services Add-ons</span>
+                    <div id="modal-services-list" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-40 overflow-y-auto no-scrollbar"></div>
+                </div>
+            </div>
+
+            <div class="p-3.5 bg-white border-t border-gray-200 shrink-0">
+                <button type="button" onclick="applyFiltersAndCloseModal()" id="btn-apply-filters-main" class="w-full neu-btn-green py-3.5 rounded-2xl text-white font-black text-xs uppercase tracking-wider cursor-pointer shadow-lg active:scale-98 transition-transform">
+                    <span id="btn-filter-live-text">Show Stays ➔</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== CURRENCY & LANG MODALS ========================================== -->
+    <div id="global-currency-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3 animate-pop-in text-left">
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
+                <div>
+                    <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Select Currency</span>
+                    <p class="text-[8.5px] text-gray-400 font-bold">150 Global Currencies</p>
+                </div>
+                <button type="button" onclick="toggleGlobalCurrencyModal(false)" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+            </div>
+            <input type="text" id="currency-search-input" oninput="filterCurrenciesList()" placeholder="🔍 Search currency code or name..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
+            <div id="currencies-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
+        </div>
+    </div>
+
+    <div id="global-lang-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3.5 animate-pop-in text-left">
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
+                <div>
+                    <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Select Language</span>
+                    <p class="text-[8.5px] text-gray-400 font-bold">40 Global Languages</p>
+                </div>
+                <button type="button" onclick="toggleGlobalLangModal(false)" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+            </div>
+            <input type="text" id="lang-search-input" oninput="filterLanguagesList()" placeholder="🔍 Search language..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
+            <div id="lang-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com",
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        let masterPropertiesList = [];
+        let homeStartDate = null;
+        let homeEndDate = null;
+        let homeGuestsCount = 2;
+        let tempModalGuests = 2;
+        let calCurrentMonth = new Date().getMonth();
+        let calCurrentYear = new Date().getFullYear();
+
+        const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            syncHeaderUI();
+            renderCurrenciesList();
+            renderLanguagesList();
+            renderFilterChecklists();
+            loadUniversalSearchHandshake();
+            renderHomeCalendar();
+            listenToFirebaseRealtimeCloud();
+
+            if (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.renderBottomNav) {
+                LikeStaysEngine.renderBottomNav('favorites');
+            }
+        });
+
+        window.addEventListener('likestays:locale_changed', () => {
+            syncHeaderUI();
+            updateSliderCurrencyLabels();
+            executeLiveFavoritesFilter();
+        });
+
+        function syncHeaderUI() {
+            if (typeof LikeStaysEngine === 'undefined') return;
+            const locale = LikeStaysEngine.getLocale();
+            document.getElementById('header-curr-flag').innerText = locale.currFlag;
+            document.getElementById('header-curr-text').innerText = `${locale.currency} (${locale.symbol})`;
+            document.getElementById('mobile-curr-flag').innerText = locale.currFlag;
+            document.getElementById('mobile-curr-text').innerText = locale.currency;
+
+            document.getElementById('header-lang-flag').innerText = locale.langFlag;
+            document.getElementById('header-lang-text').innerText = locale.langName;
+            document.getElementById('mobile-lang-flag').innerText = locale.langFlag;
+            document.getElementById('mobile-lang-text').innerText = (locale.language || 'EN').toUpperCase();
+        }
+
+        function updateSliderCurrencyLabels() {
+            if (typeof LikeStaysEngine === 'undefined') return;
+            const isHourly = LikeStaysFilter.state.rateType === 'hourly';
+            const min = isHourly ? LikeStaysFilter.state.minHourlyPrice : LikeStaysFilter.state.minDailyPrice;
+            const max = isHourly ? LikeStaysFilter.state.maxHourlyPrice : LikeStaysFilter.state.maxDailyPrice;
+
+            const minFmt = LikeStaysEngine.formatPrice(min, 'PKR');
+            const maxFmt = LikeStaysEngine.formatPrice(max, 'PKR');
+
+            document.getElementById('filter-min-val-label').innerText = minFmt;
+            document.getElementById('filter-max-val-label').innerText = maxFmt;
+            document.getElementById('filter-range-live-summary').innerText = `${minFmt} - ${maxFmt} ${isHourly ? '/hr' : '/night'}`;
+        }
+
+        // ⚡ Cloudflare Worker کے edge cache سے properties منگوانا — Firebase پر مستقل کنکشن نہیں رکھتا
+        const PROPERTIES_API_URL = "https://likestays-api.waleeddes40.workers.dev/api/properties";
+
+        function listenToFirebaseRealtimeCloud() {
+            fetchPropertiesFromEdgeCache();
+        }
+
+        async function fetchPropertiesFromEdgeCache() {
+            try {
+                const res = await fetch(PROPERTIES_API_URL, { cache: "no-store" });
+                if (!res.ok) throw new Error("Edge cache fetch failed: " + res.status);
+                const payload = await res.json();
+                masterPropertiesList = (payload && payload.properties) ? payload.properties : [];
+                executeLiveFavoritesFilter();
+            } catch (err) {
+                console.error("Edge cache fetch error, falling back to direct Firebase read:", err);
+                try {
+                    firebase.database().ref('properties').limitToFirst(300).once('value')
+                        .then((snapshot) => {
+                            const data = snapshot.val();
+                            masterPropertiesList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+                            executeLiveFavoritesFilter();
+                        })
+                        .catch(() => executeLiveFavoritesFilter());
+                } catch (e) {
+                    executeLiveFavoritesFilter();
+                }
+            }
+        }
+
+        function formatOfferTimingLabel(deal) {
+            const formatStr = (d) => {
+                if (!d) return '';
+                if (d.includes('-')) {
+                    const p = d.split('-');
+                    if (p.length === 3) {
+                        const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                        return `${parseInt(p[2])} ${m[parseInt(p[1])-1] || ''}`;
+                    }
+                }
+                return d;
+            };
+
+            const sDate = formatStr(deal.startDate);
+            const eDate = formatStr(deal.endDate);
+            const isSameDay = (deal.startDate === deal.endDate) || !deal.endDate;
+
+            return isSameDay ? `${sDate} (${deal.startTime} - ${deal.endTime})` : `${sDate} - ${eDate}`;
+        }
+
+        // ========================================== RENDER FAVORITES CARDS ==========================================
+        function executeLiveFavoritesFilter() {
+            const destBox = document.getElementById('home-search-dest');
+            const destInput = destBox ? destBox.value.trim() : '';
+            const container = document.getElementById('favorites-property-list');
+            if (!container) return;
+
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
+
+            let favoriteStays = masterPropertiesList.filter(p => favs.includes(String(p.id)));
+            let filteredStays = LikeStaysFilter.applyFilter(favoriteStays, destInput);
+            document.getElementById('home-stays-count-badge').innerText = `${filteredStays.length} Saved`;
+
+            if (filteredStays.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-20 text-center space-y-3 neu-flat p-8 rounded-[32px] bg-white border border-gray-200/80 animate-fade-in max-w-md mx-auto">
+                        <div class="w-16 h-16 rounded-full bg-softMint flex items-center justify-center text-3xl mx-auto border border-gray-200">
+                            🤍
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-sm font-black text-luxuryGreen uppercase tracking-wider">No Saved Favorites Yet</h3>
+                            <p class="text-[10px] text-gray-400 font-bold leading-relaxed">
+                                Tap the heart icon on any villa or apartment on the explore page to save your dream stays here.
+                            </p>
+                        </div>
+                        <button type="button" onclick="window.location.href='home.html'" class="neu-btn-green text-white text-xs font-black px-6 py-3.5 rounded-2xl uppercase tracking-wider cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-transform inline-flex items-center space-x-2">
+                            <span>Explore Stays ➔</span>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredStays.map(prop => {
+                const photosList = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=500"]);
+                const formattedDaily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR');
+                const hasHourly = prop.hourlyPrice && prop.hourlyPrice > 0;
+                const formattedHourly = hasHourly ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : '';
+                const isFav = favs.includes(String(prop.id));
+
+                const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+                const activeDeals = deals.filter(d => d && d.enabled !== false);
+                const currentDeal = activeDeals.length > 0 ? activeDeals[0] : null;
+                const moreDealsCount = activeDeals.length > 1 ? (activeDeals.length - 1) : 0;
+
+                const mainPhoto = photosList[0].startsWith('http') || photosList[0].startsWith('data:') 
+                    ? photosList[0] 
+                    : `https://images.unsplash.com/${photosList[0]}?auto=format&fit=crop&q=70&w=500`;
+
+                let offerRowHTML = '';
+                if (currentDeal) {
+                    const formattedDealPrice = LikeStaysEngine.formatCompactPrice(currentDeal.discountPrice || currentDeal.price || 0, prop.currency || 'PKR');
+                    const timingText = formatOfferTimingLabel(currentDeal);
+                    const themeClass = `theme-${currentDeal.theme || 'emerald'}`;
+
+                    offerRowHTML = `
+                        <div class="pt-2 border-t border-gray-100 flex flex-wrap items-center justify-between gap-1.5">
+                            <div class="inline-flex items-center space-x-1.5 ${themeClass} text-[8.5px] font-black px-2.5 py-1 rounded-full shadow-md">
+                                <span class="spark-icon text-amber-300">⚡</span>
+                                <span>${timingText}</span>
+                                <span>•</span>
+                                <span class="font-extrabold">${formattedDealPrice}</span>
+                            </div>
+                            ${moreDealsCount > 0 ? `
+                                <div class="inline-flex items-center space-x-1 bg-amber-100 border border-amber-300 text-amber-950 font-black text-[8px] px-2 py-0.5 rounded-full shadow-xs">
+                                    <span>⚡</span> <span>+${moreDealsCount} More</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div onclick="navigateToDetailsPage('${prop.id}')" class="property-card-3d neu-flat bg-white rounded-3xl overflow-hidden cursor-pointer flex flex-col justify-between border border-gray-150">
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
+                            <img src="${mainPhoto}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none transition-transform duration-300 hover:scale-105" alt="${prop.name}">
+                            
+                            <div class="absolute top-2.5 left-2.5 z-20 flex flex-col space-y-1 items-start">
+                                <div class="bg-black/65 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded-lg border border-white/20">
+                                    <span class="text-emerald-400">●</span> ${formattedDaily}<span class="text-[7px] text-gray-300">/night</span>
+                                </div>
+                                ${hasHourly ? `
+                                    <div class="bg-black/65 backdrop-blur-md text-white text-[8px] font-bold px-2 py-0.5 rounded-lg border border-white/20">
+                                        <span>⏱️</span> ${formattedHourly}<span class="text-[7px] text-gray-300">/hr</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <button type="button" onclick="toggleFavoriteFromFavoritesPage(event, '${prop.id}')" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-xs shadow hover:scale-110 active:scale-95 transition-transform cursor-pointer" title="Remove Favorite">
+                                <span>${isFav ? '❤️' : '🤍'}</span>
+                            </button>
+                        </div>
+
+                        <div class="p-3.5 space-y-1.5 text-left">
+                            <div class="flex justify-between items-center text-[9px] font-bold text-gray-400">
+                                <span class="text-luxuryGreen font-extrabold">🏡 ${prop.category || 'Stay'}</span>
+                                <span class="text-gray-500">👥 Max ${prop.maxGuests || 8} Guests</span>
+                                <span class="text-emerald-700 font-black">${prop.rating || '⭐ New'}</span>
+                            </div>
+
+                            <h4 class="text-xs font-black text-luxuryGreen truncate">${prop.name}</h4>
+                            
+                            <div class="flex justify-between items-center text-[9.5px] font-bold pt-0.5">
+                                <span class="text-gray-400 truncate max-w-[170px]">📍 ${prop.location || prop.city || 'Prime Location'}</span>
+                                <span class="text-emerald-700 font-black text-[8px] bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md shrink-0">🛡️ Free Cancel</span>
+                            </div>
+                            
+                            ${offerRowHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleFavoriteFromFavoritesPage(event, propId) {
+            event.stopPropagation(); // Stops opening details page
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
+            const sId = String(propId);
+            if (favs.includes(sId)) favs = favs.filter(id => id !== sId);
+            else favs.push(sId);
+            localStorage.setItem('likestays_favorites', JSON.stringify(favs));
+            executeLiveFavoritesFilter();
+        }
+
+        function navigateToDetailsPage(propId) {
+            saveSearchState();
+            let sStr = '';
+            let eStr = '';
+            if (homeStartDate && homeEndDate) {
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
+                sStr = `${sM} ${homeStartDate.getDate()}`;
+                eStr = `${eM} ${homeEndDate.getDate()}`;
+            }
+            const params = new URLSearchParams({
+                id: propId,
+                guests: homeGuestsCount,
+                checkin: sStr,
+                checkout: eStr
+            });
+            window.location.href = `details.html?${params.toString()}`;
+        }
+
+        // ================= DATE & CALENDAR =================
+        function loadUniversalSearchHandshake() {
+            const session = LikeStaysEngine.getSearchSession();
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const dest = urlParams.get('destination') || session.destination || '';
+            const guests = parseInt(urlParams.get('guests')) || session.guests || 2;
+
+            if (dest) document.getElementById('home-search-dest').value = dest;
+            if (guests) {
+                homeGuestsCount = guests;
+                document.getElementById('home-guests-display-btn').innerText = `${guests} Guests`;
+                document.getElementById('modal-guests-num').innerText = guests;
+            }
+        }
+
+        function saveSearchState() {
+            let sStr = '';
+            let eStr = '';
+            if (homeStartDate && homeEndDate) {
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
+                sStr = `${sM} ${homeStartDate.getDate()}`;
+                eStr = `${eM} ${homeEndDate.getDate()}`;
+            }
+            LikeStaysEngine.saveSearchSession({
+                destination: document.getElementById('home-search-dest').value.trim(),
+                checkin: sStr,
+                checkout: eStr,
+                guests: homeGuestsCount
+            });
+        }
+
+        function toggleHomeCalendarModal(open) {
+            document.getElementById('home-calendar-modal').classList.toggle('hidden', !open);
+            if (open) renderHomeCalendar();
+        }
+
+        function changeHomeCalendarMonth(delta) {
+            calCurrentMonth += delta;
+            if (calCurrentMonth < 0) { calCurrentMonth = 11; calCurrentYear--; }
+            else if (calCurrentMonth > 11) { calCurrentMonth = 0; calCurrentYear++; }
+            renderHomeCalendar();
+        }
+
+        function renderHomeCalendar() {
+            const label = document.getElementById('home-calendar-month-label');
+            const container = document.getElementById('home-calendar-days-container');
+            const subtext = document.getElementById('home-cal-subtext');
+            const summary = document.getElementById('home-cal-summary');
+            if (!label || !container) return;
+
+            label.innerText = `${MONTH_NAMES[calCurrentMonth]} ${calCurrentYear}`;
+            container.innerHTML = '';
+
+            const firstDay = new Date(calCurrentYear, calCurrentMonth, 1).getDay();
+            const totalDays = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) container.innerHTML += `<span></span>`;
+
+            for (let d = 1; d <= totalDays; d++) {
+                const cellDate = new Date(calCurrentYear, calCurrentMonth, d);
+                cellDate.setHours(0, 0, 0, 0);
+
+                const isStart = homeStartDate && (cellDate.getTime() === homeStartDate.getTime());
+                const isEnd = homeEndDate && (cellDate.getTime() === homeEndDate.getTime());
+                const isInRange = homeStartDate && homeEndDate && (cellDate.getTime() > homeStartDate.getTime() && cellDate.getTime() < homeEndDate.getTime());
+
+                let btnCls = "py-1.5 text-xs font-bold transition-all cursor-pointer ";
+                if (isStart || isEnd) {
+                    btnCls += "bg-luxuryGreen text-white font-black shadow-md rounded-full ";
+                } else if (isInRange) {
+                    btnCls += "bg-luxuryGreen/20 text-luxuryGreen font-black rounded-none ";
+                } else {
+                    btnCls += "hover:bg-emerald-50 text-gray-700 rounded-full ";
+                }
+
+                container.innerHTML += `<button type="button" onclick="handleHomeDateClick(${d})" class="${btnCls}">${d}</button>`;
+            }
+
+            if (!homeStartDate) {
+                if (subtext) subtext.innerText = "Step 1: Select Check-in Date";
+                if (summary) summary.innerText = "Tap check-in then check-out";
+            } else if (homeStartDate && !homeEndDate) {
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                if (subtext) subtext.innerText = "Step 2: Select Check-out Date";
+                if (summary) summary.innerText = `Check-in: ${sM} ${homeStartDate.getDate()} ➔ Pick checkout`;
+            } else if (homeStartDate && homeEndDate) {
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
+                const nights = Math.round((homeEndDate.getTime() - homeStartDate.getTime()) / (1000 * 60 * 60 * 24));
+                if (subtext) subtext.innerText = "Stay Range Selected ✓";
+                if (summary) summary.innerText = `${sM} ${homeStartDate.getDate()} - ${eM} ${homeEndDate.getDate()} (${nights} Nights)`;
+            }
+        }
+
+        function handleHomeDateClick(day) {
+            const clickedDate = new Date(calCurrentYear, calCurrentMonth, day);
+            clickedDate.setHours(0, 0, 0, 0);
+
+            if (!homeStartDate || (homeStartDate && homeEndDate)) {
+                homeStartDate = clickedDate;
+                homeEndDate = null;
+                renderHomeCalendar();
+            } else {
+                if (clickedDate.getTime() < homeStartDate.getTime()) {
+                    homeEndDate = homeStartDate;
+                    homeStartDate = clickedDate;
+                } else if (clickedDate.getTime() === homeStartDate.getTime()) {
+                    const nextDay = new Date(clickedDate);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    homeEndDate = nextDay;
+                } else {
+                    homeEndDate = clickedDate;
+                }
+
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
+                const nights = Math.round((homeEndDate.getTime() - homeStartDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                document.getElementById('home-dates-display').innerText = `${sM} ${homeStartDate.getDate()} - ${eM} ${homeEndDate.getDate()} (${nights}N)`;
+                saveSearchState();
+                renderHomeCalendar();
+
+                setTimeout(() => {
+                    toggleHomeCalendarModal(false);
+                    executeLiveFavoritesFilter();
+                }, 2000);
+            }
+        }
+
+        function resetHomeDates() {
+            homeStartDate = null;
+            homeEndDate = null;
+            document.getElementById('home-dates-display').innerText = "Add Dates";
+            saveSearchState();
+            renderHomeCalendar();
+            executeLiveFavoritesFilter();
+        }
+
+        function toggleGuestsModal(open) {
+            document.getElementById('home-guests-modal').classList.toggle('hidden', !open);
+            if (open) {
+                tempModalGuests = homeGuestsCount;
+                document.getElementById('modal-guests-num').innerText = tempModalGuests;
+            }
+        }
+
+        function updateModalGuestsCount(delta) {
+            tempModalGuests = Math.max(1, tempModalGuests + delta);
+            document.getElementById('modal-guests-num').innerText = tempModalGuests;
+        }
+
+        function confirmModalGuestsSelection() {
+            homeGuestsCount = tempModalGuests;
+            document.getElementById('home-guests-display-btn').innerText = `${homeGuestsCount} Guests`;
+            saveSearchState();
+            toggleGuestsModal(false);
+            executeLiveFavoritesFilter();
+        }
+
+        // ================= FILTERS LOGIC =================
+        function openIntegratedFilterModal() {
+            document.getElementById('filter-modal-overlay').classList.remove('hidden');
+            updateSliderCurrencyLabels();
+            updateLiveFilterMatchesCount();
+        }
+
+        function closeIntegratedFilterModal() {
+            document.getElementById('filter-modal-overlay').classList.add('hidden');
+        }
+
+        function handleOfferToggle(checked) {
+            LikeStaysFilter.state.onlyOffers = checked;
+            updateLiveFilterMatchesCount();
+        }
+
+        function setFilterRateType(type) {
+            LikeStaysFilter.state.rateType = type;
+            const btnDaily = document.getElementById('btn-filter-rate-daily');
+            const btnHourly = document.getElementById('btn-filter-rate-hourly');
+            const minSlider = document.getElementById('filter-min-slider');
+            const maxSlider = document.getElementById('filter-max-slider');
+
+            if (type === 'hourly') {
+                btnHourly.className = "p-2.5 rounded-2xl border-2 border-luxuryGreen bg-softMint text-luxuryGreen font-black text-xs flex items-center justify-center space-x-1.5 shadow-xs cursor-pointer";
+                btnDaily.className = "p-2.5 rounded-2xl border border-gray-200 bg-white text-gray-500 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer hover:border-luxuryGreen";
+                
+                minSlider.max = "25000"; minSlider.step = "200"; minSlider.value = LikeStaysFilter.state.minHourlyPrice;
+                maxSlider.max = "50000"; maxSlider.step = "500"; maxSlider.value = LikeStaysFilter.state.maxHourlyPrice;
+            } else {
+                btnDaily.className = "p-2.5 rounded-2xl border-2 border-luxuryGreen bg-softMint text-luxuryGreen font-black text-xs flex items-center justify-center space-x-1.5 shadow-xs cursor-pointer";
+                btnHourly.className = "p-2.5 rounded-2xl border border-gray-200 bg-white text-gray-500 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer hover:border-luxuryGreen";
+                
+                minSlider.max = "150000"; minSlider.step = "500"; minSlider.value = LikeStaysFilter.state.minDailyPrice;
+                maxSlider.max = "300000"; maxSlider.step = "1000"; maxSlider.value = LikeStaysFilter.state.maxDailyPrice;
+            }
+
+            updateSliderCurrencyLabels();
+            updateLiveFilterMatchesCount();
+        }
+
+        function handleMinPriceChange(val) {
+            const minVal = parseInt(val);
+            if (LikeStaysFilter.state.rateType === 'hourly') LikeStaysFilter.state.minHourlyPrice = minVal;
+            else LikeStaysFilter.state.minDailyPrice = minVal;
+            updateSliderCurrencyLabels();
+            updateLiveFilterMatchesCount();
+        }
+
+        function handleMaxPriceChange(val) {
+            const maxVal = parseInt(val);
+            if (LikeStaysFilter.state.rateType === 'hourly') LikeStaysFilter.state.maxHourlyPrice = maxVal;
+            else LikeStaysFilter.state.maxDailyPrice = maxVal;
+            updateSliderCurrencyLabels();
+            updateLiveFilterMatchesCount();
+        }
+
+        function setBedroomFilter(count) {
+            LikeStaysFilter.state.bedrooms = count;
+            [0, 1, 2, 3].forEach(b => {
+                const btn = document.getElementById(`btn-bed-${b}`);
+                if (btn) {
+                    if (b === count) btn.className = "py-2 rounded-xl text-xs font-black bg-luxuryGreen text-white shadow-xs";
+                    else btn.className = "py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200";
+                }
+            });
+            updateLiveFilterMatchesCount();
+        }
+
+        function renderFilterChecklists() {
+            filterCategoriesInModal();
+
+            document.getElementById('modal-amenities-list').innerHTML = LikeStaysFilter.amenities.map(a => `
+                <label class="flex items-center space-x-1.5 text-[9.5px] p-1.5 bg-white rounded-lg border border-gray-150 cursor-pointer font-bold text-gray-700">
+                    <input type="checkbox" value="${a.name}" onchange="toggleFilterItem('amenities', this.value, this.checked)" class="accent-luxuryGreen">
+                    <span class="truncate">${a.icon} ${a.name}</span>
+                </label>
+            `).join('');
+
+            document.getElementById('modal-services-list').innerHTML = LikeStaysFilter.addons.map(s => `
+                <label class="flex items-center justify-between p-2 bg-white rounded-xl border border-gray-150 cursor-pointer text-[9.5px] font-bold text-gray-700">
+                    <div class="flex items-center space-x-1.5 min-w-0">
+                        <input type="checkbox" value="${s.name}" onchange="toggleFilterItem('addons', this.value, this.checked)" class="accent-luxuryGreen">
+                        <span class="truncate">${s.name}</span>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function filterCategoriesInModal() {
+            const q = (document.getElementById('filter-cat-search')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('modal-categories-list');
+            if (!container) return;
+            const filtered = LikeStaysFilter.categories.filter(c => c.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(cat => `
+                <label class="flex items-center space-x-1.5 text-[9.5px] p-1 rounded-md hover:bg-white cursor-pointer font-bold text-gray-700">
+                    <input type="checkbox" value="${cat}" onchange="toggleFilterItem('categories', this.value, this.checked)" class="accent-luxuryGreen">
+                    <span class="truncate">${cat}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleFilterItem(type, val, checked) {
+            if (checked) {
+                if (!LikeStaysFilter.state[type].includes(val)) LikeStaysFilter.state[type].push(val);
+            } else {
+                LikeStaysFilter.state[type] = LikeStaysFilter.state[type].filter(v => v !== val);
+            }
+            updateLiveFilterMatchesCount();
+        }
+
+        function updateLiveFilterMatchesCount() {
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
+            const favStays = masterPropertiesList.filter(p => favs.includes(String(p.id)));
+            const matched = LikeStaysFilter.applyFilter(favStays, document.getElementById('home-search-dest')?.value || '');
+            document.getElementById('btn-filter-live-text').innerText = `Show ${matched.length} Saved Stays ➔`;
+        }
+
+        function applyFiltersAndCloseModal() {
+            closeIntegratedFilterModal();
+            const s = LikeStaysFilter.state;
+            const hasActive = s.onlyOffers || s.rateType === 'hourly' || s.minDailyPrice > 0 || s.maxDailyPrice < 300000 || s.minHourlyPrice > 0 || s.maxHourlyPrice < 50000 || s.selfCheckinOnly || s.petsOnly || s.smokingOnly || s.bedrooms > 0 || s.categories.length > 0 || s.amenities.length > 0 || s.addons.length > 0;
+            document.getElementById('active-filter-dot').classList.toggle('hidden', !hasActive);
+            executeLiveFavoritesFilter();
+        }
+
+        function resetFiltersInModal() {
+            LikeStaysFilter.reset();
+            document.getElementById('filter-only-offers').checked = false;
+            document.getElementById('filter-self-checkin').checked = false;
+            document.getElementById('filter-pets').checked = false;
+            document.getElementById('filter-smoking').checked = false;
+            document.getElementById('filter-min-slider').value = 0;
+            document.getElementById('filter-max-slider').value = 300000;
+            setFilterRateType('daily');
+            setBedroomFilter(0);
+            document.querySelectorAll('#filter-modal-overlay input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('active-filter-dot').classList.add('hidden');
+            updateSliderCurrencyLabels();
+            updateLiveFilterMatchesCount();
+            closeIntegratedFilterModal();
+            executeLiveFavoritesFilter();
+        }
+
+        // ================= CURRENCY & LANG =================
+        function toggleGlobalCurrencyModal(open) { document.getElementById('global-currency-modal').classList.toggle('hidden', !open); }
+        function renderCurrenciesList() { filterCurrenciesList(); }
+        function filterCurrenciesList() {
+            const q = (document.getElementById('currency-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('currencies-options-list');
+            if (!container) return;
+            const filtered = LikeStaysEngine.currencies.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(c => `
+                <button type="button" onclick="LikeStaysEngine.setCurrency('${c.code}'); toggleGlobalCurrencyModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span>${c.flag}</span><span>${c.name} (${c.code})</span></div>
+                    <span class="text-luxuryGreen font-black">${c.symbol}</span>
+                </button>
+            `).join('');
+        }
+
+        function toggleGlobalLangModal(open) { document.getElementById('global-lang-modal').classList.toggle('hidden', !open); }
+        function renderLanguagesList() { filterLanguagesList(); }
+        function filterLanguagesList() {
+            const q = (document.getElementById('lang-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('lang-options-list');
+            if (!container) return;
+            const filtered = LikeStaysEngine.languages.filter(l => l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(l => `
+                <button type="button" onclick="LikeStaysEngine.setLanguage('${l.code}'); toggleGlobalLangModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span class="text-base">${l.flag}</span><span>${l.name}</span></div>
+                    <span class="text-[10px] text-gray-400 font-semibold">${l.native}</span>
+                </button>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

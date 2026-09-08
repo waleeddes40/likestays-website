@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | My Trips & Bookings</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE -->
+    <script src="likestays-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        softShadowDark: '#D2DCD4',
+                        softShadowLight: '#FFFFFF',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background-color: #F2F5F3 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #F2F5F3; box-shadow: 4px 4px 10px #D2DCD4, -4px -4px 10px #FFFFFF; }
+        .neu-flat-white { background: #FFFFFF; box-shadow: 2px 2px 8px rgba(210, 220, 212, 0.5), -2px -2px 8px #FFFFFF; }
+        .neu-inset { background: #F2F5F3; box-shadow: inset 2px 2px 5px #D2DCD4, inset -2px -2px 5px #FFFFFF; }
+        .neu-btn-green { background: linear-gradient(135deg, #0D4E2F 0%, #155E39 100%); box-shadow: 0 4px 12px rgba(13, 78, 47, 0.3); }
+        .neu-btn-green:active { transform: scale(0.98); }
+        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 6px #D2DCD4, -2px -2px 6px #FFFFFF; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint text-gray-800 pb-28 text-left">
+
+    <!-- FLOATING TOAST -->
+    <div id="booking-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- STICKY HEADER -->
+    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2.5 px-4 sm:px-8">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <button type="button" onclick="window.location.href='index.html'" class="neu-circle-btn px-3 py-1.5 rounded-xl flex items-center space-x-1.5 text-luxuryGreen font-extrabold text-xs cursor-pointer hover:scale-105 transition-transform">
+                <span>◀</span> <span class="uppercase tracking-wider">Explore Stays</span>
+            </button>
+
+            <a href="index.html" class="flex items-center space-x-2">
+                <span class="font-cinzel-logo text-luxuryGreen text-sm font-black tracking-wider uppercase">Like Stays</span>
+            </a>
+
+            <button type="button" onclick="window.location.href='auth.html'" class="neu-circle-btn px-3 py-1.5 rounded-xl flex items-center space-x-1 text-luxuryGreen font-black text-xs cursor-pointer hover:scale-105 transition-transform">
+                <span>👤</span> <span id="nav-user-label">Account</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN GUEST TRIPS WORKSPACE -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-4 animate-fade-in">
+        
+        <div class="flex justify-between items-end border-b border-gray-200/60 pb-3">
+            <div>
+                <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black">Universal Travel Desk</span>
+                <h1 class="text-base sm:text-xl font-black text-luxuryGreen">My Bookings & Trips</h1>
+            </div>
+            <span id="guest-trips-count-badge" class="text-[9px] font-black uppercase text-emerald-800 bg-white px-3 py-1 rounded-xl border border-gray-200 shadow-xs">
+                Loading...
+            </span>
+        </div>
+
+        <!-- 🔍 1. UNIVERSAL BOOKING SEARCH ENGINE -->
+        <div class="neu-flat-white bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-200 space-y-2 shadow-xs">
+            <div class="flex justify-between items-center">
+                <span class="text-[9px] uppercase tracking-wider font-black text-luxuryGreen flex items-center space-x-1">
+                    <span>🔍</span> <span>Find Any Booking (Instant Lookup)</span>
+                </span>
+                <span class="text-[8px] text-gray-400 font-bold">Search by Voucher ID, Phone or Email</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="relative flex-1">
+                    <input type="text" id="universal-search-input" onkeyup="handleSearchInput(event)" placeholder="Enter Voucher Code (e.g. LS-123456), Phone Number or Email..." class="w-full p-2.5 pl-8 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                    <span class="absolute left-2.5 top-3 text-gray-400 text-xs">🔎</span>
+                </div>
+                <button type="button" onclick="executeManualSearch()" class="neu-btn-green text-white text-xs font-black px-4 py-2.5 rounded-xl uppercase tracking-wider cursor-pointer hover:opacity-95 transition-all">
+                    Search
+                </button>
+                <button type="button" onclick="clearSearchAndReset()" id="btn-clear-search" class="hidden px-3 py-2.5 bg-gray-150 text-gray-600 rounded-xl text-xs font-black hover:bg-gray-200 cursor-pointer">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- GUEST BOOKING CARDS FEED -->
+        <div id="guest-bookings-feed-container" class="space-y-4"></div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 🛡️ LIKE STAYS VIP ADMIN SUPPORT MODAL (4 CONTACT CHANNELS) -->
+    <!-- ========================================================================= -->
+    <div id="admin-support-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[65000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[32px] p-6 shadow-2xl border border-gray-200 space-y-4 text-left animate-fade-in">
+            
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
+                <div class="flex items-center space-x-2">
+                    <span class="text-base">🛡️</span>
+                    <div>
+                        <h3 class="text-xs font-black uppercase text-luxuryGreen">LikeStays Support (Regional Admin)</h3>
+                        <span id="support-modal-voucher-badge" class="text-[8.5px] text-gray-400 font-mono font-bold block">#LS-123456</span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAdminSupportModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+            </div>
+
+            <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 space-y-1 text-[10px] text-amber-950 font-bold">
+                <span class="text-[8px] uppercase tracking-wider text-amber-900 font-black block">💡 Host Not Responding or Payment Issue?</span>
+                <p class="text-[9px] text-gray-600 font-medium leading-relaxed">
+                    If your host has not confirmed your deposit or is unresponsive, reach out directly to your assigned regional administrator below for immediate intervention:
+                </p>
+            </div>
+
+            <!-- 4 ADMIN CONTACT CHANNELS -->
+            <div class="space-y-2.5 p-3.5 bg-softMint rounded-2xl border border-gray-200 text-xs">
+                <div class="flex items-center space-x-2 text-[11px] font-black text-luxuryGreen">
+                    <span>Admin Name:</span>
+                    <span id="support-admin-name" class="text-gray-800">Regional Admin HQ</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-[9.5px] font-bold text-gray-600">
+                    <div class="truncate">📧 Email: <strong id="support-admin-email" class="text-luxuryGreen">-</strong></div>
+                    <div class="truncate font-mono">📱 Phone: <strong id="support-admin-phone" class="text-luxuryGreen">-</strong></div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-gray-200/80">
+                    <a id="support-btn-call" href="#" class="py-2 bg-white border border-gray-200 text-luxuryGreen rounded-xl text-[9px] font-black flex items-center justify-center space-x-1 hover:bg-gray-50 shadow-2xs">
+                        <span>📞</span> <span>Call Admin</span>
+                    </a>
+                    <a id="support-btn-whatsapp" href="#" target="_blank" class="py-2 bg-emerald-700 text-white rounded-xl text-[9px] font-black flex items-center justify-center space-x-1 hover:bg-emerald-800 shadow-2xs">
+                        <span>💬</span> <span>WhatsApp</span>
+                    </a>
+                    <a id="support-btn-email" href="#" class="py-2 bg-luxuryGreen text-white rounded-xl text-[9px] font-black flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen shadow-2xs">
+                        <span>📧</span> <span>Email</span>
+                    </a>
+                </div>
+
+                <div id="support-4th-link-box" class="hidden pt-1">
+                    <a id="support-btn-4th" href="#" target="_blank" class="w-full py-2 bg-white border border-luxuryGreen text-luxuryGreen rounded-xl text-[9px] font-black flex items-center justify-center space-x-1 hover:bg-softMint">
+                        <span>🌐</span> <span id="support-4th-label">Open 4th Channel (Telegram/Skype)</span>
+                    </a>
+                </div>
+            </div>
+
+            <button type="button" onclick="closeAdminSupportModal()" class="w-full py-3 bg-gray-150 text-gray-700 font-black text-xs uppercase rounded-xl hover:bg-gray-200 cursor-pointer">
+                Close Support Window
+            </button>
+
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ❌ CANCELLATION MODAL WITH DYNAMIC HOST DEADLINE NOTICE -->
+    <!-- ========================================================================= -->
+    <div id="cancel-booking-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[32px] p-6 shadow-2xl border border-gray-200 space-y-4 text-left animate-fade-in">
+            
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
+                <div>
+                    <span class="text-[8.5px] uppercase tracking-wider text-rose-600 font-black">Reservation Management</span>
+                    <h3 class="text-sm font-black text-luxuryGreen">Cancel Booking <span id="modal-cancel-booking-code" class="font-mono text-gray-500"></span></h3>
+                </div>
+                <button type="button" onclick="closeCancelModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+            </div>
+
+            <!-- ⏱️ DYNAMIC HOST CANCELLATION DEADLINE NOTICE -->
+            <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 space-y-1 text-xs">
+                <span class="text-[8.5px] font-black uppercase text-amber-900 block flex items-center space-x-1">
+                    <span>⏱️</span> <span>Host Cancellation Policy Notice:</span>
+                </span>
+                <p id="modal-cancel-policy-statement" class="text-[9.5px] text-gray-600 font-medium leading-relaxed">
+                    Free 100% refund cancellation window is calculated based on your arrival date.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                
+                <!-- REASON SELECTION -->
+                <div class="space-y-1">
+                    <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Reason for Cancellation *</label>
+                    <select id="cancel-reason-select" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none cursor-pointer">
+                        <option value="host_requested">Host requested to cancel / Accommodation unavailable</option>
+                        <option value="plans_changed">Change of travel plans or dates</option>
+                        <option value="found_other">Found alternative accommodation</option>
+                        <option value="emergency">Personal emergency / Health reasons</option>
+                        <option value="other">Other reason</option>
+                    </select>
+                </div>
+
+                <!-- OPTIONAL EXPLANATION -->
+                <div class="space-y-1">
+                    <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Additional Notes (Optional)</label>
+                    <textarea id="cancel-notes-input" rows="2" placeholder="Briefly explain the issue for Host & Admin..." class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none resize-none"></textarea>
+                </div>
+
+                <!-- REFUND ACCOUNT DETAILS (INTERNATIONAL STANDARD) -->
+                <div class="space-y-1 bg-emerald-50/50 p-3 rounded-2xl border border-emerald-200/60">
+                    <label class="text-[8px] uppercase tracking-wider text-emerald-900 font-black block">Your Refund Payout Details *</label>
+                    <p class="text-[8.5px] text-gray-500 font-medium pb-1 leading-tight">
+                        Host will process the token refund directly to this account:
+                    </p>
+                    <input type="text" id="cancel-refund-account" placeholder="e.g. Bank Name, IBAN / Account #, or Wallet Address" class="w-full p-2.5 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="flex items-center space-x-2 pt-2">
+                    <button type="button" onclick="closeCancelModal()" class="flex-1 py-3 rounded-xl text-xs font-bold bg-gray-150 text-gray-600 hover:bg-gray-200 cursor-pointer">
+                        Keep Reservation
+                    </button>
+                    <button type="button" id="btn-confirm-cancellation" onclick="processCancellationSubmission()" class="flex-1 py-3 rounded-xl text-xs font-black bg-rose-600 hover:bg-rose-700 text-white shadow-md cursor-pointer transition-all">
+                        Confirm Cancellation
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ENGINE (REALTIME SYNC + 4 CHANNELS UNLOCK + ADMIN SUPPORT) -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com",
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        let activeGuestUid = null;
+        let activeGuestEmail = null;
+        let activeGuestPhone = null;
+
+        let globalTripsCache = [];
+        let activeCancellingBooking = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.renderBottomNav) {
+                LikeStaysEngine.renderBottomNav('profile');
+            }
+
+            // 🧹 1. RUN 5-DAY AUTO PURGE ON BROWSER CACHE
+            purgeOldCacheBookings();
+
+            // 2. CHECK AUTH & LOAD TRIPS
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    activeGuestUid = user.uid;
+                    activeGuestEmail = user.email;
+                    document.getElementById('nav-user-label').innerText = user.displayName ? user.displayName.split(' ')[0] : 'Profile';
+                } else {
+                    try {
+                        const localP = JSON.parse(localStorage.getItem('likestays_user_profile') || localStorage.getItem('likestays_active_user') || '{}');
+                        activeGuestUid = localP.uid || "guest_verified";
+                        activeGuestEmail = localP.email || "";
+                        activeGuestPhone = localP.phone || "";
+                        if (localP.name) document.getElementById('nav-user-label').innerText = localP.name.split(' ')[0];
+                    } catch(e) {}
+                }
+                listenToGuestBookings();
+            });
+        });
+
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('booking-toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+            toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // ================= 🧹 5-DAY AUTO-PURGE CACHE CLEANER =================
+        function purgeOldCacheBookings() {
+            try {
+                const raw = localStorage.getItem('likestays_my_guest_bookings');
+                if (!raw) return;
+
+                const list = JSON.parse(raw);
+                const FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000;
+                const now = new Date().getTime();
+
+                const filtered = list.filter(b => {
+                    const isEnded = b.status === "Cancelled" || b.status === "Cancelled by Guest" || b.status === "Completed";
+                    if (!isEnded) return true;
+
+                    const eventTime = new Date(b.cancelledAt || b.completedAt || b.createdAt).getTime();
+                    return (now - eventTime) < FIVE_DAYS_MS;
+                });
+
+                localStorage.setItem('likestays_my_guest_bookings', JSON.stringify(filtered));
+            } catch(e) {}
+        }
+
+        // ================= 📡 GUEST BOOKINGS — صرف اسی فون پر محفوظ IDs کے لیے مخصوص طور پر منگوائیں =================
+        function listenToGuestBookings() {
+            const countBadge = document.getElementById('guest-trips-count-badge');
+
+            let localSavedBookings = [];
+            try {
+                localSavedBookings = JSON.parse(localStorage.getItem('likestays_my_guest_bookings') || '[]');
+            } catch(e) {}
+
+            const localIds = [...new Set(localSavedBookings.map(b => b.id || b.bookingCode).filter(Boolean))];
+
+            if (localIds.length === 0) {
+                renderEmptyState();
+                return;
+            }
+
+            // ⚡ ایک ہی بار میں پوری bookings لسٹ منگوانے کی بجائے، صرف وہی مخصوص bookings
+            // (جو اس فون/براؤزر پر پہلے کی گئیں) الگ الگ ID سے منگواتے ہیں — بہت ہلکا طریقہ
+            const fetchPromises = localIds.map(id =>
+                firebase.database().ref(`bookings/${id}`).once('value')
+                    .then(s => s.val() ? { id, ...s.val() } : null)
+                    .catch(() => null)
+            );
+
+            Promise.all(fetchPromises).then(results => {
+                globalTripsCache = results.filter(Boolean);
+                globalTripsCache.sort((a,b) => (b.id > a.id ? 1 : -1));
+
+                if (countBadge) countBadge.innerText = `${globalTripsCache.length} Bookings`;
+
+                if (globalTripsCache.length === 0) {
+                    renderEmptyState();
+                    return;
+                }
+
+                renderGuestTripsList(globalTripsCache);
+            }).catch(() => renderEmptyState());
+        }
+
+        // ================= 🔍 UNIVERSAL SEARCH ENGINE =================
+        function handleSearchInput(e) {
+            if (e.key === 'Enter') executeManualSearch();
+        }
+
+        function executeManualSearch() {
+            const query = document.getElementById('universal-search-input').value.trim().toLowerCase();
+            const btnClear = document.getElementById('btn-clear-search');
+
+            if (!query) {
+                renderGuestTripsList(globalTripsCache);
+                btnClear.classList.add('hidden');
+                return;
+            }
+
+            btnClear.classList.remove('hidden');
+
+            firebase.database().ref('bookings').once('value').then(snap => {
+                const data = snap.val() || {};
+                const all = Object.keys(data).map(k => ({ id: k, ...data[k] }));
+
+                const results = all.filter(b => {
+                    const bId = (b.id || '').toLowerCase();
+                    const bCode = (b.bookingCode || '').toLowerCase();
+                    const bPhone = (b.guestPhone || '').toLowerCase();
+                    const bEmail = (b.guestEmail || '').toLowerCase();
+                    const bName = (b.guestName || '').toLowerCase();
+
+                    return bId.includes(query) || bCode.includes(query) || bPhone.includes(query) || bEmail.includes(query) || bName.includes(query);
+                });
+
+                if (results.length === 0) {
+                    showToast("No bookings matched your search.", "⚠️");
+                } else {
+                    showToast(`Found ${results.length} booking(s).`, "✓");
+                }
+
+                renderGuestTripsList(results);
+            });
+        }
+
+        function clearSearchAndReset() {
+            document.getElementById('universal-search-input').value = "";
+            document.getElementById('btn-clear-search').classList.add('hidden');
+            renderGuestTripsList(globalTripsCache);
+        }
+
+        // ================= 🛡️ LIKE STAYS VIP ADMIN SUPPORT MODAL =================
+        function openAdminSupportModal(bookingId) {
+            const b = globalTripsCache.find(trip => trip.id === bookingId);
+            if (!b) return;
+
+            const displayBookingCode = b.id.startsWith('LS-') ? `#${b.id}` : (b.bookingCode ? `#${b.bookingCode}` : `#${b.id}`);
+            document.getElementById('support-modal-voucher-badge').innerText = `Voucher: ${displayBookingCode} (${b.propName || 'Stay'})`;
+
+            const adminCode = b.adminCode || b.referenceCode || "LIKESTAYS";
+
+            firebase.database().ref('admins').once('value').then(snap => {
+                const allAdmins = snap.val() || {};
+                let adminObj = null;
+
+                for (let k in allAdmins) {
+                    if (allAdmins[k] && (allAdmins[k].adminCode === adminCode || allAdmins[k].referenceCode === adminCode)) {
+                        adminObj = allAdmins[k];
+                        break;
+                    }
+                }
+
+                if (!adminObj) {
+                    adminObj = allAdmins["-OiPWGhWICiDLit4ARzSUMD4rWKm1"] || Object.values(allAdmins)[0] || {
+                        name: "LikeStays Support HQ",
+                        email: "likestays.co@gmail.com",
+                        phone: "+1 234 567 8900",
+                        whatsapp: "+1 234 567 8900"
+                    };
+                }
+
+                const admName = adminObj.name || adminObj.fullName || "Regional Franchise Admin";
+                const admEmail = adminObj.email || "likestays.co@gmail.com";
+                const admPhone = adminObj.phone || "";
+                const admWa = adminObj.whatsapp || admPhone || "";
+                const admExtra = adminObj.extraContactLink || adminObj.contactLink || "";
+
+                document.getElementById('support-admin-name').innerText = admName;
+                document.getElementById('support-admin-email').innerText = admEmail;
+                document.getElementById('support-admin-phone').innerText = admPhone || "-";
+
+                // Setup links
+                document.getElementById('support-btn-call').href = admPhone ? `tel:${admPhone}` : '#';
+                
+                const cleanWa = admWa.replace(/[^0-9]/g, '');
+                const waText = encodeURIComponent(`Hi LikeStays Admin, I need support regarding my booking ${displayBookingCode} for ${b.propName || 'Stay'}. Please assist me with verification.`);
+                document.getElementById('support-btn-whatsapp').href = cleanWa ? `https://wa.me/${cleanWa}?text=${waText}` : `https://wa.me/?text=${waText}`;
+
+                const emailSubject = encodeURIComponent(`Urgent Support Request: Booking ${displayBookingCode}`);
+                const emailBody = encodeURIComponent(`Hi LikeStays Support Team,\n\nI need assistance regarding booking ${displayBookingCode} for ${b.propName}.\nGuest Name: ${b.guestName || 'Guest'}\nPhone: ${b.guestPhone || '-'}\n\nPlease check on this reservation.`);
+                document.getElementById('support-btn-email').href = `mailto:${admEmail}?subject=${emailSubject}&body=${emailBody}`;
+
+                const box4th = document.getElementById('support-4th-link-box');
+                if (admExtra) {
+                    box4th.classList.remove('hidden');
+                    document.getElementById('support-btn-4th').href = admExtra.startsWith('http') ? admExtra : `https://${admExtra}`;
+                } else {
+                    box4th.classList.add('hidden');
+                }
+
+                document.getElementById('admin-support-modal').classList.remove('hidden');
+            });
+        }
+
+        function closeAdminSupportModal() {
+            document.getElementById('admin-support-modal').classList.add('hidden');
+        }
+
+        // ================= ❌ CANCELLATION MODAL ENGINE =================
+        function openCancelModal(bookingId) {
+            const b = globalTripsCache.find(trip => trip.id === bookingId);
+            if (!b) return;
+
+            activeCancellingBooking = b;
+            document.getElementById('modal-cancel-booking-code').innerText = `#${b.bookingCode || b.id}`;
+            document.getElementById('cancel-notes-input').value = "";
+            document.getElementById('cancel-refund-account').value = "";
+
+            const cp = b.cancellationPolicy || { daily: { deadlineValue: 24, deadlineUnit: "Hours", fullRefundPct: 75 } };
+            const deadlineHours = cp.daily?.deadlineValue || 24;
+            document.getElementById('modal-cancel-policy-statement').innerText = 
+                `This stay allows free 100% full cancellation up to ${deadlineHours} hours before check-in date (${b.durationString || 'Arrival'}). Late cancellations receive ${cp.daily?.fullRefundPct || 75}% refund of total deposit.`;
+
+            document.getElementById('cancel-booking-modal').classList.remove('hidden');
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancel-booking-modal').classList.add('hidden');
+            activeCancellingBooking = null;
+        }
+
+        function processCancellationSubmission() {
+            if (!activeCancellingBooking) return;
+
+            const reason = document.getElementById('cancel-reason-select').value;
+            const notes = document.getElementById('cancel-notes-input').value.trim();
+            const refundAccount = document.getElementById('cancel-refund-account').value.trim();
+
+            if (!refundAccount) {
+                alert("Please provide your refund account details so the host can process your token refund.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-confirm-cancellation');
+            btn.innerText = "⏳ Processing...";
+            btn.disabled = true;
+
+            const cancelPayload = {
+                status: "Cancelled by Guest",
+                cancellationReason: reason,
+                cancellationNotes: notes,
+                refundPayoutAccount: refundAccount,
+                cancelledAt: new Date().toISOString()
+            };
+
+            firebase.database().ref(`bookings/${activeCancellingBooking.id}`).update(cancelPayload)
+                .then(() => {
+                    closeCancelModal();
+                    showToast("Booking cancelled. Refund request sent to Host.", "✓");
+                    btn.innerText = "Confirm Cancellation";
+                    btn.disabled = false;
+                })
+                .catch(() => {
+                    alert("Error cancelling booking. Please try again.");
+                    btn.innerText = "Confirm Cancellation";
+                    btn.disabled = false;
+                });
+        }
+
+        // ================= 🎨 RENDER BOOKING CARDS & 4 HOST CONTACTS =================
+        function renderEmptyState() {
+            const container = document.getElementById('guest-bookings-feed-container');
+            const countBadge = document.getElementById('guest-trips-count-badge');
+            if (countBadge) countBadge.innerText = `0 Bookings`;
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="py-16 text-center space-y-3 bg-white p-8 rounded-[32px] neu-flat border border-gray-150 max-w-md mx-auto animate-fade-in">
+                    <div class="w-14 h-14 rounded-full bg-softMint flex items-center justify-center text-3xl mx-auto border border-gray-200">
+                        🧳
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-xs font-black text-luxuryGreen uppercase tracking-wider">No Trips Booked Yet</h3>
+                        <p class="text-[9.5px] text-gray-400 font-semibold leading-relaxed">
+                            When you reserve a stay, your vouchers, host 4 contacts, and records appear here.
+                        </p>
+                    </div>
+                    <button type="button" onclick="window.location.href='index.html'" class="neu-btn-green text-white text-xs font-black px-6 py-3 rounded-xl uppercase tracking-wider cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-transform inline-flex items-center space-x-2">
+                        <span>🔍</span> <span>Explore Stays Now ➔</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderGuestTripsList(trips) {
+            const container = document.getElementById('guest-bookings-feed-container');
+            if (!container) return;
+
+            container.innerHTML = trips.map(b => {
+                const isConfirmed = b.status === "Confirmed" || b.status === "Accepted" || b.contactUnlocked === true;
+                const isCancelled = b.status === "Cancelled" || b.status === "Cancelled by Guest";
+
+                let statusPillClass = 'bg-amber-50 text-amber-900 border-amber-200';
+                let statusText = '⚡ Verification Pending';
+
+                if (isConfirmed) {
+                    statusPillClass = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+                    statusText = '✓ Confirmed & Locked';
+                } else if (isCancelled) {
+                    statusPillClass = 'bg-rose-50 text-rose-800 border-rose-200';
+                    statusText = '✕ Reservation Cancelled';
+                }
+
+                const symbol = b.displayCurrencySymbol || '$';
+                const totalFormatted = (typeof b.totalAmount === 'number') ? `${symbol}${b.totalAmount.toFixed(2)}` : `${symbol}${b.totalAmount}`;
+                const depositFormatted = (typeof b.depositPaid === 'number') ? `${symbol}${b.depositPaid.toFixed(2)}` : `${symbol}${b.depositPaid}`;
+                const remainingFormatted = (typeof b.remainingBalance === 'number') ? `${symbol}${b.remainingBalance.toFixed(2)}` : `${symbol}${b.remainingBalance}`;
+
+                const displayBookingCode = b.id.startsWith('LS-') ? `#${b.id}` : (b.bookingCode ? `#${b.bookingCode}` : `#${b.id}`);
+
+                const paidBank = b.paidToAccountDetails || {};
+                const bankStr = paidBank.bankName 
+                    ? `${paidBank.bankName} (${paidBank.accountTitle || 'Host Account'}, #${paidBank.accountNumber || paidBank.iban || '-'})`
+                    : (b.paymentMethodSelected || 'Direct Payout').toUpperCase();
+
+                // 🔓 UNLOCKED 4 HOST CONTACTS (AFTER CONFIRMATION ONLY)
+                let hostContactBoxHTML = '';
+                if (isConfirmed) {
+                    const hostPhone = b.hostPhone || '';
+                    const hostEmail = b.hostEmail || '-';
+                    const hostWhatsapp = b.hostWhatsapp || b.hostPhone || '';
+                    const hostExtraLink = b.hostExtraContact || b.hostContactLink || '';
+
+                    const cleanPhone = hostPhone.replace(/[^0-9]/g, '');
+                    const cleanWa = hostWhatsapp.replace(/[^0-9]/g, '');
+                    const waLink = cleanWa ? `https://wa.me/${cleanWa}` : `https://wa.me/`;
+
+                    hostContactBoxHTML = `
+                        <div class="p-3.5 bg-emerald-50/90 rounded-2xl border border-emerald-200 space-y-2 text-left shadow-2xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[9px] font-black uppercase text-emerald-950 flex items-center space-x-1">
+                                    <span>🔓</span> <span>Host Contacts Unlocked (4 Channels):</span>
+                                </span>
+                                <span class="text-[7.5px] font-black text-emerald-800 bg-white px-2 py-0.5 rounded-full border border-emerald-200">Verified Partner</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-1.5 text-xs font-bold text-gray-700">
+                                <div>Host: <strong class="text-luxuryGreen">${b.hostName || 'Partner Host'}</strong></div>
+                                <div class="truncate text-[10px]">📧 Email: <strong class="text-luxuryGreen">${hostEmail}</strong></div>
+                                <div class="font-mono text-[10px]">📱 Phone: <strong class="text-luxuryGreen">${hostPhone || '-'}</strong></div>
+                                <div class="font-mono text-[10px]">💬 WhatsApp: <strong class="text-luxuryGreen">${hostWhatsapp || '-'}</strong></div>
+                            </div>
+
+                            <!-- 4 1-CLICK ACTION BUTTONS + IN-APP CHAT -->
+                            <div class="grid grid-cols-4 gap-1.5 pt-1 border-t border-emerald-200/60">
+                                ${hostPhone ? `
+                                    <a href="tel:${hostPhone}" class="py-1.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-gray-50">
+                                        <span>📞</span> <span>Call</span>
+                                    </a>
+                                ` : '<span class="py-1.5 bg-gray-100 text-gray-400 rounded-xl text-[8.5px] text-center font-bold">No Call</span>'}
+
+                                <a href="${waLink}" target="_blank" class="py-1.5 bg-emerald-700 text-white rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-emerald-800">
+                                    <span>💬</span> <span>WhatsApp</span>
+                                </a>
+
+                                ${hostExtraLink ? `
+                                    <a href="${hostExtraLink.startsWith('http') ? hostExtraLink : 'https://' + hostExtraLink}" target="_blank" class="py-1.5 bg-luxuryGreen text-white rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen truncate px-1">
+                                        <span>🌐</span> <span>4th Link</span>
+                                    </a>
+                                ` : '<span class="py-1.5 bg-gray-100 text-gray-400 rounded-xl text-[8.5px] text-center font-bold">No 4th</span>'}
+
+                                <a href="mailto:${hostEmail}" class="py-1.5 bg-luxuryGreen text-white rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen">
+                                    <span>📧</span> <span>Email</span>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else if (!isCancelled) {
+                    hostContactBoxHTML = `
+                        <div class="p-3 bg-amber-50/60 rounded-2xl border border-amber-200 flex items-center text-xs">
+                            <div class="flex items-center space-x-1.5 text-amber-900">
+                                <span>🔒</span>
+                                <span class="text-[9px] font-bold">Host 4 contact channels unlock automatically once deposit is verified.</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Cancellation Button
+                const cancelButtonHTML = !isCancelled ? `
+                    <button type="button" onclick="openCancelModal('${b.id}')" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50/70 text-rose-700 hover:bg-rose-100 text-[9px] font-black cursor-pointer transition-all flex items-center space-x-1">
+                        <span>✕</span> <span>Cancel Trip</span>
+                    </button>
+                ` : `
+                    <span class="text-[8px] font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-lg">Auto-clears in 5 days</span>
+                `;
+
+                return `
+                    <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-[28px] border border-gray-200 space-y-3 shadow-xs animate-fade-in">
+                        
+                        <!-- CARD HEADER -->
+                        <div class="flex justify-between items-center border-b border-gray-150 pb-2">
+                            <div>
+                                <span class="text-[7.5px] uppercase tracking-widest text-gray-400 font-bold block">Trip Voucher</span>
+                                <h3 class="text-xs sm:text-sm font-black text-luxuryGreen font-mono">${displayBookingCode}</h3>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[8px] font-black uppercase px-2.5 py-1 rounded-full border ${statusPillClass}">
+                                    ${statusText}
+                                </span>
+                                ${cancelButtonHTML}
+                            </div>
+                        </div>
+
+                        <!-- STAY INFO & DATES -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center space-x-1.5 text-[8.5px] font-bold text-gray-400">
+                                    <span class="text-luxuryGreen font-black">${b.category || '🏡 Stay'}</span>
+                                    <span>•</span>
+                                    <span>👥 ${b.guests || 2} Guests</span>
+                                </div>
+                                <h4 class="text-xs sm:text-sm font-black text-luxuryGreen cursor-pointer hover:underline" onclick="window.location.href='details.html?id=${b.propId}'">
+                                    ${b.propName || 'Luxury Stay'}
+                                </h4>
+                                <p class="text-[9.5px] text-gray-500 font-semibold">📍 ${b.propLocation || 'Prime Location'}</p>
+                            </div>
+
+                            <div class="p-2.5 bg-softMint rounded-xl border border-gray-150 text-left sm:text-right space-y-0.5 shrink-0 w-full sm:w-auto">
+                                <span class="text-[7.5px] text-gray-400 uppercase font-black block">${b.bookingMode ? b.bookingMode.toUpperCase() : 'DAILY STAY'}</span>
+                                <span class="text-[10.5px] font-black text-luxuryGreen block">${b.durationString || 'Stay Dates'}</span>
+                            </div>
+                        </div>
+
+                        <!-- FINANCIALS BREAKDOWN -->
+                        <div class="p-3 bg-softMint/50 rounded-2xl border border-gray-200 grid grid-cols-3 gap-2 text-center text-xs">
+                            <div class="border-r border-gray-200/80 pr-1">
+                                <span class="text-[8px] text-gray-400 font-bold uppercase block">Total Cost</span>
+                                <strong class="text-gray-800 text-xs font-black">${totalFormatted}</strong>
+                            </div>
+                            <div class="border-r border-gray-200/80 pr-1 text-emerald-800">
+                                <span class="text-[8px] font-bold uppercase block">Token Paid</span>
+                                <strong class="text-xs font-black">${depositFormatted}</strong>
+                            </div>
+                            <div class="text-luxuryGreen">
+                                <span class="text-[8px] font-bold uppercase block">Due on Arrival</span>
+                                <strong class="text-xs font-black">${remainingFormatted}</strong>
+                            </div>
+                        </div>
+
+                        <div class="text-[9px] text-gray-500 pl-1">
+                            <span class="font-bold text-gray-600">Paid to Host Bank:</span> ${bankStr}
+                        </div>
+
+                        <!-- UNLOCKED 4 HOST CONTACTS OR LOCKED NOTICE -->
+                        ${hostContactBoxHTML}
+
+                        <!-- 🛡️ LIKESTAYS VIP SUPPORT (CONTACT ADMIN) BUTTON -->
+                        <div class="pt-1">
+                            <button type="button" onclick="openAdminSupportModal('${b.id}')" class="w-full py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 rounded-xl text-[9px] font-black uppercase flex items-center justify-center space-x-1.5 cursor-pointer shadow-2xs transition-all">
+                                <span>🛡️</span> <span>LikeStays Support (Contact Admin if Host Unresponsive)</span>
+                            </button>
+                        </div>
+
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
