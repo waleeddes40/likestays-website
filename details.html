@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | Luxury Stay Details</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🗺️ LEAFLET (FREE OPENSTREETMAP — NO API KEY) — چھوٹا لوکیشن پیش نظارہ کارڈ کے لیے -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE -->
+    <script src="likestays-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        softShadowDark: '#D2DCD4',
+                        softShadowLight: '#FFFFFF',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background-color: #F2F5F3 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            scroll-behavior: smooth;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #F2F5F3; box-shadow: 3px 3px 8px #D2DCD4, -3px -3px 8px #FFFFFF; }
+        .neu-flat-white { background: #FFFFFF; box-shadow: 2px 2px 8px rgba(210, 220, 212, 0.5), -2px -2px 8px #FFFFFF; }
+        .neu-inset { background: #F2F5F3; box-shadow: inset 2px 2px 4px #D2DCD4, inset -2px -2px 4px #FFFFFF; }
+        .neu-btn-green { background: linear-gradient(135deg, #0D4E2F 0%, #155E39 100%); box-shadow: 0 4px 12px rgba(13, 78, 47, 0.3); }
+        .neu-btn-green:active { transform: scale(0.98); }
+        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 5px #D2DCD4, -2px -2px 5px #FFFFFF; }
+
+        .property-card-3d {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .property-card-3d:active { transform: scale(0.98); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop-in { animation: popIn 0.2s ease-out forwards; }
+
+        /* ✨ 4 LUXURY OFFER THEMES */
+        @keyframes luxuryShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .theme-emerald {
+            background: linear-gradient(110deg, #0D4E2F 15%, #1E6F45 35%, #D4AF37 50%, #1E6F45 65%, #0D4E2F 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            color: #FFFFFF;
+        }
+        .theme-gold {
+            background: linear-gradient(110deg, #8C6D1F 10%, #C89F2D 35%, #FFF0AA 50%, #C89F2D 65%, #8C6D1F 90%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            color: #FFFFFF;
+        }
+        .theme-midnight {
+            background: linear-gradient(110deg, #0F172A 15%, #1E293B 35%, #D4AF37 50%, #1E293B 65%, #0F172A 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            color: #FFFFFF;
+        }
+        .theme-ruby {
+            background: linear-gradient(110deg, #7F1D1D 15%, #991B1B 35%, #F87171 50%, #991B1B 65%, #7F1D1D 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(254, 202, 202, 0.7);
+            color: #FFFFFF;
+        }
+
+        .spark-icon { display: inline-block; }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint text-gray-800 pb-28 relative">
+
+    <!-- FLOATING TOAST -->
+    <div id="luxury-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-4 py-2 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Notification Message</span>
+    </div>
+
+    <!-- ZERO-FLASH LOADING OVERLAY -->
+    <div id="details-loading-overlay" class="fixed inset-0 bg-softMint z-[60000] flex flex-col items-center justify-center space-y-2.5">
+        <div class="w-9 h-9 border-4 border-luxuryGreen/20 border-t-luxuryGreen rounded-full animate-spin"></div>
+        <span class="text-[9px] font-black uppercase tracking-widest text-luxuryGreen">Loading Details...</span>
+    </div>
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2.5 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <button type="button" onclick="history.back()" class="neu-circle-btn w-8 h-8 rounded-full flex items-center justify-center text-luxuryGreen hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+
+            <div class="flex items-center space-x-2">
+                <button type="button" onclick="sharePropertyDetails()" class="neu-circle-btn w-8 h-8 rounded-full flex items-center justify-center text-luxuryGreen hover:scale-105 cursor-pointer" title="Share">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                </button>
+                <button type="button" id="btn-toggle-fav" onclick="toggleDetailsFavorite()" class="neu-circle-btn w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:scale-105 cursor-pointer" title="Favorite">
+                    <span id="icon-fav-heart" class="text-xs">🤍</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 space-y-4 text-left">
+        
+        <!-- 1. PHOTO GALLERY -->
+        <div id="gallery-container" class="w-full">
+            <div id="desktop-gallery-grid" class="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[380px] rounded-3xl overflow-hidden neu-flat p-2 bg-white border border-gray-150 cursor-pointer" onclick="openPhotoGalleryModal()">
+                <div class="col-span-2 row-span-2 relative rounded-2xl overflow-hidden group bg-gray-100">
+                    <img id="dt-img-0" src="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Stay Image">
+                </div>
+                <div class="col-span-1 row-span-1 rounded-2xl overflow-hidden group bg-gray-100">
+                    <img id="dt-img-1" src="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="col-span-1 row-span-1 rounded-2xl overflow-hidden group bg-gray-100">
+                    <img id="dt-img-2" src="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="col-span-1 row-span-1 rounded-2xl overflow-hidden group bg-gray-100">
+                    <img id="dt-img-3" src="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="col-span-1 row-span-1 rounded-2xl overflow-hidden group bg-gray-100 relative">
+                    <img id="dt-img-4" src="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div id="dt-more-photos-overlay" class="hidden absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center text-white text-[10px] font-black">
+                        <span id="dt-more-count">+ More</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Swipeable Carousel -->
+            <div class="md:hidden relative w-full aspect-[16/10] rounded-2xl overflow-hidden neu-flat bg-white border border-gray-150 cursor-pointer" onclick="openPhotoGalleryModal()">
+                <div id="details-carousel-slides" onscroll="handleDetailsCarouselScroll()" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth"></div>
+                <div id="details-carousel-dots" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1 z-10 pointer-events-none"></div>
+            </div>
+        </div>
+
+        <!-- 2. UNIFIED COMPACT HEADER CARD -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <div class="flex items-center space-x-1.5 text-[9.5px] font-bold text-gray-500">
+                    <span class="text-luxuryGreen font-black px-2 py-0.5 rounded-md bg-softMint" id="det-category">🏡 Villa</span>
+                    <span>•</span>
+                    <span id="det-max-guests">👥 Max 8 Guests</span>
+                </div>
+                <span class="text-emerald-800 font-black text-[9.5px] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100" id="det-rating">⭐ New</span>
+            </div>
+
+            <h1 id="det-title" class="text-base sm:text-2xl font-black text-luxuryGreen leading-tight tracking-tight">Luxury Stay</h1>
+            
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-gray-100">
+                <p id="det-location" class="text-[11px] font-semibold text-gray-500 truncate max-w-[220px] sm:max-w-xl">📍 Location loading...</p>
+            </div>
+
+            <!-- 🗺️ چھوٹا سا LOCATION PREVIEW کارڈ — یہ دکھاتا ہے کہ پراپرٹی کس ایریا میں ہے، مکمل نقشے کے لیے tap کریں -->
+            <div onclick="redirectToMapPage()" class="relative w-full h-28 rounded-2xl overflow-hidden border border-gray-200 shadow-xs cursor-pointer active:scale-[0.98] transition-transform">
+                <div id="details-location-preview-map" class="w-full h-full pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-2.5">
+                    <span class="text-white text-[10px] font-black bg-black/50 px-2.5 py-1 rounded-full flex items-center space-x-1">
+                        <span>🗺️</span> <span>View Full Map</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. COMPACT 5-IN-ONE LIVING SPACES MICRO-BAR -->
+        <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
+            <div class="grid grid-cols-5 gap-1 text-center">
+                <div class="p-1 space-y-0.5 border-r border-gray-100">
+                    <span class="text-sm block">🛏️</span>
+                    <span class="text-[8px] text-gray-400 font-bold uppercase block">Beds</span>
+                    <strong class="text-xs text-luxuryGreen font-black" id="det-bedrooms-count">4</strong>
+                </div>
+                <div class="p-1 space-y-0.5 border-r border-gray-100">
+                    <span class="text-sm block">🚿</span>
+                    <span class="text-[8px] text-gray-400 font-bold uppercase block">Baths</span>
+                    <strong class="text-xs text-luxuryGreen font-black" id="det-bathrooms-count">4</strong>
+                </div>
+                <div class="p-1 space-y-0.5 border-r border-gray-100">
+                    <span class="text-sm block">🍳</span>
+                    <span class="text-[8px] text-gray-400 font-bold uppercase block">Kitchen</span>
+                    <strong class="text-xs text-luxuryGreen font-black" id="det-kitchens-count">1</strong>
+                </div>
+                <div class="p-1 space-y-0.5 border-r border-gray-100">
+                    <span class="text-sm block">🛋️</span>
+                    <span class="text-[8px] text-gray-400 font-bold uppercase block">Lounge</span>
+                    <strong class="text-xs text-luxuryGreen font-black" id="det-lounge-count">1</strong>
+                </div>
+                <div class="p-1 space-y-0.5">
+                    <span class="text-sm block">🛌</span>
+                    <span class="text-[8px] text-gray-400 font-bold uppercase block">Sofa Bed</span>
+                    <strong class="text-xs text-luxuryGreen font-black" id="det-sofabeds-count">2</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. TIMINGS & DISCOUNTS ROW -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-bold text-gray-600">
+            <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
+                <span class="text-[7.5px] text-gray-400 font-black uppercase block">Check-in (24h)</span>
+                <span id="det-checkin-time" class="text-luxuryGreen font-black text-xs">14:00</span>
+            </div>
+            <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
+                <span class="text-[7.5px] text-gray-400 font-black uppercase block">Check-out (24h)</span>
+                <span id="det-checkout-time" class="text-luxuryGreen font-black text-xs">11:00</span>
+            </div>
+            <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150" id="box-weekly-disc">
+                <span class="text-[7.5px] text-gray-400 font-black uppercase block">Weekly Disc.</span>
+                <span id="det-weekly-disc" class="text-emerald-700 font-black text-xs">10% Off</span>
+            </div>
+            <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-200" id="box-monthly-disc">
+                <span class="text-[7.5px] text-gray-400 font-black uppercase block">Monthly Disc.</span>
+                <span id="det-monthly-disc" class="text-emerald-700 font-black text-xs">20% Off</span>
+            </div>
+        </div>
+
+        <!-- 🔑 SELF CHECK-IN -->
+        <div id="det-self-checkin-card" class="hidden neu-flat-white bg-white p-3.5 rounded-2xl border border-gray-150 space-y-1">
+            <div class="flex items-center space-x-2">
+                <span class="text-base">🔑</span>
+                <div>
+                    <h3 class="text-[11px] font-black text-luxuryGreen uppercase">Self Check-in Available</h3>
+                    <span id="det-self-checkin-type" class="text-[8.5px] font-bold text-gray-400">Smart Lock</span>
+                </div>
+            </div>
+            <p id="det-self-checkin-instructions" class="text-[10px] text-gray-600 font-medium pl-6 leading-relaxed"></p>
+        </div>
+
+        <!-- 5. ABOUT SPACE -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
+            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">About this space</h3>
+            <p id="det-description" class="text-xs text-gray-600 leading-relaxed font-medium"></p>
+        </div>
+
+        <!-- 6. MULTI-MONTH AVAILABILITY CALENDAR -->
+        <div id="availability-calendar-section" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+            <div class="flex justify-between items-center pb-1.5 border-b border-gray-100">
+                <div>
+                    <h3 class="text-[11px] font-black uppercase tracking-wider text-luxuryGreen">Availability Calendar</h3>
+                    <p class="text-[8.5px] text-gray-400 font-semibold">Select check-in & checkout dates</p>
+                </div>
+                <div class="flex items-center space-x-2 text-[8px] font-bold">
+                    <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">● Open</span>
+                    <span class="text-red-500 bg-red-50 px-2 py-0.5 rounded line-through">● Blocked</span>
+                </div>
+            </div>
+            
+            <div id="cal-box-wrapper" class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <button type="button" onclick="changeGuestCalendarMonth(-1)" class="w-7 h-7 rounded-xl neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❮</button>
+                    <span id="details-cal-month-label" class="text-xs font-black text-luxuryGreen uppercase tracking-wider">August 2026</span>
+                    <button type="button" onclick="changeGuestCalendarMonth(1)" class="w-7 h-7 rounded-xl neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❯</button>
+                </div>
+
+                <div class="grid grid-cols-7 text-center text-[8.5px] font-black text-gray-400">
+                    <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
+                </div>
+                
+                <div id="details-cal-days-container" class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold pt-0.5"></div>
+                
+                <div class="flex justify-between items-center text-[8.5px] font-bold text-gray-400 border-t border-gray-100 pt-2">
+                    <span id="cal-helper-text-details" class="text-emerald-700 font-black">Stay Range Selected ✓</span>
+                    <button type="button" onclick="resetDetailsCalendarRange()" class="text-red-500 hover:underline cursor-pointer">✕ Reset Dates</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. AMENITIES -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">What this place offers</h3>
+            <div id="det-amenities-list" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2"></div>
+        </div>
+
+        <!-- 8. EXTRA SERVICES -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+            <div class="flex justify-between items-center">
+                <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
+                <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
+            </div>
+            <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+        </div>
+
+        <!-- 9. CANCELLATION POLICY -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
+            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Cancellation & Refund Policy</h3>
+            <div id="det-cancellation-card" class="rounded-2xl p-3 bg-softMint/50 border border-gray-200 text-[10.5px] font-medium text-gray-600"></div>
+        </div>
+
+        <!-- 10. HOUSE RULES -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
+            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">House Rules</h3>
+            <div id="det-house-rules-list" class="space-y-1 text-xs text-gray-600 font-medium"></div>
+        </div>
+
+        <!-- ======================================================================= -->
+        <!-- 🎯 11. LUXURY RESERVATION CARD -->
+        <!-- ======================================================================= -->
+        <div id="main-booking-reservation-card" class="neu-flat-white bg-white rounded-[32px] p-5 sm:p-7 border-2 border-luxuryGreen/30 space-y-4 shadow-xl relative">
+            
+            <div class="border-b border-gray-150 pb-2.5 flex justify-between items-center">
+                <div>
+                    <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black block">Instant Reservation</span>
+                    <h2 class="text-base sm:text-lg font-black text-luxuryGreen">Reserve Your Stay</h2>
+                </div>
+                <span class="text-[8.5px] font-black text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                    ⚡ Instant Confirm
+                </span>
+            </div>
+
+            <!-- SPECIAL OFFERS CONTAINER -->
+            <div id="details-multi-deals-section" class="hidden space-y-2 bg-gradient-to-r from-emerald-50/80 to-softMint p-3 rounded-2xl border border-emerald-200/80 shadow-xs">
+                <div class="flex justify-between items-center">
+                    <span class="text-[9.5px] font-black uppercase text-luxuryGreen flex items-center space-x-1.5">
+                        <span class="spark-icon text-amber-500">⚡</span> <span>Special Stay Packages:</span>
+                    </span>
+                    <span id="details-deals-count-badge" class="text-[8px] font-black bg-luxuryGreen text-white px-2 py-0.5 rounded-full">Offer Active</span>
+                </div>
+                <div id="details-deals-list-container" class="space-y-2"></div>
+            </div>
+
+            <!-- Pricing Header -->
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
+                <div>
+                    <span class="text-[8px] font-bold text-gray-400 uppercase block">Daily Rate</span>
+                    <span id="det-card-daily-price" class="text-lg sm:text-xl font-black text-luxuryGreen">Rs 5,000</span>
+                    <span class="text-[9.5px] font-semibold text-gray-400">/ night</span>
+                </div>
+                <div id="det-card-hourly-col" class="text-right hidden">
+                    <span class="text-[8px] font-bold text-gray-400 uppercase block">Hourly Rate</span>
+                    <span id="det-card-hourly-price" class="text-xs font-bold text-luxuryLightGreen">Rs 500</span>
+                    <span class="text-[8.5px] font-semibold text-gray-400">/ hr</span>
+                </div>
+            </div>
+
+            <!-- Daily vs Hourly Switcher -->
+            <div id="booking-interval-tabs-row" class="hidden flex bg-softMint p-1 rounded-2xl border border-gray-200">
+                <button type="button" id="tab-daily" onclick="setDetailsBookingInterval('daily')" class="flex-grow text-[11px] font-black py-2 rounded-xl bg-white shadow-sm text-luxuryGreen cursor-pointer">Daily Stay</button>
+                <button type="button" id="tab-hourly" onclick="setDetailsBookingInterval('hourly')" class="flex-grow text-[11px] font-bold py-2 rounded-xl text-gray-400 cursor-pointer">Hourly Stay</button>
+            </div>
+
+            <!-- Selection Box -->
+            <div class="neu-inset bg-softMint p-3 rounded-2xl space-y-2 border border-gray-200/60">
+                <div class="flex justify-between items-center text-xs font-bold">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-sm text-luxuryGreen">📅</span>
+                        <div>
+                            <span class="text-[7.5px] text-gray-400 block uppercase font-bold">Selected Booking Dates</span>
+                            <span id="det-selected-dates-text" class="text-xs font-black text-luxuryGreen">Aug 11 (3N)</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="focusAvailabilityCalendar()" class="neu-flat px-2.5 py-1 rounded-xl bg-white border border-gray-200 text-[9px] font-black text-luxuryGreen hover:scale-105 cursor-pointer shadow-xs">
+                        ✏️ Change Dates
+                    </button>
+                </div>
+
+                <!-- Hourly Slot Timings -->
+                <div id="hourly-timings-selector-box" class="hidden pt-1.5 border-t border-gray-200/70 space-y-1">
+                    <span class="text-[7.5px] text-gray-400 uppercase font-black block">Slot Timings (24h)</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="space-y-0.5">
+                            <label class="text-[7px] text-gray-400 uppercase font-bold">Start Time</label>
+                            <input type="time" id="book-hourly-start" value="12:00" onchange="handleHourlyTimeChange()" class="w-full p-1.5 neu-inset bg-white rounded-xl text-[11px] font-black text-luxuryGreen outline-none border-none">
+                        </div>
+                        <div class="space-y-0.5">
+                            <label class="text-[7px] text-gray-400 uppercase font-bold">End Time</label>
+                            <input type="time" id="book-hourly-end" value="16:00" onchange="handleHourlyTimeChange()" class="w-full p-1.5 neu-inset bg-white rounded-xl text-[11px] font-black text-luxuryGreen outline-none border-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full h-[1px] bg-gray-200"></div>
+
+                <!-- Guests Count -->
+                <div class="flex justify-between items-center text-xs font-bold">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-sm text-luxuryGreen">👥</span>
+                        <div>
+                            <span class="text-[7.5px] text-gray-400 block uppercase font-bold">Guests</span>
+                            <span id="det-selected-guests-text" class="text-xs font-black text-luxuryGreen">2 Guests</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button type="button" onclick="updateDetailsGuests(-1)" class="w-5 h-5 rounded-md neu-circle-btn flex items-center justify-center font-black text-xs text-luxuryGreen">-</button>
+                        <span id="det-guests-count-num" class="w-3 text-center text-xs font-black text-luxuryGreen">2</span>
+                        <button type="button" onclick="updateDetailsGuests(1)" class="w-5 h-5 rounded-md neu-circle-btn flex items-center justify-center font-black text-xs text-luxuryGreen">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Breakdown Calculation -->
+            <div class="space-y-1.5 text-xs font-semibold text-gray-600 pt-1">
+                <div class="flex justify-between items-center">
+                    <span id="det-calc-nights-lbl">Stay Rent Calculation</span>
+                    <span id="det-calc-subtotal" class="font-bold text-gray-800 text-xs">0</span>
+                </div>
+
+                <!-- DYNAMIC DISCOUNT ROW -->
+                <div id="det-calc-discount-row" class="hidden flex justify-between items-center text-emerald-700 font-black">
+                    <span id="det-calc-discount-lbl">Weekly Discount</span>
+                    <span id="det-calc-discount-val">- 0</span>
+                </div>
+
+                <!-- LIVE SELECTED ADD-ONS -->
+                <div id="det-calc-extras-list-container" class="space-y-1 pt-1 border-t border-gray-100"></div>
+
+                <div class="flex justify-between items-center text-[10px]">
+                    <span class="text-gray-500">Service & Platform Fee</span>
+                    <span class="font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">0% Free</span>
+                </div>
+
+                <div class="flex justify-between items-center text-[10px]">
+                    <span class="text-gray-500">Taxes & Cleaning Charges</span>
+                    <span class="font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">Included (Free)</span>
+                </div>
+
+                <div class="flex justify-between border-t border-gray-200 pt-2.5 text-sm font-black text-luxuryGreen items-center">
+                    <span>Total Payable</span>
+                    <span id="det-calc-grand-total" class="text-base text-luxuryGreen">0</span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="button" onclick="proceedToBookingConfirmation()" class="w-full neu-btn-green py-3.5 rounded-2xl text-white font-black text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center space-x-1.5 shadow-lg hover:scale-101 active:scale-98 transition-transform">
+                <span>Reserve & Book Now</span>
+                <span>➔</span>
+            </button>
+            <p class="text-[8px] text-gray-400 text-center font-semibold">🔒 No Extra Charges • 100% Free Service Fee Included</p>
+        </div>
+
+        <!-- 12. GUEST REVIEWS (DISPLAY ONLY VERIFIED GUEST REVIEWS) -->
+        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Verified Guest Reviews</h3>
+                    <p class="text-[8.5px] text-gray-400 font-bold" id="reviews-header-summary">⭐ 5.0 Rating</p>
+                </div>
+                <span class="text-[8.5px] text-gray-400 font-semibold bg-softMint px-2.5 py-1 rounded-xl border border-gray-200">
+                    🔒 Post-Stay Reviews
+                </span>
+            </div>
+            <div id="reviews-feed-container" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar space-x-2.5 pb-1"></div>
+        </div>
+
+        <!-- 13. MORE STAYS BY THIS HOST -->
+        <div class="space-y-3 pt-2">
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-xs font-black uppercase tracking-wider text-luxuryGreen">More Stays by this Host</h3>
+                <span class="text-[9px] text-gray-400 font-bold">Verified Portfolio</span>
+            </div>
+            <div id="more-host-stays-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- 🚩 14. REPORT THIS PROPERTY (DIRECT TO REGIONAL ADMIN) -->
+        <!-- ========================================================================= -->
+        <div class="pt-4 pb-2 text-center">
+            <button type="button" onclick="openReportPropertyModal()" class="inline-flex items-center space-x-1.5 text-xs font-black text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-4 py-2 rounded-2xl cursor-pointer shadow-2xs transition-all active:scale-95">
+                <span>🚩</span> <span>Report this listing to LikeStays Admin</span>
+            </button>
+            <p class="text-[8px] text-gray-400 font-semibold mt-1">Reports are confidential and reviewed directly by regional administrators.</p>
+        </div>
+
+    </main>
+
+    <!-- ========================================================================= -->
+    <!-- 🚩 REPORT PROPERTY MODAL (CONFIDENTIAL TO ADMIN) -->
+    <!-- ========================================================================= -->
+    <div id="report-property-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[65000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[32px] p-6 shadow-2xl space-y-3.5 text-left animate-pop-in border border-rose-200">
+            
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
+                <div class="flex items-center space-x-2 text-rose-700 font-black text-xs uppercase tracking-wider">
+                    <span class="text-base">🚩</span> <span>Report Listing to Admin</span>
+                </div>
+                <button type="button" onclick="closeReportPropertyModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+            </div>
+
+            <form onsubmit="handlePropertyReportSubmit(event)" class="space-y-3 text-xs">
+                
+                <!-- REASON SELECTION -->
+                <div class="space-y-1">
+                    <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Reason for Report *</label>
+                    <select id="report-reason-select" required class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen font-bold border-none cursor-pointer">
+                        <option value="inaccurate_info">Inaccurate photos, address or false description</option>
+                        <option value="fake_scam">Suspected fake listing or fraud</option>
+                        <option value="unresponsive_host">Unresponsive or rude host</option>
+                        <option value="safety_hygiene">Safety, cleanliness, or security concerns</option>
+                        <option value="off_platform_payment">Host demanded off-platform suspicious payment</option>
+                        <option value="other">Other serious issue</option>
+                    </select>
+                </div>
+
+                <!-- GUEST CONTACT DETAILS (OPTIONAL) -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="space-y-0.5">
+                        <label class="text-[7.5px] uppercase tracking-wider text-gray-400 font-bold">Your Name (Optional)</label>
+                        <input type="text" id="report-guest-name" placeholder="Anonymous or Name" class="w-full p-2 bg-softMint rounded-xl text-xs font-bold text-luxuryGreen outline-none border-none">
+                    </div>
+                    <div class="space-y-0.5">
+                        <label class="text-[7.5px] uppercase tracking-wider text-gray-400 font-bold">Phone / Email (Optional)</label>
+                        <input type="text" id="report-guest-contact" placeholder="Contact for follow-up" class="w-full p-2 bg-softMint rounded-xl text-xs font-bold text-luxuryGreen outline-none border-none">
+                    </div>
+                </div>
+
+                <!-- DETAILED EXPLANATION -->
+                <div class="space-y-1">
+                    <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Explain the Issue in Detail *</label>
+                    <textarea id="report-details-textarea" rows="3" required placeholder="Please describe exactly what happened or why this listing should be investigated..." class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium resize-none border-none"></textarea>
+                </div>
+
+                <div class="p-2.5 bg-rose-50 rounded-xl border border-rose-150 text-[8.5px] text-rose-900 font-bold leading-tight">
+                    🛡️ This report is strictly private and sent directly to the assigned Regional Admin to take immediate action against the host if needed.
+                </div>
+
+                <button type="submit" id="btn-submit-report" class="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs uppercase tracking-wider rounded-2xl cursor-pointer shadow-md transition-all active:scale-95">
+                    Submit Report to Admin 🚩
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- FULLSCREEN PHOTO GALLERY MODAL -->
+    <div id="photo-gallery-modal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-md z-[55000] flex flex-col justify-between p-4 animate-pop-in">
+        <div class="flex justify-between items-center text-white pb-3 border-b border-white/20 shrink-0 max-w-5xl mx-auto w-full">
+            <span class="text-xs font-black uppercase tracking-wider">Stay Photo Gallery (<span id="modal-gallery-count">0</span> Photos)</span>
+            <button type="button" onclick="closePhotoGalleryModal()" class="neu-circle-btn px-3.5 py-1.5 rounded-xl text-xs font-black text-luxuryGreen hover:scale-105 cursor-pointer">✕ Close</button>
+        </div>
+        <div id="modal-gallery-photos-grid" class="overflow-y-auto no-scrollbar grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 py-4 max-w-5xl mx-auto w-full flex-grow"></div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com",
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        const AMENITIES_CATALOG = [
+            {name:"Free WiFi",icon:"📶"},{name:"Air Conditioning",icon:"❄️"},{name:"Heating",icon:"🔥"},{name:"Kitchen",icon:"🍳"},{name:"Cooking Gas",icon:"💨"},
+            {name:"Utensils",icon:"🥘"},{name:"Plates & Bowls",icon:"🍽️"},{name:"Glasses",icon:"🥛"},{name:"Cutlery",icon:"🍴"},{name:"Refrigerator",icon:"🧊"},
+            {name:"Microwave",icon:"🎛️"},{name:"Kettle",icon:"🫖"},{name:"Washing Machine",icon:"🧺"},{name:"Smart TV",icon:"🎬"},{name:"Parking",icon:"🚗"},
+            {name:"Swimming Pool",icon:"🏊"},{name:"Gym",icon:"🏋️"},{name:"Elevator",icon:"🛗"},{name:"Balcony",icon:"🌅"},{name:"Garden",icon:"🏡"},
+            {name:"Workspace",icon:"💻"},{name:"Hot Water",icon:"♨️"},{name:"Towels",icon:"🧼"},{name:"Bed Linen",icon:"🛏️"},{name:"Blankets",icon:"🛌"},
+            {name:"Toiletries",icon:"🧴"},{name:"Iron",icon:"👔"},{name:"Hair Dryer",icon:"💈"},{name:"Security Cameras",icon:"📹"},{name:"BBQ Grill",icon:"🍖"}
+        ];
+
+        let activeProperty = null;
+        let guestsBookingCount = 2;
+        let activeBookingMode = 'daily';
+        let isFavorite = false;
+
+        let selectedOfferObj = null;
+
+        let detailsStartDate = null;
+        let detailsEndDate = null;
+        let currentCalendarMonth = new Date().getMonth();
+        let currentCalendarYear = new Date().getFullYear();
+        let hourlyDurationHours = 4;
+
+        const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const propId = urlParams.get('id');
+
+            parseGuestSearchParameters(urlParams);
+
+            if (propId) {
+                listenToLiveFirebaseProperty(propId);
+            } else {
+                showPropertyNotFound();
+            }
+        });
+
+        window.addEventListener('likestays:locale_changed', () => {
+            renderPropertyDetails();
+            renderExtraServicesGrid();
+            renderMultiDealsSection();
+            recalculateBookingTotals();
+        });
+
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('details-loading-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        function showPropertyNotFound() {
+            hideLoadingOverlay();
+            const main = document.querySelector('main');
+            if (main) {
+                main.innerHTML = `
+                    <div class="py-20 text-center space-y-3">
+                        <div class="text-3xl">🏝️</div>
+                        <h3 class="text-xs font-black text-luxuryGreen">Stay Not Found</h3>
+                        <p class="text-[10px] text-gray-400">This listing may have been removed.</p>
+                        <button onclick="window.location.href='index.html'" class="neu-btn-green text-white text-xs font-bold px-5 py-2.5 rounded-xl uppercase tracking-wider mt-2 cursor-pointer">Back to Explore</button>
+                    </div>
+                `;
+            }
+        }
+
+        function listenToLiveFirebaseProperty(propId) {
+            try {
+                firebase.database().ref(`properties/${propId}`).on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) {
+                        showPropertyNotFound();
+                        return;
+                    }
+                    activeProperty = { id: propId, ...data };
+                    renderPropertyDetails();
+                    renderExtraServicesGrid();
+                    renderGuestMultiMonthCalendar();
+                    renderMultiDealsSection();
+                    renderLiveReviewsList();
+                    recalculateBookingTotals();
+                    syncFavoriteStatus();
+                    hideLoadingOverlay();
+                    loadMoreStaysByHost(data.hostUid, propId);
+                }, () => showPropertyNotFound());
+            } catch(e) { showPropertyNotFound(); }
+        }
+
+        function loadMoreStaysByHost(hostUid, currentPropId) {
+            if (!hostUid) return;
+            try {
+                firebase.database().ref('properties').orderByChild('hostUid').equalTo(hostUid).once('value')
+                    .then(snapshot => {
+                        const data = snapshot.val() || {};
+                        const otherStays = Object.keys(data)
+                            .map(key => ({ id: key, ...data[key] }))
+                            .filter(p => String(p.id) !== String(currentPropId));
+                        renderMoreStaysByHost(otherStays);
+                    })
+                    .catch(() => {});
+            } catch(e) {}
+        }
+
+        function parseGuestSearchParameters(urlParams) {
+            const guestsParam = parseInt(urlParams.get('guests'));
+            if (guestsParam && guestsParam > 0) guestsBookingCount = guestsParam;
+
+            const checkinParam = urlParams.get('checkin');
+            const checkoutParam = urlParams.get('checkout');
+
+            if (checkinParam && checkoutParam) {
+                try {
+                    detailsStartDate = parseFlexibleDateString(checkinParam);
+                    detailsEndDate = parseFlexibleDateString(checkoutParam);
+                    if (detailsStartDate) {
+                        currentCalendarMonth = detailsStartDate.getMonth();
+                        currentCalendarYear = detailsStartDate.getFullYear();
+                    }
+                } catch(e) {}
+            }
+
+            if (!detailsStartDate || !detailsEndDate) {
+                const today = new Date();
+                detailsStartDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+                detailsEndDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4);
+            }
+        }
+
+        function parseFlexibleDateString(str) {
+            if (!str) return null;
+            if (str.includes('-')) {
+                const parts = str.split('-');
+                if (parts.length === 3) return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            }
+            const parts = str.trim().split(' ');
+            if (parts.length >= 2) {
+                const mIdx = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"].indexOf(parts[0].toLowerCase().slice(0,3));
+                const d = parseInt(parts[1]);
+                if (mIdx !== -1 && d) return new Date(currentCalendarYear, mIdx, d);
+            }
+            return null;
+        }
+
+        let toastTimeout = null;
+        function showLuxuryToast(msg, icon = '✨') {
+            const toast = document.getElementById('luxury-toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+            toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+            }, 2000);
+        }
+
+        // ================= RENDER DETAILS =================
+        function renderPropertyDetails() {
+            if (!activeProperty) return;
+            const propCurrency = activeProperty.currency || 'PKR';
+
+            document.getElementById('det-title').innerText = activeProperty.name || 'Luxury Stay';
+            document.getElementById('det-category').innerText = `🏡 ${activeProperty.category || 'Stay'}`;
+            document.getElementById('det-max-guests').innerText = `👥 Max ${activeProperty.maxGuests || 8} Guests`;
+            document.getElementById('det-rating').innerText = activeProperty.rating || '⭐ New';
+
+            const locText = activeProperty.address
+                ? `📍 ${activeProperty.address}${activeProperty.locality ? ', ' + activeProperty.locality : ''}, ${activeProperty.city || ''}`
+                : `📍 ${activeProperty.location || activeProperty.city || 'Prime Location'}`;
+            document.getElementById('det-location').innerText = locText;
+
+            // چھوٹا map preview تھوڑی تاخیر سے شروع کریں تاکہ container کا سائز صحیح طرح مل جائے
+            setTimeout(initDetailsLocationPreviewMap, 150);
+
+            document.getElementById('det-bedrooms-count').innerText = activeProperty.bedrooms || 1;
+            document.getElementById('det-bathrooms-count').innerText = activeProperty.bathrooms || 1;
+            document.getElementById('det-kitchens-count').innerText = activeProperty.kitchens || 0;
+            document.getElementById('det-lounge-count').innerText = activeProperty.lounge || 0;
+            document.getElementById('det-sofabeds-count').innerText = activeProperty.sofaBeds || 0;
+
+            document.getElementById('det-checkin-time').innerText = activeProperty.checkinTime || "14:00";
+            document.getElementById('det-checkout-time').innerText = activeProperty.checkoutTime || "11:00";
+            
+            const boxW = document.getElementById('box-weekly-disc');
+            const boxM = document.getElementById('box-monthly-disc');
+            if (activeProperty.discWeekly && Number(activeProperty.discWeekly) > 0) {
+                document.getElementById('det-weekly-disc').innerText = `${activeProperty.discWeekly}% Off`;
+                boxW.classList.remove('hidden');
+            } else { boxW.classList.add('hidden'); }
+            
+            if (activeProperty.discMonthly && Number(activeProperty.discMonthly) > 0) {
+                document.getElementById('det-monthly-disc').innerText = `${activeProperty.discMonthly}% Off`;
+                boxM.classList.remove('hidden');
+            } else { boxM.classList.add('hidden'); }
+
+            const selfCard = document.getElementById('det-self-checkin-card');
+            if (activeProperty.selfCheckin && activeProperty.selfCheckin.enabled) {
+                selfCard.classList.remove('hidden');
+                document.getElementById('det-self-checkin-type').innerText = activeProperty.selfCheckin.type || 'Smart Lock';
+                document.getElementById('det-self-checkin-instructions').innerText = activeProperty.selfCheckin.instructions || 'Self check-in instructions will be shared before arrival.';
+            } else {
+                selfCard.classList.add('hidden');
+            }
+
+            document.getElementById('det-description').innerText = activeProperty.desc || activeProperty.description || 'Experience ultimate luxury at this verified private sanctuary.';
+
+            document.getElementById('det-guests-count-num').innerText = guestsBookingCount;
+            document.getElementById('det-selected-guests-text').innerText = `${guestsBookingCount} Guests`;
+
+            const dailyFormatted = (typeof LikeStaysEngine !== 'undefined') 
+                ? LikeStaysEngine.formatPrice(activeProperty.dailyPrice || activeProperty.price || 5000, propCurrency)
+                : `$${activeProperty.dailyPrice || 5000}`;
+            document.getElementById('det-card-daily-price').innerText = dailyFormatted;
+
+            const hourlyRate = activeProperty.hourlyPrice;
+            if (hourlyRate && hourlyRate > 0) {
+                document.getElementById('det-card-hourly-col').classList.remove('hidden');
+                document.getElementById('booking-interval-tabs-row').classList.remove('hidden');
+                document.getElementById('det-card-hourly-price').innerText = (typeof LikeStaysEngine !== 'undefined') ? LikeStaysEngine.formatPrice(hourlyRate, propCurrency) : `$${hourlyRate}`;
+            } else {
+                document.getElementById('det-card-hourly-col').classList.add('hidden');
+                document.getElementById('booking-interval-tabs-row').classList.add('hidden');
+            }
+
+            const photos = (activeProperty.photos && activeProperty.photos.length > 0) ? activeProperty.photos : (activeProperty.image ? [activeProperty.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=80&w=1200"]);
+            const formattedPhotos = photos.map(img => (img.startsWith('http') || img.startsWith('data:')) ? img : `https://images.unsplash.com/${img}?auto=format&fit=crop&q=80&w=1200`);
+
+            for (let i = 0; i < 5; i++) {
+                const imgEl = document.getElementById(`dt-img-${i}`);
+                if (imgEl) imgEl.src = formattedPhotos[i] || formattedPhotos[0];
+            }
+            if (formattedPhotos.length > 5) {
+                document.getElementById('dt-more-photos-overlay').classList.remove('hidden');
+                document.getElementById('dt-more-count').innerText = `+${formattedPhotos.length - 5} More`;
+            } else {
+                document.getElementById('dt-more-photos-overlay').classList.add('hidden');
+            }
+
+            const slidesContainer = document.getElementById('details-carousel-slides');
+            const dotsContainer = document.getElementById('details-carousel-dots');
+            slidesContainer.innerHTML = formattedPhotos.map(src => `<img src="${src}" class="w-full h-full object-cover shrink-0 snap-center">`).join('');
+            dotsContainer.innerHTML = formattedPhotos.map((_, i) => `<span class="details-dot w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white scale-125' : 'bg-white/60'} transition-all"></span>`).join('');
+
+            const amContainer = document.getElementById('det-amenities-list');
+            const hostAmenities = activeProperty.amenities || ["Free WiFi", "Air Conditioning"];
+            amContainer.innerHTML = hostAmenities.map(amName => {
+                const matchedObj = AMENITIES_CATALOG.find(a => a.name === amName);
+                const icon = matchedObj ? matchedObj.icon : '✓';
+                return `
+                    <div class="neu-flat-white bg-white p-2 rounded-xl flex items-center space-x-1.5 border border-gray-150">
+                        <span class="text-xs shrink-0">${icon}</span>
+                        <span class="text-[10px] font-bold text-gray-700 truncate">${amName}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const cancelContainer = document.getElementById('det-cancellation-card');
+            const cp = activeProperty.cancellationPolicy || { daily: { deadlineValue: 24, deadlineUnit: "Hours", fullRefundPct: 75 } };
+            cancelContainer.innerHTML = `
+                <div class="space-y-0.5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-luxuryGreen font-black uppercase text-[9.5px]">Free Cancellation Window</span>
+                        <span class="bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded text-[8.5px] font-black">${cp.daily?.deadlineValue || 24} ${cp.daily?.deadlineUnit || 'Hours'} Before</span>
+                    </div>
+                    <p class="text-[9px] text-gray-500 font-medium">Cancel before deadline for 100% full refund. Late cancellations receive ${cp.daily?.fullRefundPct || 75}% refund of total stay.</p>
+                </div>
+            `;
+
+            const rulesContainer = document.getElementById('det-house-rules-list');
+            let rulesHTML = '';
+            if (activeProperty.houseRules) {
+                const hr = activeProperty.houseRules;
+                rulesHTML += `<div class="flex items-center space-x-1.5"><span>•</span><span>Smoking: ${hr.smoking ? 'Allowed' : 'Strictly Not Allowed'}</span></div>`;
+                rulesHTML += `<div class="flex items-center space-x-1.5"><span>•</span><span>Pets: ${hr.pets ? 'Allowed' : 'Not Allowed'}</span></div>`;
+                rulesHTML += `<div class="flex items-center space-x-1.5"><span>•</span><span>Events / Parties: ${hr.parties ? 'Allowed' : 'Strictly Prohibited'}</span></div>`;
+                rulesHTML += `<div class="flex items-center space-x-1.5"><span>•</span><span>Photo Shoots: ${hr.shoots ? 'Allowed' : 'Not Allowed'}</span></div>`;
+                if (hr.customRules) rulesHTML += `<div class="flex items-center space-x-1.5 text-luxuryGreen font-bold"><span>•</span><span>${hr.customRules}</span></div>`;
+            } else {
+                rulesHTML = `<div class="flex items-center space-x-1.5"><span>•</span><span>Treat this space with care and respect community rules.</span></div>`;
+            }
+            rulesContainer.innerHTML = rulesHTML;
+        }
+
+
+        // ================= 📸 PHOTO GALLERY =================
+        function openPhotoGalleryModal() {
+            if (!activeProperty) return;
+            const photos = (activeProperty.photos && activeProperty.photos.length > 0) ? activeProperty.photos : (activeProperty.image ? [activeProperty.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=80&w=1200"]);
+            const formattedPhotos = photos.map(img => (img.startsWith('http') || img.startsWith('data:')) ? img : `https://images.unsplash.com/${img}?auto=format&fit=crop&q=80&w=1200`);
+
+            document.getElementById('modal-gallery-count').innerText = formattedPhotos.length;
+            const grid = document.getElementById('modal-gallery-photos-grid');
+            grid.innerHTML = formattedPhotos.map((src, idx) => `
+                <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-gray-800 shadow-md">
+                    <img src="${src}" class="w-full h-full object-cover" alt="Photo ${idx+1}">
+                </div>
+            `).join('');
+
+            document.getElementById('photo-gallery-modal').classList.remove('hidden');
+        }
+
+        function closePhotoGalleryModal() {
+            document.getElementById('photo-gallery-modal').classList.add('hidden');
+        }
+
+        // ================= ⚡ SPECIAL OFFERS =================
+        function formatDealTiming24h(d) {
+            const formatStr = (dateVal) => {
+                if (!dateVal) return '';
+                if (dateVal.includes('-')) {
+                    const p = dateVal.split('-');
+                    if (p.length === 3) {
+                        const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                        return `${parseInt(p[2])} ${m[parseInt(p[1])-1] || ''}`;
+                    }
+                }
+                return dateVal;
+            };
+
+            const sDate = formatStr(d.startDate);
+            const eDate = formatStr(d.endDate);
+            const sTime = d.startTime || '14:00';
+            const eTime = d.endTime || '18:00';
+
+            return `${sDate} (${sTime}) ➔ ${eDate} (${eTime})`;
+        }
+
+        function renderMultiDealsSection() {
+            const deals = activeProperty.flashDeals || (activeProperty.flashOffer && activeProperty.flashOffer.enabled ? [activeProperty.flashOffer] : []);
+            const container = document.getElementById('details-multi-deals-section');
+            const list = document.getElementById('details-deals-list-container');
+            const badge = document.getElementById('details-deals-count-badge');
+
+            if (!deals || deals.length === 0) {
+                container.classList.add('hidden'); return;
+            }
+
+            container.classList.remove('hidden');
+            badge.innerText = `${deals.length} Offers Live`;
+
+            list.innerHTML = deals.map(d => {
+                const isSelected = selectedOfferObj && selectedOfferObj.id === d.id;
+                const formattedPrice = (typeof LikeStaysEngine !== 'undefined') ? LikeStaysEngine.formatPrice(d.discountPrice || d.price || 0, activeProperty.currency || 'PKR') : `$${d.price}`;
+                const timingString = formatDealTiming24h(d);
+                const themeClass = `theme-${d.theme || 'emerald'}`;
+
+                return `
+                    <div onclick="toggleSelectFlashDeal('${d.id}')" class="p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between bg-white border border-gray-200 hover:border-luxuryGreen shadow-xs ${isSelected ? 'ring-2 ring-luxuryGreen bg-emerald-50/50' : ''}">
+                        <div class="space-y-1 text-left min-w-0 pr-1">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="spark-icon text-amber-500 text-xs">⚡</span>
+                                <span class="text-xs font-black text-gray-800 truncate">${d.title}</span>
+                                <span class="${themeClass} text-[7.5px] font-black px-2 py-0.5 rounded-full">${isSelected ? 'APPLIED' : 'OFFER'}</span>
+                            </div>
+                            <span class="text-[9px] font-semibold text-gray-500 block">⏱️ ${timingString}</span>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <span class="text-xs font-black text-luxuryGreen block">${formattedPrice}</span>
+                            <span class="text-[8.5px] font-bold ${isSelected ? 'text-emerald-800' : 'text-gray-500 underline'}">${isSelected ? '✓ Selected' : 'Apply Offer ➔'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleSelectFlashDeal(id) {
+            const deals = activeProperty.flashDeals || (activeProperty.flashOffer && activeProperty.flashOffer.enabled ? [activeProperty.flashOffer] : []);
+            const deal = deals.find(d => d.id === id);
+
+            if (selectedOfferObj && selectedOfferObj.id === id) {
+                selectedOfferObj = null;
+                activeBookingMode = 'daily';
+                showLuxuryToast("Offer Removed. Switched to Daily Stay.", "🔄");
+            } else if (deal) {
+                selectedOfferObj = deal;
+                activeBookingMode = 'offer';
+                showLuxuryToast(`⚡ Special Offer "${deal.title}" Applied!`, "🎉");
+            }
+
+            renderMultiDealsSection();
+            recalculateBookingTotals();
+        }
+
+        // ================= 📅 CALENDAR LOGIC =================
+        function changeGuestCalendarMonth(delta) {
+            currentCalendarMonth += delta;
+            if (currentCalendarMonth < 0) { currentCalendarMonth = 11; currentCalendarYear--; }
+            else if (currentCalendarMonth > 11) { currentCalendarMonth = 0; currentCalendarYear++; }
+            renderGuestMultiMonthCalendar();
+        }
+
+        function isDateBlockedInListing(cellDate) {
+            if (!activeProperty) return false;
+            const y = cellDate.getFullYear();
+            const m = String(cellDate.getMonth() + 1).padStart(2, '0');
+            const d = String(cellDate.getDate()).padStart(2, '0');
+            const dateStr = `${y}-${m}-${d}`;
+
+            if (activeProperty.blockedDates && Array.isArray(activeProperty.blockedDates)) {
+                return activeProperty.blockedDates.includes(dateStr);
+            }
+            if (activeProperty.calendarAvailability && Array.isArray(activeProperty.calendarAvailability)) {
+                if (typeof activeProperty.calendarAvailability[0] === 'string') {
+                    return activeProperty.calendarAvailability.includes(dateStr);
+                }
+                return activeProperty.calendarAvailability[cellDate.getDate()] === false;
+            }
+            return false;
+        }
+
+        function renderGuestMultiMonthCalendar() {
+            const label = document.getElementById('details-cal-month-label');
+            const container = document.getElementById('details-cal-days-container');
+            const helper = document.getElementById('cal-helper-text-details');
+            if (!label || !container) return;
+
+            label.innerText = `${MONTH_NAMES[currentCalendarMonth]} ${currentCalendarYear}`;
+            container.innerHTML = '';
+
+            const firstDay = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
+            const totalDays = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) container.innerHTML += `<span></span>`;
+
+            for (let d = 1; d <= totalDays; d++) {
+                const cellDate = new Date(currentCalendarYear, currentCalendarMonth, d);
+                cellDate.setHours(0, 0, 0, 0);
+
+                const isBlocked = isDateBlockedInListing(cellDate);
+                const isStart = detailsStartDate && (cellDate.getTime() === detailsStartDate.getTime());
+                const isEnd = detailsEndDate && (cellDate.getTime() === detailsEndDate.getTime());
+                const isInRange = detailsStartDate && detailsEndDate && (cellDate.getTime() > detailsStartDate.getTime() && cellDate.getTime() < detailsEndDate.getTime());
+
+                let btnCls = "py-1.5 rounded-lg text-xs font-bold transition-all ";
+
+                if (isBlocked) {
+                    btnCls += "bg-red-50 text-red-400 line-through border border-red-200 cursor-not-allowed opacity-50 ";
+                    container.innerHTML += `<button type="button" disabled class="${btnCls}">${d}</button>`;
+                } else {
+                    btnCls += "cursor-pointer ";
+                    if (isStart || isEnd) {
+                        btnCls += "bg-luxuryGreen text-white font-black shadow-sm ";
+                    } else if (isInRange) {
+                        btnCls += "bg-luxuryGreen/15 text-luxuryGreen font-black rounded-none ";
+                    } else {
+                        btnCls += "hover:bg-emerald-50 text-gray-700 ";
+                    }
+                    container.innerHTML += `<button type="button" onclick="handleGuestDateClick(${d})" class="${btnCls}">${d}</button>`;
+                }
+            }
+
+            if (!detailsStartDate) {
+                if (helper) helper.innerText = "Select Check-in Date";
+            } else if (detailsStartDate && !detailsEndDate) {
+                const sMName = MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3);
+                if (helper) helper.innerText = `Check-in: ${sMName} ${detailsStartDate.getDate()} ➔ Pick Checkout`;
+            } else if (detailsStartDate && detailsEndDate) {
+                const sMName = MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3);
+                const eMName = MONTH_NAMES[detailsEndDate.getMonth()].slice(0,3);
+                const nights = Math.round((detailsEndDate.getTime() - detailsStartDate.getTime()) / (1000 * 60 * 60 * 24));
+                if (helper) helper.innerText = `Selected: ${sMName} ${detailsStartDate.getDate()} - ${eMName} ${detailsEndDate.getDate()} (${nights} Nights)`;
+            }
+        }
+
+        function handleGuestDateClick(day) {
+            const clickedDate = new Date(currentCalendarYear, currentCalendarMonth, day);
+            clickedDate.setHours(0, 0, 0, 0);
+
+            selectedOfferObj = null;
+            if (activeBookingMode === 'offer') activeBookingMode = 'daily';
+
+            if (!detailsStartDate || (detailsStartDate && detailsEndDate)) {
+                detailsStartDate = clickedDate;
+                detailsEndDate = null;
+                renderGuestMultiMonthCalendar();
+            } else {
+                if (clickedDate.getTime() < detailsStartDate.getTime()) {
+                    detailsEndDate = detailsStartDate;
+                    detailsStartDate = clickedDate;
+                } else if (clickedDate.getTime() === detailsStartDate.getTime()) {
+                    const nextDay = new Date(clickedDate);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    detailsEndDate = nextDay;
+                } else {
+                    detailsEndDate = clickedDate;
+                }
+
+                renderMultiDealsSection();
+                renderGuestMultiMonthCalendar();
+                recalculateBookingTotals();
+            }
+        }
+
+        function resetDetailsCalendarRange() {
+            const today = new Date();
+            detailsStartDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+            detailsEndDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4);
+            selectedOfferObj = null;
+            activeBookingMode = 'daily';
+            renderMultiDealsSection();
+            renderGuestMultiMonthCalendar();
+            recalculateBookingTotals();
+        }
+
+        // ================= 💰 RECALCULATE TOTALS =================
+        function recalculateBookingTotals() {
+            if (!activeProperty) return;
+            const propCurrency = activeProperty.currency || 'PKR';
+            const daily = activeProperty.dailyPrice || activeProperty.price || 5000;
+            const hourly = activeProperty.hourlyPrice || Math.round(daily/10);
+
+            let baseCost = 0;
+            let discountAmount = 0;
+            let discountPercent = 0;
+            let discountType = '';
+
+            const nights = (detailsStartDate && detailsEndDate) ? Math.max(1, Math.round((detailsEndDate.getTime() - detailsStartDate.getTime()) / (1000 * 60 * 60 * 24))) : 3;
+
+            if (activeBookingMode === 'offer' && selectedOfferObj) {
+                baseCost = selectedOfferObj.discountPrice || selectedOfferObj.price || 0;
+                document.getElementById('det-calc-nights-lbl').innerText = `⚡ Package: ${selectedOfferObj.title}`;
+                document.getElementById('det-selected-dates-text').innerText = formatDealTiming24h(selectedOfferObj);
+                document.getElementById('det-calc-discount-row').classList.add('hidden');
+            } else if (activeBookingMode === 'hourly') {
+                baseCost = Math.round(hourly * hourlyDurationHours);
+                const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : '';
+                const sTime = document.getElementById('book-hourly-start')?.value || '12:00';
+                const eTime = document.getElementById('book-hourly-end')?.value || '16:00';
+                document.getElementById('det-calc-nights-lbl').innerText = `${LikeStaysEngine.formatPrice(hourly, propCurrency)} × ${hourlyDurationHours} hrs`;
+                document.getElementById('det-selected-dates-text').innerText = `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : ''} (${sTime} - ${eTime})`;
+                document.getElementById('det-calc-discount-row').classList.add('hidden');
+            } else {
+                baseCost = Math.round(daily * nights);
+                const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : '';
+                const eMName = detailsEndDate ? MONTH_NAMES[detailsEndDate.getMonth()].slice(0,3) : '';
+                document.getElementById('det-calc-nights-lbl').innerText = `${LikeStaysEngine.formatPrice(daily, propCurrency)} × ${nights} nights`;
+                document.getElementById('det-selected-dates-text').innerText = `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : ''} - ${eMName} ${detailsEndDate ? detailsEndDate.getDate() : ''} (${nights}N)`;
+
+                if (nights >= 30 && activeProperty.discMonthly && Number(activeProperty.discMonthly) > 0) {
+                    discountPercent = Number(activeProperty.discMonthly);
+                    discountType = 'Monthly Discount';
+                    discountAmount = Math.round(baseCost * (discountPercent / 100));
+                } else if (nights >= 7 && activeProperty.discWeekly && Number(activeProperty.discWeekly) > 0) {
+                    discountPercent = Number(activeProperty.discWeekly);
+                    discountType = 'Weekly Discount';
+                    discountAmount = Math.round(baseCost * (discountPercent / 100));
+                }
+
+                const discRow = document.getElementById('det-calc-discount-row');
+                if (discountAmount > 0) {
+                    discRow.classList.remove('hidden');
+                    document.getElementById('det-calc-discount-lbl').innerText = `${discountType} (${discountPercent}%)`;
+                    document.getElementById('det-calc-discount-val').innerText = `- ${LikeStaysEngine.formatPrice(discountAmount, propCurrency)}`;
+                } else {
+                    discRow.classList.add('hidden');
+                }
+            }
+
+            let extrasCost = 0;
+            const extrasListContainer = document.getElementById('det-calc-extras-list-container');
+            let extrasHtml = '';
+
+            document.querySelectorAll('#det-extra-services-grid input[type="checkbox"]:checked').forEach(cb => {
+                const srvName = cb.getAttribute('data-srv-name');
+                const rawPrice = parseFloat(cb.getAttribute('data-raw-price')) || 0;
+                const isFree = cb.getAttribute('data-is-free') === 'true' || rawPrice === 0;
+
+                if (isFree) {
+                    extrasHtml += `
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="text-gray-600">${srvName}</span>
+                            <span class="text-emerald-700 font-extrabold bg-emerald-50 px-1.5 py-0.5 rounded">Free ✓ (Included)</span>
+                        </div>
+                    `;
+                } else {
+                    extrasCost += rawPrice;
+                    extrasHtml += `
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="text-gray-600">${srvName}</span>
+                            <span class="font-bold text-luxuryGreen">+ ${LikeStaysEngine.formatPrice(rawPrice, propCurrency)}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            if (extrasListContainer) extrasListContainer.innerHTML = extrasHtml;
+
+            document.getElementById('det-calc-subtotal').innerText = LikeStaysEngine.formatPrice(baseCost, propCurrency);
+
+            const grandTotal = Math.max(0, (baseCost - discountAmount) + extrasCost);
+            document.getElementById('det-calc-grand-total').innerText = LikeStaysEngine.formatPrice(grandTotal, propCurrency);
+        }
+
+        function setDetailsBookingInterval(type) {
+            activeBookingMode = type;
+            selectedOfferObj = null;
+            renderMultiDealsSection();
+
+            const hourlyBox = document.getElementById('hourly-timings-selector-box');
+            if (type === 'hourly') {
+                hourlyBox.classList.remove('hidden');
+                document.getElementById('tab-hourly').className = "flex-grow text-[11px] font-black py-2 rounded-xl bg-white shadow-sm text-luxuryGreen cursor-pointer";
+                document.getElementById('tab-daily').className = "flex-grow text-[11px] font-bold py-2 rounded-xl text-gray-400 cursor-pointer";
+            } else {
+                hourlyBox.classList.add('hidden');
+                document.getElementById('tab-daily').className = "flex-grow text-[11px] font-black py-2 rounded-xl bg-white shadow-sm text-luxuryGreen cursor-pointer";
+                document.getElementById('tab-hourly').className = "flex-grow text-[11px] font-bold py-2 rounded-xl text-gray-400 cursor-pointer";
+            }
+            recalculateBookingTotals();
+        }
+
+        function updateDetailsGuests(c) {
+            guestsBookingCount = Math.max(1, Math.min(activeProperty.maxGuests || 8, guestsBookingCount + c));
+            document.getElementById('det-guests-count-num').innerText = guestsBookingCount;
+            document.getElementById('det-selected-guests-text').innerText = `${guestsBookingCount} Guests`;
+            recalculateBookingTotals();
+        }
+
+        function renderExtraServicesGrid() {
+            const container = document.getElementById('det-extra-services-grid');
+            if (!container) return;
+            const services = (activeProperty.extraServices && activeProperty.extraServices.length > 0) ? activeProperty.extraServices : [];
+
+            if (services.length === 0) {
+                container.innerHTML = `<p class="text-[9px] text-gray-400">No extra add-on services configured.</p>`;
+                return;
+            }
+
+            const propCurrency = activeProperty.currency || 'PKR';
+
+            container.innerHTML = services.map(srv => {
+                const isFree = srv.isFree || srv.price === 0;
+                const formattedSrvPrice = isFree ? 'Free ✓' : `+${LikeStaysEngine.formatPrice(srv.price, propCurrency)}`;
+                return `
+                    <label class="flex items-center justify-between p-2.5 neu-flat-white bg-white rounded-2xl border border-gray-150 cursor-pointer text-xs font-bold text-gray-700 hover:border-luxuryGreen transition-colors">
+                        <div class="flex items-center space-x-2 min-w-0">
+                            <input type="checkbox" id="srv-check-${srv.id || srv.name}" data-srv-name="${srv.name}" data-is-free="${isFree}" data-raw-price="${isFree ? 0 : srv.price}" onchange="recalculateBookingTotals()" class="w-4 h-4 accent-luxuryGreen">
+                            <span class="truncate text-[11px]">${srv.name}</span>
+                        </div>
+                        <span class="${isFree ? 'text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded text-[8.5px]' : 'text-emerald-800 text-[9.5px]'} font-extrabold">${formattedSrvPrice}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function redirectToMapPage() {
+            window.location.href = `map.html?id=${activeProperty.id}&lat=${activeProperty.lat || 31.5204}&lng=${activeProperty.lng || 74.3587}`;
+        }
+
+        // 🗺️ چھوٹا، غیر انٹرایکٹیو Location Preview نقشہ — مفت Leaflet/OpenStreetMap، کوئی API key نہیں
+        let detailsPreviewMapInstance = null;
+        function initDetailsLocationPreviewMap() {
+            const mapContainer = document.getElementById('details-location-preview-map');
+            if (!mapContainer || typeof L === 'undefined') return;
+
+            const lat = activeProperty.lat || 31.5204;
+            const lng = activeProperty.lng || 74.3587;
+
+            if (detailsPreviewMapInstance) {
+                detailsPreviewMapInstance.remove();
+            }
+
+            detailsPreviewMapInstance = L.map('details-location-preview-map', {
+                zoomControl: false,
+                dragging: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                touchZoom: false,
+                attributionControl: false
+            }).setView([lat, lng], 13);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }).addTo(detailsPreviewMapInstance);
+
+            L.marker([lat, lng]).addTo(detailsPreviewMapInstance);
+        }
+
+        // ================= ✍️ DISPLAY ONLY VERIFIED REVIEWS =================
+        function renderLiveReviewsList() {
+            const container = document.getElementById('reviews-feed-container');
+            const summaryLabel = document.getElementById('reviews-header-summary');
+            if (!container) return;
+
+            const reviews = activeProperty.reviews || [];
+
+            if (summaryLabel) {
+                summaryLabel.innerText = activeProperty.rating || (reviews.length > 0 ? `⭐ 5.0 (${reviews.length})` : '⭐ New');
+            }
+
+            if (reviews.length === 0) {
+                container.innerHTML = `<div class="p-3 text-[10px] text-gray-400 font-bold">No verified guest reviews yet. Guests can submit reviews from their profile after completing a stay.</div>`;
+                return;
+            }
+
+            container.innerHTML = reviews.map(r => {
+                const starStr = '⭐'.repeat(r.stars || 5);
+                const bCode = r.bookingId ? `• #${r.bookingId}` : '';
+                return `
+                    <div class="min-w-[220px] max-w-[240px] p-3 rounded-2xl bg-softMint/50 border border-gray-150 space-y-1 snap-start shrink-0 relative">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10.5px] font-black text-luxuryGreen truncate">${r.name || 'Verified Guest'}</span>
+                            <span class="text-[7.5px] text-gray-400 font-bold">${r.date || 'Recent'}</span>
+                        </div>
+                        <div class="text-[9.5px] flex items-center space-x-1">
+                            <span>${starStr}</span>
+                            <span class="text-[7.5px] text-emerald-800 font-mono font-bold">${bCode}</span>
+                        </div>
+                        <p class="text-[9.5px] text-gray-600 font-medium leading-tight line-clamp-3">"${r.comment}"</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleDetailsCarouselScroll() {
+            const el = document.getElementById('details-carousel-slides');
+            if (!el) return;
+            const idx = Math.round(el.scrollLeft / el.clientWidth);
+            document.querySelectorAll('.details-dot').forEach((d, i) => {
+                d.className = `details-dot w-1.5 h-1.5 rounded-full ${i === idx ? 'bg-white scale-125' : 'bg-white/60'} transition-all`;
+            });
+        }
+
+        function focusAvailabilityCalendar() {
+            const calSection = document.getElementById('availability-calendar-section');
+            const calBox = document.getElementById('cal-box-wrapper');
+            if (calSection) calSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (calBox) {
+                calBox.classList.add('pulse-calendar-focus');
+                setTimeout(() => calBox.classList.remove('pulse-calendar-focus'), 2000);
+            }
+        }
+
+        function handleHourlyTimeChange() {
+            const sTime = document.getElementById('book-hourly-start')?.value || '12:00';
+            const eTime = document.getElementById('book-hourly-end')?.value || '16:00';
+            if (sTime && eTime) {
+                const sH = parseInt(sTime.split(':')[0]);
+                const eH = parseInt(eTime.split(':')[0]);
+                hourlyDurationHours = Math.max(1, eH - sH);
+            }
+            recalculateBookingTotals();
+        }
+
+        // ================= 🎯 CHECKOUT HANDSHAKE =================
+        function proceedToBookingConfirmation() {
+            const sTime = document.getElementById('book-hourly-start')?.value || '12:00';
+            const eTime = document.getElementById('book-hourly-end')?.value || '16:00';
+            const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : 'Aug';
+            const eMName = detailsEndDate ? MONTH_NAMES[detailsEndDate.getMonth()].slice(0,3) : 'Aug';
+            const nights = (detailsStartDate && detailsEndDate) ? Math.max(1, Math.round((detailsEndDate.getTime() - detailsStartDate.getTime()) / (1000 * 60 * 60 * 24))) : 3;
+
+            const selectedExtras = [];
+            document.querySelectorAll('#det-extra-services-grid input[type="checkbox"]:checked').forEach(cb => {
+                selectedExtras.push({
+                    name: cb.getAttribute('data-srv-name'),
+                    price: parseFloat(cb.getAttribute('data-raw-price')) || 0,
+                    isFree: cb.getAttribute('data-is-free') === 'true'
+                });
+            });
+
+            const checkoutPayload = {
+                propId: activeProperty.id,
+                propName: activeProperty.name || 'Luxury Stay',
+                category: activeProperty.category || 'Stay',
+                location: activeProperty.location || activeProperty.city || 'Prime Location',
+                image: (activeProperty.photos && activeProperty.photos.length > 0) ? activeProperty.photos[0] : activeProperty.image,
+                currency: activeProperty.currency || 'PKR',
+                guests: guestsBookingCount,
+                mode: activeBookingMode,
+                
+                offer: (activeBookingMode === 'offer' && selectedOfferObj) ? {
+                    id: selectedOfferObj.id,
+                    title: selectedOfferObj.title || 'Special Stay Package',
+                    price: selectedOfferObj.discountPrice || selectedOfferObj.price || 0,
+                    timing: formatDealTiming24h(selectedOfferObj)
+                } : null,
+
+                hourly: {
+                    hours: hourlyDurationHours,
+                    date: `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : '22'}`,
+                    startTime: sTime,
+                    endTime: eTime,
+                    rate: activeProperty.hourlyPrice || Math.round((activeProperty.dailyPrice || 5000) / 10)
+                },
+
+                daily: {
+                    nights: nights,
+                    checkin: `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : '22'}`,
+                    checkout: `${eMName} ${detailsEndDate ? detailsEndDate.getDate() : '25'}`,
+                    rate: activeProperty.dailyPrice || activeProperty.price || 5000,
+                    discWeekly: activeProperty.discWeekly || 0,
+                    discMonthly: activeProperty.discMonthly || 0
+                },
+
+                extras: selectedExtras,
+                hostUid: activeProperty.hostUid || 'host_verified',
+                host: activeProperty.host || {},
+                bankAccounts: activeProperty.bankAccounts || []
+            };
+
+            localStorage.setItem('likestays_active_checkout_payload', JSON.stringify(checkoutPayload));
+            window.location.href = `booking-confirmation.html?id=${activeProperty.id}`;
+        }
+
+        function syncFavoriteStatus() {
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
+            isFavorite = favs.includes(String(activeProperty.id));
+            document.getElementById('icon-fav-heart').innerText = isFavorite ? '❤️' : '🤍';
+        }
+
+        function toggleDetailsFavorite() {
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
+            const sId = String(activeProperty.id);
+
+            if (favs.includes(sId)) {
+                favs = favs.filter(id => id !== sId);
+                isFavorite = false;
+            } else {
+                favs.push(sId);
+                isFavorite = true;
+            }
+
+            localStorage.setItem('likestays_favorites', JSON.stringify(favs));
+            document.getElementById('icon-fav-heart').innerText = isFavorite ? '❤️' : '🤍';
+            showLuxuryToast(isFavorite ? "Saved to Favorites!" : "Removed from Favorites", isFavorite ? "❤️" : "🤍");
+        }
+
+        function sharePropertyDetails() { 
+            navigator.clipboard.writeText(window.location.href); 
+            showLuxuryToast("Link copied to clipboard!", "🔗"); 
+        }
+
+        // ================= 🚩 REPORT PROPERTY LOGIC =================
+        function openReportPropertyModal() {
+            document.getElementById('report-details-textarea').value = '';
+            document.getElementById('report-property-modal').classList.remove('hidden');
+        }
+
+        function closeReportPropertyModal() {
+            document.getElementById('report-property-modal').classList.add('hidden');
+        }
+
+        function handlePropertyReportSubmit(e) {
+            e.preventDefault();
+            if (!activeProperty) return;
+
+            const reason = document.getElementById('report-reason-select').value;
+            const guestName = document.getElementById('report-guest-name').value.trim() || 'Anonymous Guest';
+            const guestContact = document.getElementById('report-guest-contact').value.trim() || 'Not Provided';
+            const details = document.getElementById('report-details-textarea').value.trim();
+
+            if (!details) {
+                alert("Please explain the issue.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-report');
+            btn.innerText = "⏳ Submitting Report...";
+            btn.disabled = true;
+
+            const reportKey = `rep_${Date.now()}`;
+            const hostAdminCode = activeProperty.adminCode || activeProperty.referenceCode || "LIKESTAYS";
+
+            const reportPayload = {
+                id: reportKey,
+                propId: activeProperty.id,
+                propName: activeProperty.name || 'Stay Listing',
+                hostUid: activeProperty.hostUid || 'host_verified',
+                hostName: activeProperty.host?.name || activeProperty.hostName || 'Host',
+                adminCode: hostAdminCode,
+                reason: reason,
+                guestName: guestName,
+                guestContact: guestContact,
+                details: details,
+                status: 'PENDING_INVESTIGATION',
+                createdAt: new Date().toISOString()
+            };
+
+            // 1. Save Report directly in Firebase under reports & admin territory
+            const p1 = firebase.database().ref(`reports/${reportKey}`).set(reportPayload);
+            const p2 = firebase.database().ref(`admins/${hostAdminCode}/reports/${reportKey}`).set(reportPayload);
+            
+            // 2. Increment reports counter on property node
+            const currentReportsCount = (Number(activeProperty.reportsCount) || 0) + 1;
+            const p3 = firebase.database().ref(`properties/${activeProperty.id}/reportsCount`).set(currentReportsCount);
+
+            Promise.all([p1, p2, p3]).then(() => {
+                closeReportPropertyModal();
+                showLuxuryToast("Report submitted to LikeStays Admin.", "🚩");
+                btn.innerText = "Submit Report to Admin 🚩";
+                btn.disabled = false;
+            }).catch(() => {
+                closeReportPropertyModal();
+                showLuxuryToast("Report sent.", "✓");
+                btn.innerText = "Submit Report to Admin 🚩";
+                btn.disabled = false;
+            });
+        }
+
+        // ================= MORE STAYS BY THIS HOST =================
+        function renderMoreStaysByHost(allStays) {
+            const container = document.getElementById('more-host-stays-grid');
+            if (!container) return;
+            const otherStays = allStays.filter(p => String(p.id) !== String(activeProperty.id));
+
+            if (otherStays.length === 0) {
+                container.innerHTML = `<p class="text-[8.5px] text-gray-400 col-span-full">No other stays listed by this host.</p>`; return;
+            }
+
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
+
+            container.innerHTML = otherStays.map(prop => {
+                const photosList = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=500"]);
+                const formattedDaily = (typeof LikeStaysEngine !== 'undefined') ? LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR') : `$${prop.dailyPrice || 5000}`;
+                const hasHourly = prop.hourlyPrice && prop.hourlyPrice > 0;
+                const formattedHourly = hasHourly ? ((typeof LikeStaysEngine !== 'undefined') ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : `$${prop.hourlyPrice}`) : '';
+                const isFav = favs.includes(String(prop.id));
+
+                const mainPhoto = photosList[0].startsWith('http') || photosList[0].startsWith('data:') 
+                    ? photosList[0] 
+                    : `https://images.unsplash.com/${photosList[0]}?auto=format&fit=crop&q=70&w=500`;
+
+                return `
+                    <div onclick="window.location.href='details.html?id=${prop.id}'" class="property-card-3d neu-flat bg-white rounded-3xl overflow-hidden cursor-pointer flex flex-col justify-between border border-gray-150">
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
+                            <img src="${mainPhoto}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none transition-transform duration-300 hover:scale-105" alt="${prop.name}">
+                            
+                            <div class="absolute top-2.5 left-2.5 z-20 flex flex-col space-y-1 items-start">
+                                <div class="bg-black/65 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded-lg border border-white/20">
+                                    <span class="text-emerald-400">●</span> ${formattedDaily}<span class="text-[7px] text-gray-300 font-normal">/night</span>
+                                </div>
+                                ${hasHourly ? `
+                                    <div class="bg-black/65 backdrop-blur-md text-white text-[8px] font-bold px-2 py-0.5 rounded-lg border border-white/20">
+                                        <span>⏱️</span> ${formattedHourly}<span class="text-[7px] text-gray-300 font-normal">/hr</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <button type="button" onclick="event.stopPropagation(); toggleDetailsFavorite();" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-xs shadow hover:scale-110 active:scale-95 transition-transform cursor-pointer">
+                                <span>${isFav ? '❤️' : '🤍'}</span>
+                            </button>
+                        </div>
+
+                        <div class="p-3.5 space-y-1.5 text-left">
+                            <div class="flex justify-between items-center text-[9px] font-bold text-gray-400">
+                                <span class="text-luxuryGreen font-extrabold">🏡 ${prop.category || 'Stay'}</span>
+                                <span class="text-gray-500">👥 Max ${prop.maxGuests || 8} Guests</span>
+                                <span class="text-emerald-700 font-black">${prop.rating || '⭐ New'}</span>
+                            </div>
+
+                            <h4 class="text-xs font-black text-luxuryGreen truncate">${prop.name}</h4>
+                            
+                            <div class="flex justify-between items-center text-[9.5px] font-bold pt-0.5">
+                                <span class="text-gray-400 truncate max-w-[170px]">📍 ${prop.location || prop.city || 'Prime Location'}</span>
+                                <span class="text-emerald-700 font-black text-[8px] bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md shrink-0">🛡️ Free Cancel</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>

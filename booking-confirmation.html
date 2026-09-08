@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Like Stays | Booking Confirmation & Checkout</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 REALTIME FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- 🌐 GLOBAL LIKESTAYS ENGINE & LANGUAGE ENGINE -->
+    <script src="likestays-engine.js"></script>
+    <script src="language-engine.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryGreen: '#0D4E2F',
+                        luxuryLightGreen: '#1E6F45',
+                        softMint: '#F2F5F3',
+                        softShadowDark: '#D2DCD4',
+                        softShadowLight: '#FFFFFF',
+                        goldWarm: '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            min-height: 100%;
+            background-color: #F2F5F3 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+
+        .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
+        .neu-flat { background: #F2F5F3; box-shadow: 4px 4px 10px #D2DCD4, -4px -4px 10px #FFFFFF; }
+        .neu-flat-white { background: #FFFFFF; box-shadow: 2px 2px 8px rgba(210, 220, 212, 0.6), -2px -2px 8px #FFFFFF; }
+        .neu-inset { background: #F2F5F3; box-shadow: inset 2px 2px 5px #D2DCD4, inset -2px -2px 5px #FFFFFF; }
+        .neu-btn-green { background: linear-gradient(135deg, #0D4E2F 0%, #155E39 100%); box-shadow: 0 4px 14px rgba(13, 78, 47, 0.35); }
+        .neu-btn-green:active { transform: scale(0.98); }
+        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 6px #D2DCD4, -2px -2px 6px #FFFFFF; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
+    </style>
+</head>
+<body class="no-scrollbar bg-softMint text-gray-800 pb-28 text-left">
+
+    <!-- 🌟 LUXURY FLOATING TOAST -->
+    <div id="booking-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+        <span id="toast-icon">✨</span>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2.5 px-4 sm:px-8">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <button type="button" onclick="history.back()" class="neu-circle-btn w-8 h-8 rounded-full flex items-center justify-center text-luxuryGreen hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+
+            <a href="index.html" class="flex items-center space-x-2">
+                <span class="font-cinzel-logo text-luxuryGreen text-sm sm:text-base font-black tracking-wider uppercase">Like Stays</span>
+            </a>
+
+            <div class="flex items-center space-x-1 bg-emerald-50 text-emerald-800 border border-emerald-200/70 px-2.5 py-1 rounded-full text-[8.5px] font-black">
+                <span>🔒</span> <span>Fast Checkout</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CHECKOUT VIEW ================= -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-4 animate-fade-in" id="main-checkout-view">
+        
+        <div class="border-b border-gray-200/60 pb-2 flex justify-between items-center">
+            <div>
+                <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black">Fast Guest Booking</span>
+                <h1 class="text-base sm:text-xl font-black text-luxuryGreen">Confirm Your Stay</h1>
+            </div>
+            <span class="text-[8px] font-bold text-gray-400 bg-white px-2.5 py-1 rounded-xl border border-gray-200">No Account Required</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <!-- LEFT COLUMN -->
+            <div class="lg:col-span-7 space-y-4">
+                
+                <!-- 1. STAY SUMMARY CARD -->
+                <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3.5 min-w-0">
+                        <img id="sum-prop-img" src="" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover shrink-0 bg-gray-100 shadow-xs">
+                        <div class="space-y-0.5 min-w-0">
+                            <div class="flex items-center space-x-1.5 text-[8.5px] font-bold text-gray-500">
+                                <span class="text-luxuryGreen font-black px-2 py-0.5 rounded bg-softMint" id="sum-prop-cat">🏡 Villa</span>
+                                <span>•</span>
+                                <span id="sum-prop-rating">⭐ New</span>
+                            </div>
+                            <h3 id="sum-prop-name" class="text-xs sm:text-sm font-black text-luxuryGreen truncate">Property Name</h3>
+                            <p id="sum-prop-location" class="text-[10px] text-gray-400 font-semibold truncate">📍 Location</p>
+                        </div>
+                    </div>
+
+                    <!-- DATES & GUESTS -->
+                    <div class="w-full sm:w-auto p-2.5 bg-softMint/60 rounded-2xl border border-gray-200 text-left sm:text-right space-y-0.5 shrink-0">
+                        <span class="text-[7.5px] text-gray-400 font-black uppercase block" id="sum-mode-badge">Daily Stay</span>
+                        <span id="sum-dates-label" class="text-[11px] font-black text-luxuryGreen block">Dates Loading...</span>
+                        <span id="sum-guests-label" class="text-[9px] text-gray-500 font-bold block">👥 2 Guests</span>
+                    </div>
+                </div>
+
+                <!-- 🌟 2. GUEST DETAILS FORM (5 COMPREHENSIVE FIELDS) -->
+                <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
+                        <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">1. Guest Details & Contact Channels</span>
+                        <span class="text-[8px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">No Account Required</span>
+                    </div>
+
+                    <!-- Name & Phone -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="space-y-0.5">
+                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Guest Full Name *</label>
+                            <input type="text" id="guest-input-name" required placeholder="e.g. Ahmed Khan" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                        </div>
+                        <div class="space-y-0.5">
+                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Calling Phone Number *</label>
+                            <input type="tel" id="guest-input-phone" required placeholder="e.g. 03001234567" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="space-y-0.5">
+                        <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Email Address *</label>
+                        <input type="email" id="guest-input-email" required placeholder="e.g. guest@example.com" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                    </div>
+
+                    <!-- 2 Extra Links -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-gray-100">
+                        <div class="space-y-0.5">
+                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Contact Link 1 (WhatsApp / Telegram)</label>
+                            <input type="text" id="guest-input-link1" placeholder="e.g. https://wa.me/923001234567 or @username" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
+                        </div>
+                        <div class="space-y-0.5">
+                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Contact Link 2 (Instagram / WeChat / IMO)</label>
+                            <input type="text" id="guest-input-link2" placeholder="e.g. Instagram Link or alternate chat ID" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🌟 3. DYNAMIC HOST PAYMENT ACCOUNTS (SHOWS 1, 2, 3 OR 4 DEPENDING ON AVAILABILITY) -->
+                <div id="host-payment-accounts-section" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
+                        <div>
+                            <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen block">2. Host Bank & Payment Accounts</span>
+                            <span class="text-[8px] text-gray-400 font-bold">Transfer advance token to lock booking</span>
+                        </div>
+                        <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-black">Direct Payout</span>
+                    </div>
+
+                    <!-- DYNAMIC TABS CONTAINER -->
+                    <div id="dynamic-account-tabs" class="flex flex-wrap gap-1.5 bg-softMint p-1 rounded-2xl border border-gray-200"></div>
+
+                    <!-- ACCOUNT DETAILS BOX -->
+                    <div id="host-account-details-box" class="p-4 bg-softMint/60 rounded-2xl border border-gray-200 space-y-2 text-xs font-bold text-gray-700"></div>
+                </div>
+
+                <!-- DIRECT BOOKING NOTICE (SHOWN IF HOST ALLOWS NO TOKEN) -->
+                <div id="direct-booking-banner" class="hidden p-4 bg-emerald-50/80 border-2 border-emerald-200 rounded-3xl space-y-1.5 text-left">
+                    <span class="text-xs font-black text-emerald-900 flex items-center space-x-1.5">
+                        <span>⚡</span> <span>No Advance Token Deposit Required!</span>
+                    </span>
+                    <p class="text-[10px] text-emerald-800 font-bold leading-relaxed">
+                        ہوسٹ نے اس پراپرٹی پر بغیر ایڈوانس ٹوکن بکنگ کی اجازت دی ہے۔ آپ کا کوئی پیشگی خرچہ نہیں ہوگا، تمام رقم پراپرٹی پر چیک اِن کے وقت وصول کی جائے گی۔
+                    </p>
+                </div>
+
+                <!-- 4. RULES AGREEMENT CHECKBOX -->
+                <div class="neu-flat-white bg-white p-3.5 rounded-2xl border border-gray-150 flex items-start space-x-2.5">
+                    <input type="checkbox" id="check-accept-rules" required class="w-4 h-4 accent-luxuryGreen mt-0.5 cursor-pointer" checked>
+                    <label for="check-accept-rules" class="text-[9.5px] text-gray-600 font-medium leading-tight cursor-pointer">
+                        I agree to the House Rules, cancellation policies, and acknowledge that remaining balance is payable upon arrival at property.
+                    </label>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: BILLING & SUBMIT -->
+            <div class="lg:col-span-5 sticky top-20 space-y-4">
+                
+                <div class="neu-flat-white bg-white p-5 sm:p-6 rounded-[32px] border-2 border-luxuryGreen/25 space-y-4 shadow-xl">
+                    
+                    <div class="border-b border-gray-150 pb-2 flex justify-between items-center">
+                        <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Price Summary</span>
+                        <span class="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">All-Inclusive</span>
+                    </div>
+
+                    <!-- ITEMIZED BILLING -->
+                    <div class="space-y-2 text-xs font-semibold text-gray-600 bg-softMint/50 p-3.5 rounded-2xl border border-gray-200/60">
+                        <div class="flex justify-between items-center">
+                            <span id="bill-nights-label">Stay Rent Calculation</span>
+                            <span id="bill-base-rent" class="font-bold text-gray-800 text-xs">-</span>
+                        </div>
+
+                        <!-- DISCOUNT ROW -->
+                        <div id="bill-discount-row" class="hidden flex justify-between items-center text-emerald-700 font-black">
+                            <span id="bill-discount-lbl">Discount</span>
+                            <span id="bill-discount-val">-</span>
+                        </div>
+
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="text-gray-500">Service Fee</span>
+                            <span class="font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">0% Free</span>
+                        </div>
+
+                        <div class="flex justify-between items-center border-t border-gray-200/80 pt-2 text-sm font-black text-luxuryGreen">
+                            <span>Total Stay Cost</span>
+                            <span id="bill-grand-total" class="text-base text-luxuryGreen">-</span>
+                        </div>
+                    </div>
+
+                    <!-- TOKEN DEPOSIT CONTROLLER -->
+                    <div id="token-controller-box" class="bg-softMint/70 p-3.5 rounded-2xl border border-gray-200 space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-black uppercase text-luxuryGreen block">Advance Token Deposit</span>
+                            <span class="text-[7.5px] font-black bg-luxuryGreen text-white px-2 py-0.5 rounded-full">Advance</span>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-[7.5px] uppercase tracking-wider text-gray-400 font-bold">Token Deposit Amount Paid</label>
+                            <div class="flex items-center neu-inset bg-white rounded-xl px-3 py-1 border border-gray-200">
+                                <span id="label-curr-symbol" class="text-xs font-black text-luxuryGreen mr-1.5">Rs </span>
+                                <input type="number" step="1" id="input-advance-deposit" oninput="calculateRemainingBalanceOnArrival()" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs sm:text-sm font-black border-none">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-gray-150 text-xs">
+                            <span class="text-[9.5px] font-bold text-gray-500 uppercase">Due on Arrival:</span>
+                            <span id="bill-remaining-balance" class="font-black text-luxuryGreen text-xs sm:text-sm">-</span>
+                        </div>
+                    </div>
+
+                    <!-- SUBMISSION BUTTON -->
+                    <button type="button" onclick="submitBookingRequest()" id="btn-submit-booking" class="w-full neu-btn-green py-4 rounded-2xl text-white font-black text-xs sm:text-sm uppercase tracking-wider cursor-pointer shadow-xl hover:opacity-95 active:scale-98 transition-all flex items-center justify-center">
+                        Confirm & Lock Reservation
+                    </button>
+                    
+                    <p class="text-[8px] text-gray-400 text-center font-semibold leading-tight">
+                        🛡️ Direct connection to Host & Admin.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= 🌟 POST-BOOKING VOUCHER (SHOWS ALL 4 HOST CHANNELS) ================= -->
+    <div id="booking-receipt-screen" class="hidden max-w-2xl mx-auto px-4 sm:px-6 pt-4 pb-16 space-y-4 animate-fade-in">
+        
+        <div class="text-center space-y-1">
+            <div class="w-14 h-14 rounded-full bg-emerald-50 text-luxuryGreen border-2 border-luxuryGreen/30 flex items-center justify-center text-2xl mx-auto shadow-sm">
+                🎉
+            </div>
+            <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black">Booking Confirmed</span>
+            <h2 class="text-lg sm:text-xl font-black text-luxuryGreen">Reservation Registered!</h2>
+            <p class="text-[10px] text-gray-500 font-medium leading-relaxed">
+                The host and website admin have received your booking details on Telegram.
+            </p>
+        </div>
+
+        <div class="neu-flat-white bg-white p-5 sm:p-6 rounded-[32px] border-2 border-luxuryGreen space-y-4 shadow-xl text-left">
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
+                <div>
+                    <span class="text-[7.5px] font-black text-gray-400 uppercase tracking-widest block">Booking Voucher ID</span>
+                    <h3 id="rcpt-booking-id" class="text-sm font-black text-luxuryGreen font-mono">#LS-458909</h3>
+                </div>
+                <span class="bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 rounded-full font-black text-[8px] uppercase">
+                    Active Reservation
+                </span>
+            </div>
+
+            <!-- GUEST & TRIP SUMMARY -->
+            <div class="space-y-1.5 border-b border-gray-150 pb-2.5 text-[11px]">
+                <div class="flex justify-between"><span class="text-gray-400">Guest Name:</span><span id="rcpt-guest-name" class="font-black text-luxuryGreen">-</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Phone:</span><span id="rcpt-guest-phone" class="font-bold text-gray-700 font-mono">-</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Stay Duration:</span><span id="rcpt-stay-duration" class="font-bold text-gray-800">-</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Total Bill:</span><span id="rcpt-total-bill" class="font-black text-luxuryGreen text-xs">-</span></div>
+            </div>
+
+            <!-- 🌟 4 HOST CONTACT CHANNELS (UNLOCKED DIRECTLY FROM ADD-LISTING) -->
+            <div class="p-4 bg-emerald-50/90 rounded-2xl border border-emerald-200 space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-[9px] uppercase tracking-wider text-emerald-950 font-black flex items-center space-x-1">
+                        <span>🏠</span> <span>Host Direct Contacts (4 Channels):</span>
+                    </span>
+                    <span class="text-[7.5px] font-black text-emerald-800 bg-white px-2 py-0.5 rounded-full border border-emerald-200">Verified Host</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-gray-700">
+                    <div>Host Name: <strong id="rcpt-host-name" class="text-luxuryGreen">-</strong></div>
+                    <div>Calling Phone: <strong id="rcpt-host-phone" class="text-luxuryGreen font-mono">-</strong></div>
+                </div>
+
+                <!-- 4 1-CLICK ACTION BUTTONS -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[10px] font-black">
+                    <a id="rcpt-host-call-btn" href="#" class="p-2.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl flex items-center justify-center space-x-1 hover:bg-gray-50 shadow-2xs">
+                        <span>📞</span> <span>Call Host</span>
+                    </a>
+                    <a id="rcpt-host-wa-btn" href="#" target="_blank" class="p-2.5 bg-emerald-700 text-white rounded-xl flex items-center justify-center space-x-1 hover:bg-emerald-800 shadow-2xs">
+                        <span>💬</span> <span>WhatsApp</span>
+                    </a>
+                    <a id="rcpt-host-email-btn" href="#" class="p-2.5 bg-luxuryGreen text-white rounded-xl flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen shadow-2xs">
+                        <span>📧</span> <span>Email</span>
+                    </a>
+                    <a id="rcpt-host-extra-btn" href="#" target="_blank" class="p-2.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl flex items-center justify-center space-x-1 hover:bg-softMint shadow-2xs">
+                        <span>🌐</span> <span>Social Link</span>
+                    </a>
+                </div>
+            </div>
+
+            <button type="button" onclick="window.location.href='my-bookings.html'" class="w-full neu-btn-green py-3.5 rounded-2xl text-xs sm:text-sm font-black text-white uppercase tracking-wider shadow-lg hover:opacity-95 cursor-pointer">
+                Done & View My Trips ➔
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        const CLOUDFLARE_WORKER_URL = "https://likestays-api.waleeddes40.workers.dev";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
+            authDomain: "likestays-446d5.firebaseapp.com",
+            databaseURL: "https://likestays-446d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "likestays-446d5",
+            storageBucket: "likestays-446d5.firebasestorage.app",
+            messagingSenderId: "529363561874",
+            appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
+            measurementId: "G-JX301VFVHK"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+        let activeProperty = null;
+        let activeCheckoutPayload = null;
+        let convertedTotalAmount = 5000;
+        let activeSymbol = "Rs ";
+        let activeBankAccountsList = [];
+        let selectedBankType = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCheckoutPayload();
+        });
+
+        function showBookingToast(msg, icon = '✨') {
+            const toast = document.getElementById('booking-toast');
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').innerText = icon;
+            toast.classList.remove('opacity-0', '-translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
+            }, 2800);
+        }
+
+        function loadCheckoutPayload() {
+            try {
+                const raw = localStorage.getItem('likestays_active_checkout_payload');
+                if (raw) activeCheckoutPayload = JSON.parse(raw);
+            } catch(e) {}
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const propId = (activeCheckoutPayload && activeCheckoutPayload.propId) || urlParams.get('id');
+
+            if (!propId) {
+                showBookingToast("No stay selected for booking.", "⚠️");
+                setTimeout(() => window.location.href = "index.html", 1000);
+                return;
+            }
+
+            firebase.database().ref(`properties/${propId}`).once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    showBookingToast("Stay listing not found.", "⚠️");
+                    setTimeout(() => window.location.href = "index.html", 1000);
+                    return;
+                }
+                activeProperty = { id: propId, ...data };
+                renderCheckoutDetails();
+            });
+        }
+
+        function renderCheckoutDetails() {
+            if (!activeProperty) return;
+            activeSymbol = activeProperty.currencySymbol || "Rs ";
+            document.getElementById('label-curr-symbol').innerText = activeSymbol;
+
+            const photos = activeProperty.photos || (activeProperty.image ? [activeProperty.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=200"]);
+            document.getElementById('sum-prop-img').src = photos[0];
+            document.getElementById('sum-prop-name').innerText = activeProperty.name || activeProperty.title || 'Luxury Stay';
+            document.getElementById('sum-prop-cat').innerText = `🏡 ${activeProperty.category || 'Stay'}`;
+            document.getElementById('sum-prop-rating').innerText = activeProperty.rating || '⭐ New';
+            document.getElementById('sum-prop-location').innerText = `📍 ${activeProperty.location || activeProperty.city || 'Prime Location'}`;
+
+            const guests = activeCheckoutPayload ? (activeCheckoutPayload.guests || 2) : 2;
+            document.getElementById('sum-guests-label').innerText = `👥 ${guests} Guests`;
+
+            const mode = activeCheckoutPayload ? activeCheckoutPayload.mode : 'daily';
+            let rawBaseCost = 0;
+
+            if (mode === 'offer' && activeCheckoutPayload.offer) {
+                rawBaseCost = activeCheckoutPayload.offer.price || 0;
+                document.getElementById('sum-mode-badge').innerText = `⚡ Offer Package`;
+                document.getElementById('sum-dates-label').innerText = activeCheckoutPayload.offer.timing || 'Dates';
+                document.getElementById('bill-nights-label').innerText = activeCheckoutPayload.offer.title || 'Special Package';
+            } else if (mode === 'hourly' && activeCheckoutPayload.hourly) {
+                const hr = activeCheckoutPayload.hourly;
+                rawBaseCost = (hr.rate || 500) * (hr.hours || 4);
+                document.getElementById('sum-mode-badge').innerText = `⏱️ Hourly Stay`;
+                document.getElementById('sum-dates-label').innerText = `${hr.date} (${hr.startTime} - ${hr.endTime})`;
+                document.getElementById('bill-nights-label').innerText = `Hourly Rate × ${hr.hours} hrs`;
+            } else {
+                const d = (activeCheckoutPayload && activeCheckoutPayload.daily) || { nights: 3, checkin: 'Aug 22', checkout: 'Aug 25' };
+                const dailyRate = d.rate || activeProperty.dailyPrice || activeProperty.price || 5000;
+                rawBaseCost = dailyRate * (d.nights || 3);
+                document.getElementById('sum-mode-badge').innerText = `🌙 Daily Stay`;
+                document.getElementById('sum-dates-label').innerText = `${d.checkin} - ${d.checkout} (${d.nights}N)`;
+                document.getElementById('bill-nights-label').innerText = `${dailyRate} × ${d.nights} nights`;
+            }
+
+            convertedTotalAmount = rawBaseCost;
+            document.getElementById('bill-base-rent').innerText = `${activeSymbol}${rawBaseCost.toLocaleString()}`;
+            document.getElementById('bill-grand-total').innerText = `${activeSymbol}${convertedTotalAmount.toLocaleString()}`;
+
+            // 🌟 جانچ: کیا ہوسٹ نے بغیر ٹوکن اجازت دی ہے؟
+            const allowDirectBooking = Boolean(activeProperty.allowDirectBooking);
+
+            if (allowDirectBooking) {
+                document.getElementById('direct-booking-banner').classList.remove('hidden');
+                document.getElementById('host-payment-accounts-section').classList.add('hidden');
+                document.getElementById('token-controller-box').classList.add('hidden');
+                document.getElementById('input-advance-deposit').value = 0;
+            } else {
+                document.getElementById('direct-booking-banner').classList.add('hidden');
+                document.getElementById('host-payment-accounts-section').classList.remove('hidden');
+                document.getElementById('token-controller-box').classList.remove('hidden');
+                
+                const defaultToken = Math.round(convertedTotalAmount * 0.15);
+                document.getElementById('input-advance-deposit').value = defaultToken;
+                calculateRemainingBalanceOnArrival();
+
+                // 🌟 فلٹر شدہ 4 بینک اکاؤنٹس رینڈر کریں
+                setupDynamicBankAccounts();
+            }
+        }
+
+        function calculateRemainingBalanceOnArrival() {
+            const depositVal = parseFloat(document.getElementById('input-advance-deposit').value) || 0;
+            const remaining = Math.max(0, convertedTotalAmount - depositVal);
+            document.getElementById('bill-remaining-balance').innerText = `${activeSymbol}${remaining.toLocaleString()}`;
+        }
+
+        // ================= 🌟 DYNAMIC 4 BANK ACCOUNTS RENDERER =================
+        function setupDynamicBankAccounts() {
+            const rawAccounts = activeProperty.bankAccounts || [];
+            activeBankAccountsList = [];
+
+            // صرف وہ اکاؤنٹس فلٹر کریں جو ہوسٹ نے واقعی فل کیے ہیں
+            rawAccounts.forEach(b => {
+                if (b.type === 'local' && (b.bankName || b.accountNumber)) {
+                    activeBankAccountsList.push({ ...b, label: "🏦 Bank", name: b.bankName || 'Local Bank', detail1: b.accountTitle, detail2: b.accountNumber || b.iban });
+                } else if (b.type === 'wallet' && (b.walletName || b.accountNumber)) {
+                    activeBankAccountsList.push({ ...b, label: "📱 Wallet", name: b.walletName || 'Mobile Wallet', detail1: b.accountTitle, detail2: b.accountNumber });
+                } else if (b.type === 'international' && (b.bankName || b.iban)) {
+                    activeBankAccountsList.push({ ...b, label: "🌐 Intl Wire", name: b.bankName || 'Intl Wire', detail1: b.accountTitle, detail2: b.iban, extra: b.swift });
+                } else if (b.type === 'crypto' && (b.address || b.provider)) {
+                    activeBankAccountsList.push({ ...b, label: "🪙 Crypto", name: b.provider || 'USDT / PayPal', detail1: b.network || 'TRC20', detail2: b.address });
+                }
+            });
+
+            const tabsContainer = document.getElementById('dynamic-account-tabs');
+            tabsContainer.innerHTML = '';
+
+            if (activeBankAccountsList.length === 0) {
+                document.getElementById('host-account-details-box').innerHTML = `<p class="text-[10px] text-gray-400">ہوسٹ نے کوئی اکاؤنٹ سیٹ نہیں کیا۔ براہ کرم رابطہ کریں۔</p>`;
+                return;
+            }
+
+            // ڈائنامک ٹیبز بنائیں
+            activeBankAccountsList.forEach((acc, idx) => {
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = `flex-1 py-2 rounded-xl text-[10px] font-black cursor-pointer transition-all ${idx === 0 ? 'bg-white shadow-xs text-luxuryGreen' : 'text-gray-400'}`;
+                btn.innerText = acc.label;
+                btn.onclick = () => selectBankAccountTab(idx);
+                btn.id = `bank-tab-${idx}`;
+                tabsContainer.appendChild(btn);
+            });
+
+            selectBankAccountTab(0);
+        }
+
+        function selectBankAccountTab(index) {
+            const acc = activeBankAccountsList[index];
+            if (!acc) return;
+            selectedBankType = acc.type;
+
+            // ٹیب اسٹائلنگ
+            activeBankAccountsList.forEach((_, idx) => {
+                const btn = document.getElementById(`bank-tab-${idx}`);
+                if (btn) btn.className = `flex-1 py-2 rounded-xl text-[10px] font-black cursor-pointer transition-all ${idx === index ? 'bg-white shadow-xs text-luxuryGreen' : 'text-gray-400'}`;
+            });
+
+            // تفصیلات
+            const box = document.getElementById('host-account-details-box');
+            box.innerHTML = `
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between py-1 border-b border-gray-150">
+                        <span class="text-gray-400">Title / Name:</span>
+                        <span class="text-luxuryGreen font-black">${acc.name}</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-gray-150">
+                        <span class="text-gray-400">Account Holder:</span>
+                        <span class="text-luxuryGreen font-black">${acc.detail1 || '-'}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                        <span class="text-gray-400">Number / Address:</span>
+                        <div class="flex items-center space-x-1.5 min-w-0">
+                            <span class="text-luxuryGreen font-mono font-black truncate max-w-[150px]">${acc.detail2 || '-'}</span>
+                            <button type="button" onclick="navigator.clipboard.writeText('${acc.detail2 || ''}'); showBookingToast('کاپی ہو گیا! 📋', '✓');" class="px-2 py-0.5 bg-luxuryGreen text-white text-[8px] font-black rounded cursor-pointer">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ================= 🚀 SUBMIT BOOKING (WITH 5 GUEST FIELDS & 4 HOST CHANNELS) =================
+        async function submitBookingRequest() {
+            const name = document.getElementById('guest-input-name').value.trim();
+            const phone = document.getElementById('guest-input-phone').value.trim();
+            const email = document.getElementById('guest-input-email').value.trim();
+            const link1 = document.getElementById('guest-input-link1').value.trim();
+            const link2 = document.getElementById('guest-input-link2').value.trim();
+            const depositPaid = parseFloat(document.getElementById('input-advance-deposit').value) || 0;
+
+            if (!name || !phone || !email) {
+                showBookingToast("براہ کرم اپنا نام، فون نمبر اور ای میل لازمی درج کریں!", "⚠️");
+                return;
+            }
+
+            const submitBtn = document.getElementById('btn-submit-booking');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "⏳ Booking in progress...";
+
+            const uniqueCodeNum = Math.floor(100000 + Math.random() * 900000);
+            const globalBookingKey = `LS-BK-${uniqueCodeNum}`;
+
+            const mode = activeCheckoutPayload ? activeCheckoutPayload.mode : 'daily';
+            let checkIn = "";
+            let checkOut = "";
+
+            if (mode === 'daily' && activeCheckoutPayload.daily) {
+                checkIn = activeCheckoutPayload.daily.checkin;
+                checkOut = activeCheckoutPayload.daily.checkout;
+            } else {
+                checkIn = new Date().toLocaleDateString();
+                checkOut = "Flexible";
+            }
+
+            const hostName = activeProperty.hostName || activeProperty.host?.name || "Verified Host";
+            const hostPhone = activeProperty.hostPhone || activeProperty.host?.phone || "";
+            const hostEmail = activeProperty.hostEmail || activeProperty.host?.email || "";
+            const hostLink1 = activeProperty.hostContactLink1 || activeProperty.hostWhatsapp || hostPhone;
+            const hostLink2 = activeProperty.hostContactLink2 || activeProperty.hostTelegram || "";
+
+            // گیسٹ اور ہوسٹ کی تمام تفصیلات کا پے لوڈ
+            const bookingPayload = {
+                bookingId: globalBookingKey,
+                propertyId: activeProperty.id,
+                propertyName: activeProperty.name || activeProperty.title || "Stay",
+                city: activeProperty.city || "Pakistan",
+                checkIn: checkIn,
+                checkOut: checkOut,
+                guestsCount: activeCheckoutPayload ? (activeCheckoutPayload.guests || 2) : 2,
+                totalAmount: convertedTotalAmount,
+                commissionAmount: Math.round(convertedTotalAmount * 0.10),
+
+                // 🌟 گیسٹ کی 5 تفصیلات (4 رابطہ چینلز)
+                guestName: name,
+                guestPhone: phone,
+                guestEmail: email,
+                guestContactLink1: link1,
+                guestContactLink2: link2,
+                guestWhatsapp: link1.includes('wa.me') ? link1 : phone,
+                guestTelegram: link1.includes('t.me') ? link1 : (link2.includes('t.me') ? link2 : ""),
+
+                // 🌟 ہوسٹ کی معلومات (4 رابطہ چینلز)
+                hostUid: activeProperty.hostUid || "",
+                hostName: hostName,
+                hostPhone: hostPhone,
+                hostEmail: hostEmail,
+                hostContactLink1: hostLink1,
+                hostContactLink2: hostLink2,
+                hostWhatsapp: hostLink1,
+                hostTelegram: hostLink1.includes('t.me') ? hostLink1 : (hostLink2.includes('t.me') ? hostLink2 : ""),
+
+                paymentMethodSelected: selectedBankType || 'Direct on Arrival',
+                depositPaid: depositPaid,
+                remainingDue: Math.max(0, convertedTotalAmount - depositPaid),
+                status: "new",
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                // 1. فائر بیس میں محفوظ کریں
+                await firebase.database().ref(`bookings/${globalBookingKey}`).set(bookingPayload);
+
+                // لوکل اسٹوریج میں گیسٹ کے لیے سیو
+                let myGuestBookings = JSON.parse(localStorage.getItem('likestays_my_guest_bookings') || '[]');
+                myGuestBookings.unshift(bookingPayload);
+                localStorage.setItem('likestays_my_guest_bookings', JSON.stringify(myGuestBookings));
+
+                // 2. Cloudflare Worker کو کال کریں (ایڈمن کو ٹیلی گرام پر فوری الرٹ جائے گا)
+                fetch(`${CLOUDFLARE_WORKER_URL}/api/new-booking`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bookingPayload)
+                }).catch(e => console.log("Telegram Worker Alert dispatched."));
+
+                // 3. واؤچر اسکرین دکھائیں
+                document.getElementById('main-checkout-view').classList.add('hidden');
+                document.getElementById('booking-receipt-screen').classList.remove('hidden');
+
+                document.getElementById('rcpt-booking-id').innerText = `#${globalBookingKey}`;
+                document.getElementById('rcpt-guest-name').innerText = name;
+                document.getElementById('rcpt-guest-phone').innerText = phone;
+                document.getElementById('rcpt-stay-duration').innerText = `${checkIn} - ${checkOut}`;
+                document.getElementById('rcpt-total-bill').innerText = `${activeSymbol}${convertedTotalAmount.toLocaleString()}`;
+
+                // 🌟 ہوسٹ کے چاروں رابطہ چینلز واؤچر پر لگائیں
+                document.getElementById('rcpt-host-name').innerText = hostName;
+                document.getElementById('rcpt-host-phone').innerText = hostPhone || "-";
+                
+                const cleanPhone = hostPhone.replace(/[^0-9]/g, '');
+                document.getElementById('rcpt-host-call-btn').href = cleanPhone ? `tel:${cleanPhone}` : '#';
+                
+                const cleanWa = (hostLink1 || hostPhone).replace(/[^0-9]/g, '');
+                document.getElementById('rcpt-host-wa-btn').href = cleanWa ? `https://wa.me/${cleanWa}` : '#';
+                
+                document.getElementById('rcpt-host-email-btn').href = hostEmail ? `mailto:${hostEmail}` : '#';
+
+                const extraBtn = document.getElementById('rcpt-host-extra-btn');
+                if (hostLink2) {
+                    extraBtn.href = hostLink2.startsWith('http') ? hostLink2 : `https://${hostLink2}`;
+                    extraBtn.classList.remove('opacity-40', 'pointer-events-none');
+                } else {
+                    extraBtn.classList.add('opacity-40', 'pointer-events-none');
+                }
+
+            } catch (err) {
+                console.error("Booking Error:", err);
+                showBookingToast("خرابی پیش آئی، دوبارہ کوشش کریں!", "⚠️");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Confirm & Lock Reservation";
+            }
+        }
+    </script>
+</body>
+</html>
