@@ -75,7 +75,7 @@ const LikeStaysFilter = (function() {
         const cleanDest = searchedDest.trim().toLowerCase();
 
         return propertiesList.filter(prop => {
-            if (prop.status === "Hidden" || prop.status === "Draft") return false;
+            if (prop.status === "Hidden" || prop.status === "Draft" || prop.status === "Pending" || prop.status === "Rejected") return false;
 
             // 1. Search Destination
             if (cleanDest) {
