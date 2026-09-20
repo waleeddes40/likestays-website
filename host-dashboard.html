@@ -97,35 +97,25 @@
             
             <!-- TOP STICKY HEADER -->
             <header class="h-16 shrink-0 bg-white flex justify-between items-center px-4 sm:px-8 border-b border-gray-150/60 z-30 shadow-xs">
-                <!-- SWITCH TO GUEST BUTTON -->
-                <button onclick="switchToGuestPortal()" class="text-xs font-black text-luxuryGreen uppercase tracking-wider flex items-center space-x-1.5 cursor-pointer hover:scale-105 active:scale-95 transition-transform bg-softMint px-3 py-2 rounded-xl border border-gray-200">
-                    <span class="text-sm">🔄</span> 
-                    <span>Switch to Guest Side</span>
-                </button>
-                
-                <!-- 🌐 DUAL GLOBAL CONTROLS: 40+ LANGUAGES & 150 CURRENCIES -->
+                <div class="flex items-center space-x-2 text-left leading-tight">
+                    <span id="host-name-label" class="text-xs font-black text-luxuryGreen">Host Console</span>
+                </div>
+
+                <!-- 🌐 DUAL GLOBAL CONTROLS: 40+ LANGUAGES & 150 CURRENCIES (برابر سائز) -->
                 <div class="flex items-center space-x-2">
                     <!-- 40+ LANGUAGES BUTTON -->
-                    <button type="button" id="header-lang-btn" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
+                    <button type="button" id="header-lang-btn" class="neu-flat w-[86px] px-2 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center justify-center space-x-1 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
                         <span id="header-lang-flag">🇺🇸</span>
                         <span id="header-lang-text">EN</span>
                         <span class="text-[8px]">▼</span>
                     </button>
 
                     <!-- 150 CURRENCIES BUTTON -->
-                    <button type="button" id="header-curr-btn" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
+                    <button type="button" id="header-curr-btn" class="neu-flat w-[86px] px-2 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center justify-center space-x-1 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
                         <span id="header-curr-flag">🇺🇸</span>
-                        <span id="header-curr-text">USD ($)</span>
+                        <span id="header-curr-text">USD</span>
                         <span class="text-[8px]">▼</span>
                     </button>
-
-                    <div class="hidden sm:flex items-center space-x-2 text-left leading-tight pl-2">
-                        <span id="host-name-label" class="text-xs font-black text-luxuryGreen">Host Console</span>
-                        <span class="text-[9px] font-bold text-gray-400 block">Verified Partner</span>
-                    </div>
-                    <span class="bg-luxuryGreen text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-xl shadow-xs tracking-wider">
-                        HOST
-                    </span>
                 </div>
             </header>
 
@@ -204,21 +194,21 @@
                         </div>
                         <div>
                             <h4 class="text-xs sm:text-sm font-black text-luxuryGreen uppercase tracking-wider">Your Brand Link</h4>
-                            <p class="text-[10px] text-gray-400 font-bold">اپنا مختصر، برانڈڈ لنک بنائیں — اپنی تمام properties ایک جگہ دکھائیں</p>
-                            <p class="text-[9px] text-amber-700 font-bold pt-0.5">📌 صرف چھوٹے انگریزی حروف اور ڈیش (-) — مثال: <span class="font-mono">sunset-villas</span> → <span class="font-mono">sunset-villas.likestays.co</span></p>
+                            <p class="text-[10px] text-gray-400 font-bold">Create your short, branded link — show all your properties in one place</p>
+                            <p class="text-[9px] text-amber-700 font-bold pt-0.5">📌 Lowercase English letters and dashes (-) only — example: <span class="font-mono">sunset-villas</span> → <span class="font-mono">sunset-villas.likestays.co</span></p>
                         </div>
                     </div>
 
                     <div id="brand-link-current-display" class="hidden bg-emerald-50 border border-emerald-100 rounded-2xl p-3 text-center">
-                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wide">آپ کا لائیو لنک</p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wide">Your Live Link</p>
                         <p id="brand-link-current-url" class="text-sm font-black text-luxuryGreen font-mono"></p>
                     </div>
 
-                    <div id="brand-link-setup-form" class="flex items-center space-x-2">
-                        <input type="text" id="brand-link-input" oninput="updateBrandLinkPreview(this.value)" placeholder="e.g. sunset-villas" class="flex-1 p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
-                        <button type="button" onclick="saveHostBrandLink()" class="neu-btn-green text-white font-black text-xs px-4 py-3 rounded-xl uppercase tracking-wider cursor-pointer shrink-0">Save</button>
+                    <div id="brand-link-setup-form" class="space-y-2">
+                        <input type="text" id="brand-link-input" oninput="updateBrandLinkPreview(this.value)" placeholder="e.g. sunset-villas" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                        <button type="button" onclick="saveHostBrandLink()" class="w-full neu-btn-green text-white font-black text-xs py-3 rounded-xl uppercase tracking-wider cursor-pointer">Save</button>
                     </div>
-                    <p class="text-[9px] text-gray-400 font-semibold">🔗 پیش نظارہ: <span id="brand-link-live-preview" class="font-mono text-luxuryGreen font-black">yourname.likestays.co</span></p>
+                    <p class="text-[9px] text-gray-400 font-semibold">🔗 Preview: <span id="brand-link-live-preview" class="font-mono text-luxuryGreen font-black">yourname.likestays.co</span></p>
                     <p id="brand-link-status-msg" class="text-[9px] font-bold pt-0.5"></p>
 
                     <div class="bg-softMint/70 border border-gray-200 rounded-2xl p-3 mt-1">
@@ -226,7 +216,8 @@
                             📌 <b>Note:</b> This is your subdomain link. When someone opens this link, only
                             <b>YOUR</b> properties will be shown — nothing else (no search bar, no other host's
                             properties, no other pages like Booking or Highlights). Just your property cards,
-                            with Language, Currency, and the LikeStays logo on top.
+                            with Language, Currency, and the LikeStays logo on top. Already have a link? Just
+                            type a new name above and tap Save to change it anytime.
                         </p>
                     </div>
                 </div>
@@ -346,24 +337,24 @@
 
             if (!hostUid) {
                 statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
-                statusMsg.innerText = "⚠️ پہلے sign in کریں۔";
+                statusMsg.innerText = "⚠️ Please sign in first.";
                 return;
             }
             if (!slug || slug.length < 3) {
                 statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
-                statusMsg.innerText = "⚠️ کم از کم 3 حروف کا نام لکھیں (صرف انگریزی حروف/نمبر)۔";
+                statusMsg.innerText = "⚠️ Enter at least 3 characters (English letters/numbers only).";
                 return;
             }
 
             statusMsg.className = "text-[9px] font-bold pt-0.5 text-gray-400";
-            statusMsg.innerText = "چیک ہو رہا ہے...";
+            statusMsg.innerText = "Checking availability...";
 
             const registryRef = firebase.database().ref(`brandSlugRegistry/${slug}`);
             registryRef.once('value').then(snap => {
                 const existingOwner = snap.val();
                 if (existingOwner && existingOwner !== hostUid) {
                     statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
-                    statusMsg.innerText = "❌ یہ نام پہلے سے کسی اور host نے لے رکھا ہے، دوسرا نام آزمائیں۔";
+                    statusMsg.innerText = "❌ This name is already taken by another host — try a different one.";
                     return;
                 }
 
@@ -383,7 +374,7 @@
                         document.getElementById('brand-link-current-display').classList.remove('hidden');
                         document.getElementById('brand-link-current-url').innerText = `${slug}.likestays.co`;
                         statusMsg.className = "text-[9px] font-bold pt-0.5 text-emerald-700";
-                        statusMsg.innerText = "✅ محفوظ ہو گیا! اب یہ لنک لائیو ہے۔";
+                        statusMsg.innerText = "✅ Saved! Your link is now live.";
                     });
                 });
             });
