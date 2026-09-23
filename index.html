@@ -907,11 +907,13 @@
                         <!-- CAROUSEL -->
                         <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
                             <div id="carousel-track-${prop.id}" onscroll="handleCardCarouselScroll('${prop.id}', event)" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-                                ${photosList.map((photo) => {
+                                ${photosList.map((photo, photoIdx) => {
                                     const cleanUrl = photo.startsWith('http') || photo.startsWith('data:') ? photo : `https://images.unsplash.com/${photo}?auto=format&fit=crop&q=70&w=500`;
+                                    // 🎯 صرف cover (پہلی) تصویر پر host کا منتخب کردہ crop position لاگو ہوتا ہے
+                                    const objPos = (photoIdx === 0 && prop.coverPosition) ? prop.coverPosition : 'center';
                                     return `
                                         <div class="w-full h-full shrink-0 snap-center">
-                                            <img src="${cleanUrl}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none" alt="${prop.name}">
+                                            <img src="${cleanUrl}" loading="lazy" decoding="async" style="object-position: ${objPos};" class="w-full h-full object-cover pointer-events-none" alt="${prop.name}">
                                         </div>
                                     `;
                                 }).join('')}
