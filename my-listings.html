@@ -521,6 +521,28 @@
                     </div>
                 </div>
 
+                <!-- 3B. PROPERTY VIDEO (REELS) -->
+                <div class="neu-flat bg-white rounded-3xl p-5 border border-gray-150 space-y-3">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
+                        <div>
+                            <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen block">3B. Property Video (Reels)</span>
+                            <span class="text-[8px] text-gray-400 font-bold">Optional. Vertical video, up to 60 seconds, shown in the Reels tab</span>
+                        </div>
+                        <span id="video-status-label" class="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">No video</span>
+                    </div>
+                    <div class="relative w-full p-4 rounded-2xl neu-inset bg-softMint border-2 border-dashed border-gray-300 hover:border-luxuryGreen flex flex-col items-center justify-center cursor-pointer text-center">
+                        <input type="file" id="prop-video-input" accept="video/*" onchange="handleListingVideoUpload(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                        <span class="text-xl mb-1">🎬</span>
+                        <span class="text-xs font-black text-luxuryGreen">Click to Select Video</span>
+                        <span class="text-[8px] text-gray-400 font-bold">MP4 / MOV, max 60 MB</span>
+                    </div>
+                    <div id="video-progress-wrap" class="hidden w-full h-2 rounded-full bg-gray-200 overflow-hidden"><div id="video-progress-bar" class="h-full bg-luxuryGreen" style="width:0%"></div></div>
+                    <div id="video-preview-wrap" class="hidden relative w-40 mx-auto aspect-[9/16] rounded-2xl overflow-hidden bg-black">
+                        <video id="video-preview" class="w-full h-full object-cover" controls playsinline muted></video>
+                        <button type="button" onclick="removeListingVideo()" class="absolute top-1 right-1 bg-red-600 text-white text-[9px] font-black px-2 py-1 rounded-full">Remove</button>
+                    </div>
+                </div>
+
                 <!-- 4. CAPACITY & DETAILED SPACES -->
                 <div class="neu-flat bg-white rounded-3xl p-5 border border-gray-150 space-y-3 text-xs font-bold text-gray-600">
                     <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen block border-b border-gray-100 pb-1.5">4. Capacity & Detailed Spaces</span>
@@ -1818,6 +1840,7 @@
                 coverPhotoPosition = { x: 50, y: 50 };
             }
             renderPhotosManagerGrid();
+            listingVideoUrl = p.videoUrl || ''; listingVideoPoster = p.videoPoster || ''; setVideoUI(listingVideoUrl);
 
             // 4. Capacity
             document.getElementById('new-prop-max-guests').value = p.maxGuests || 8;
@@ -2132,6 +2155,69 @@
                 renderPhotosManagerGrid();
                 uploadPhotoBlobToStorage(blob, photoEntry);
             });
+        }
+
+        // ================= 🎬 PROPERTY VIDEO (Cloudinary — free, no card) =================
+        // ⚠️ اپنے Cloudinary اکاؤنٹ سے یہ دو قدریں بھریں (secret نہیں، محفوظ ہیں):
+        const CLOUDINARY_CLOUD_NAME = "YOUR_CLOUD_NAME";
+        const CLOUDINARY_UPLOAD_PRESET = "YOUR_UNSIGNED_PRESET"; // Unsigned preset
+        let listingVideoUrl = '';
+        let listingVideoPoster = '';
+
+        function setVideoUI(url) {
+            const wrap = document.getElementById('video-preview-wrap');
+            const vid = document.getElementById('video-preview');
+            const label = document.getElementById('video-status-label');
+            if (url) {
+                vid.src = url; wrap.classList.remove('hidden'); label.innerText = 'Video ready';
+            } else {
+                vid.removeAttribute('src'); wrap.classList.add('hidden'); label.innerText = 'No video';
+            }
+        }
+
+        function handleListingVideoUpload(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            if (file.size > 60 * 1024 * 1024) { showToast("Video must be under 60 MB.", "⚠️"); input.value = ''; return; }
+            if (CLOUDINARY_CLOUD_NAME.startsWith('YOUR_')) { showToast("Cloudinary is not configured yet.", "⚠️"); input.value = ''; return; }
+
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            fd.append('folder', 'likestays-reels');
+
+            const bar = document.getElementById('video-progress-bar');
+            const barWrap = document.getElementById('video-progress-wrap');
+            const label = document.getElementById('video-status-label');
+            barWrap.classList.remove('hidden'); bar.style.width = '0%';
+            pendingPhotoUploads++; updateSubmitButtonUploadState(); // submit بٹن اپلوڈ تک بند
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) { const pct = Math.round(e.loaded / e.total * 100); bar.style.width = pct + '%'; label.innerText = `Uploading ${pct}%`; }
+            };
+            xhr.onload = () => {
+                pendingPhotoUploads--; updateSubmitButtonUploadState(); barWrap.classList.add('hidden');
+                try {
+                    const res = JSON.parse(xhr.responseText);
+                    if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) {
+                        if (res.duration && res.duration > 61) { showToast("Video is longer than 60 seconds.", "⚠️"); label.innerText = 'No video'; return; }
+                        // f_auto,q_auto,w_720: چھوٹا اور تیز ویڈیو؛ poster: پہلا فریم
+                        listingVideoUrl = res.secure_url.replace('/upload/', '/upload/f_mp4,q_auto,w_720/');
+                        listingVideoPoster = res.secure_url.replace('/upload/', '/upload/so_0,f_jpg,w_720/').replace(/\.[a-z0-9]+$/i, '.jpg');
+                        setVideoUI(listingVideoUrl);
+                    } else { throw new Error((res.error && res.error.message) || 'Upload failed'); }
+                } catch (err) { label.innerText = 'Upload failed'; showToast("Video upload failed. Try again.", "⚠️"); }
+            };
+            xhr.onerror = () => { pendingPhotoUploads--; updateSubmitButtonUploadState(); barWrap.classList.add('hidden'); label.innerText = 'Upload failed'; showToast("Video upload failed. Check your connection.", "⚠️"); };
+            xhr.send(fd);
+        }
+
+        function removeListingVideo() {
+            listingVideoUrl = ''; listingVideoPoster = '';
+            document.getElementById('prop-video-input').value = '';
+            setVideoUI('');
         }
 
         function renderPhotosManagerGrid() {
@@ -2522,6 +2608,8 @@
                 },
                 photos: finalPhotosList,
                 image: finalPhotosList[0],
+                videoUrl: listingVideoUrl || null,
+                videoPoster: listingVideoPoster || null,
                 coverPosition: `${coverPhotoPosition.x}% ${coverPhotoPosition.y}%`, // 🎯 index.html کارڈ پر کون سا حصہ مرکز میں رہے
                 currency: String(activeSelectedCurrency.code),
                 currencySymbol: String(activeSelectedCurrency.symbol),

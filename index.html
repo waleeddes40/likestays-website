@@ -119,12 +119,60 @@
             height: 18px; width: 18px; border-radius: 50%; background: #0D4E2F; cursor: pointer;
             -webkit-appearance: none; margin-top: -6.5px; box-shadow: 0 2px 5px rgba(13, 78, 47, 0.35); border: 2px solid #FFFFFF;
         }
-    </style>
+    
+  .offer-cycle{position:relative;height:12px;overflow:hidden;flex:1;min-width:0}
+  .offer-cycle span{position:absolute;left:0;right:0;top:0;white-space:nowrap;opacity:0}
+  .offer-cycle .s1{animation:offerFade1 4s infinite}
+  .offer-cycle .s2{animation:offerFade2 4s infinite}
+  @keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+  @keyframes offerFade1{0%{opacity:0}5%{opacity:1}22%{opacity:1}30%{opacity:0}100%{opacity:0}}
+  @keyframes offerFade2{0%{opacity:0}30%{opacity:0}38%{opacity:1}95%{opacity:1}100%{opacity:0}}
+  .price-stack{position:absolute;left:10px;top:8px;z-index:10;display:flex;flex-direction:column;gap:2px}
+  .price-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:7px;font-weight:800;padding:3px 8px;width:fit-content}
+  #feed-wrap{top:var(--hdr,120px)!important}
+  #explore-property-list{padding-top:0}
+  .side-circles{position:absolute;right:12px;bottom:170px;display:flex;flex-direction:column;gap:11px;align-items:center;z-index:6}
+  .side-circle{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);color:#0D4E2F;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:10px;line-height:1.05;border:0;cursor:pointer}
+
+  #explore-real-header .neu-logo-card,
+  #explore-real-header .neu-flat{background:rgba(0,0,0,.45)!important;backdrop-filter:blur(8px);border-color:rgba(255,255,255,.25)!important}
+  #explore-real-header .neu-logo-card span,
+  #explore-real-header .neu-logo-card svg,
+  #explore-real-header .neu-flat span{color:#fff!important}
+  #explore-real-header .airbnb-search-pill{background:#fff!important;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+  #explore-real-header #general-search-pill-row{margin-top:2px}
+</style>
+<style>
+  html,body{height:100%;overflow:hidden!important}
+  body{padding-bottom:0!important}
+  #feed-wrap{position:fixed;left:0;right:0;bottom:0;top:var(--hdr,120px);z-index:1}
+  #explore-property-list{display:block!important;height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;background:#000}
+  #explore-property-list::-webkit-scrollbar{display:none}
+  .feed-slide{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:#000;color:#fff}
+  .feed-media{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+  .feed-media::-webkit-scrollbar{display:none}
+  .feed-item{flex:0 0 100%;height:100%;scroll-snap-align:center;position:relative}
+  .feed-item img,.feed-item video{width:100%;height:100%;object-fit:cover;display:block}
+  .feed-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent 20%,transparent 45%,rgba(0,0,0,.85))}
+  .feed-dots{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;background:rgba(0,0,0,.4);padding:4px 8px;border-radius:999px;pointer-events:none;z-index:5}
+  .feed-info{position:absolute;left:14px;right:70px;bottom:calc(env(safe-area-inset-bottom,0px) + 158px);z-index:5;pointer-events:none}
+  .feed-rail{position:absolute;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 158px);z-index:6;display:flex;flex-direction:column;gap:14px;align-items:center}
+  .rail-btn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border:0;color:#fff;font-size:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
+  .rail-btn small{font-size:8px;font-weight:800;margin-top:-2px}
+  .host-av{width:46px;height:46px;border-radius:50%;background:#1E6F45;border:2px solid #fff;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer}
+  .feed-actions{position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 88px);z-index:6;display:flex;gap:10px}
+  .fa-btn{flex:1;border:0;border-radius:999px;padding:13px 10px;font-size:13px;font-weight:800;cursor:pointer}
+  .fa-book{background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff}
+  .fa-view{background:#fff;color:#0D4E2F}
+  .prompt-slide{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(160deg,#0D4E2F,#12331F);gap:14px}
+  #host-sheet{position:fixed;left:0;right:0;bottom:0;max-height:75vh;overflow-y:auto;background:#fff;color:#0D4E2F;border-radius:24px 24px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateY(105%);transition:transform .25s;z-index:27000}
+  #host-sheet.open{transform:none}
+</style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-28">
 
     <!-- 🌟 TOP HEADER -->
-    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 pt-2.5 pb-3 px-3 sm:px-6">
+    <header id="explore-real-header" class="fixed top-0 left-0 right-0 z-[190] bg-transparent border-0 pt-2.5 pb-3 px-3 sm:px-6" style="padding-top:calc(env(safe-area-inset-top,0px) + 10px)">
         <div class="max-w-7xl mx-auto flex flex-col space-y-2.5">
             
             <!-- ROW 1: LOGO + CURRENCY & LANGUAGE -->
@@ -173,6 +221,14 @@
                 </button>
             </div>
 
+            <!-- offer badge for whichever Explore card is currently on screen (empty/hidden when that property has no offer) -->
+            <div id="g-offer-badge" class="w-full max-w-xl mx-auto" style="display:none;align-items:center;background:#F5A524;color:#3a2500;font-size:10px;font-weight:800;padding:5px 12px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden">
+                <div class="offer-cycle" style="flex:1">
+                    <span class="s1" style="font-weight:900;letter-spacing:.3px">✨ SPECIAL OFFER</span>
+                    <span class="s2" id="g-offer-text">&nbsp;</span>
+                </div>
+            </div>
+
         </div>
     </header>
 
@@ -193,23 +249,20 @@
     </div>
 
     <!-- MAIN WORKSPACE -->
-    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 space-y-4">
-        <div class="border-b border-gray-200/50 pb-1 text-left flex justify-between items-center">
-            <div>
-                <h2 id="search-title-label" class="text-sm sm:text-base font-black text-luxuryGreen">All Luxury Escapes</h2>
-                <p id="search-subtitle-label" class="text-[9px] font-bold text-gray-400">Verified villas, penthouses and elite private stays</p>
-            </div>
-            <span id="home-stays-count-badge" class="text-[10px] font-extrabold text-luxuryLightGreen bg-white px-2.5 py-1 rounded-xl border border-gray-200 shadow-sm">Loading...</span>
+    <!-- floating Book Now button, sits beside the real bottom nav (LikeStaysEngine.renderBottomNav), targets whichever card is on screen -->
+    <button type="button" id="g-book-btn" onclick="navigateToDetailsPage(window._activeFeedId)" style="position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:210;padding:12px 18px;border-radius:99px;font-size:12px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;border:0;box-shadow:0 4px 14px rgba(0,0,0,.25)">Book Now</button>
+    <main id="feed-wrap">
+        <div id="feed-title-row" class="hidden">
+            <h2 id="search-title-label"></h2><p id="search-subtitle-label"></p>
+            <span id="home-stays-count-badge">Loading...</span>
         </div>
-
-        <!-- PROGRESSIVE CHUNKED PROPERTY GRID -->
-        <div id="explore-property-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"></div>
-
-        <!-- INFINITE SCROLL LOADER SENTINEL -->
-        <div id="infinite-scroll-sentinel" class="py-6 text-center text-xs font-bold text-gray-400 hidden">
-            <span class="inline-block animate-spin mr-1">⏳</span> Loading more stays...
-        </div>
+        <div id="explore-property-list"></div>
+        <div id="infinite-scroll-sentinel" class="hidden"></div>
     </main>
+    <div id="host-sheet">
+        <div class="flex justify-between items-center mb-3"><h3 id="host-sheet-title" class="text-sm font-black"></h3><button type="button" onclick="closeHostSheet()" class="text-xs font-black">✕</button></div>
+        <div id="host-sheet-list" class="grid grid-cols-2 gap-3"></div>
+    </div>
 
     <!-- ======================================================================= -->
     <!-- 🌟 AIRBNB GLOBAL SEARCH POPUP MODAL -->
@@ -499,7 +552,7 @@
         let masterPropertiesList = [];
         let currentlyRenderedList = [];
         let currentRenderIndex = 0;
-        const CHUNK_SIZE = 12;
+        const CHUNK_SIZE = 8;
 
         let activeSubdomainSlug = null;
         let activeHotelName = null;
@@ -851,6 +904,130 @@
             updateMainSearchPillDisplay();
         }
 
+        // ================= 🎬 FULL-SCREEN EXPLORE FEED =================
+        let feedMuted = true;
+        const escF = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        function setFeedTop() {
+            const h = document.querySelector('header');
+            if (h) document.documentElement.style.setProperty('--hdr', h.offsetHeight + 'px');
+        }
+        window.addEventListener('resize', setFeedTop);
+
+        function buildFeedSlide(prop, favs) {
+            const photos = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=900"]);
+            const daily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR');
+            const hourly = (prop.hourlyPrice && prop.hourlyPrice > 0) ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : '';
+            const isFav = favs.includes(String(prop.id));
+            const id = escF(prop.id);
+            const hasVideo = !!prop.videoUrl;
+
+            const items = [];
+            if (hasVideo) {
+                items.push(`<div class="feed-item"><video data-src="${escF(prop.videoUrl)}" ${prop.videoPoster ? `poster="${escF(prop.videoPoster)}"` : ''} loop muted playsinline preload="none"></video></div>`);
+            }
+            photos.forEach((photo, idx) => {
+                const url = photo.startsWith('http') || photo.startsWith('data:') ? photo : `https://images.unsplash.com/${photo}?auto=format&fit=crop&q=70&w=900`;
+                const pos = (idx === 0 && prop.coverPosition) ? prop.coverPosition : 'center';
+                items.push(`<div class="feed-item"><img src="${escF(url)}" loading="lazy" decoding="async" style="object-position:${escF(pos)}" alt="${escF(prop.name)}"></div>`);
+            });
+
+            const dots = items.length > 1 ? `<div class="feed-dots" data-video-first="${hasVideo ? '1' : '0'}">${items.map((_, d) => `<span id="dot-${id}-${d}" class="w-1.5 h-1.5 rounded-full transition-all ${d === 0 ? 'bg-white scale-125 shadow-xs' : 'bg-white/50'}"></span>`).join('')}</div>` : '';
+
+            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+            const deal = deals.filter(d => d && d.enabled !== false)[0];
+            const offerText = deal ? `${escF(formatOfferTimingLabel(deal))} • ${escF(LikeStaysEngine.formatCompactPrice(deal.discountPrice || deal.price || 0, prop.currency || 'PKR'))}` : '';
+
+            return `
+            <section class="feed-slide" data-id="${id}" data-offer="${offerText.replace(/"/g, '&quot;')}">
+                <div id="carousel-track-${id}" class="feed-media" onscroll="handleCardCarouselScroll('${id}', event)">${items.join('')}</div>
+                <div class="feed-shade"></div>
+                ${dots}
+                <div class="price-stack">
+                    <span class="price-chip" style="font-size:10px"><span style="color:#34d399">●</span> ${daily}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Daily</small></span>
+                    ${hourly ? `<span class="price-chip" style="font-size:9.5px">⏱️ ${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}
+                </div>
+                <div class="side-circles">
+                    <button type="button" class="side-circle" onclick="togglePropertyFavorite(event,'${id}')">${isFav ? '❤️' : '🤍'}</button>
+                    <button type="button" class="side-circle" onclick="openReviews('${id}')" style="font-size:9px">${escF(prop.rating || '4.8★')}<span style="font-weight:700;font-size:7.5px;opacity:.75">${escF(prop.reviewCount || 0)}</span></button>
+                </div>
+                <div class="feed-info" style="right:64px">
+                    <div style="font-size:15px;font-weight:900">${escF(prop.name)}</div>
+                    <div style="font-size:11px;font-weight:700;opacity:.9">🏡 ${escF(prop.category || 'Stay')}</div>
+                    <div style="font-size:11px;font-weight:700;opacity:.85">📍 ${escF(prop.location || prop.city || 'Prime Location')}</div>
+                </div>
+                ${hasVideo ? `<button type="button" class="rail-btn feed-mute" style="position:absolute;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 230px);z-index:6" onclick="toggleFeedMute()">🔇</button>` : ''}
+            </section>`;
+        }
+
+        function buildSearchPromptSlide() {
+            return `<section class="feed-slide prompt-slide">
+                <div style="font-size:44px">🔍</div>
+                <div style="font-size:18px;font-weight:900">Looking for a stay in your city?</div>
+                <div style="font-size:12px;opacity:.85">Search by city, dates and guests</div>
+                <button type="button" class="fa-btn fa-view" style="flex:none;padding:13px 28px" onclick="openAirbnbSearchModal()">Search now</button>
+            </section>`;
+        }
+
+        function toggleFeedMute() {
+            feedMuted = !feedMuted;
+            document.querySelectorAll('.feed-slide video').forEach(v => v.muted = feedMuted);
+            document.querySelectorAll('.feed-mute').forEach(b => b.textContent = feedMuted ? '🔇' : '🔊');
+        }
+        function shareProperty(id, name) {
+            const url = location.origin + '/details.html?id=' + encodeURIComponent(id);
+            if (navigator.share) { navigator.share({ title: name, url }).catch(() => {}); }
+            else { window.open('https://wa.me/?text=' + encodeURIComponent(name + ' ' + url), '_blank'); }
+        }
+        function openReviews(id) { window.location.href = 'details.html?id=' + encodeURIComponent(id) + '#reviews-feed-container'; }
+
+        function openHostSheet(uid, name, fallbackId) {
+            let list = masterPropertiesList.filter(p => uid && (String(p.hostUid) === String(uid) || String(p.host && p.host.uid) === String(uid)));
+            if (!list.length) list = masterPropertiesList.filter(p => String(p.id) === String(fallbackId));
+            document.getElementById('host-sheet-title').textContent = `${name} • ${list.length} ${list.length === 1 ? 'property' : 'properties'}`;
+            document.getElementById('host-sheet-list').innerHTML = list.map(p => {
+                const img = (p.photos && p.photos[0]) || p.image || '';
+                return `<div onclick="navigateToDetailsPage('${escF(p.id)}')" style="cursor:pointer"><img src="${escF(img)}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;background:#eee"><div style="font-size:11px;font-weight:800;margin-top:4px">${escF(p.name)}</div></div>`;
+            }).join('');
+            document.getElementById('host-sheet').classList.add('open');
+        }
+        function closeHostSheet() { document.getElementById('host-sheet').classList.remove('open'); }
+
+        // ویڈیو: صرف سامنے والی چلے؛ اگلی 3 ویڈیوز پہلے سے بیک گراؤنڈ میں لوڈ ہوں (اسکرول رکنے نہ پائے)
+        window._activeFeedId = null;
+        function updateGlobalOverlayForSlide(slide) {
+            if (!slide) return;
+            window._activeFeedId = slide.dataset.id;
+            const offerText = slide.dataset.offer || '';
+            const badge = document.getElementById('g-offer-badge');
+            const textEl = document.getElementById('g-offer-text');
+            if (badge) badge.style.display = offerText ? 'flex' : 'none';
+            if (textEl) textEl.textContent = offerText;
+        }
+        const playIO = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                const v = e.target;
+                if (e.isIntersecting && e.intersectionRatio > 0.6) {
+                    v.muted = feedMuted; v.play().catch(() => {});
+                    updateGlobalOverlayForSlide(v.closest('.feed-slide'));
+                } else v.pause();
+            });
+        }, { threshold: [0, 0.6, 1] });
+        // غیر ویڈیو (صرف تصویر والی) سلائیڈز پر بھی overlay اپڈیٹ ہو، اس لیے سلائیڈ لیول پر ایک ہلکا observer
+        const slideIO = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting && e.intersectionRatio > 0.6) updateGlobalOverlayForSlide(e.target); });
+        }, { threshold: [0, 0.6, 1] });
+        const loadIO = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                const v = e.target;
+                if (e.isIntersecting && v.dataset.src) { v.src = v.dataset.src; v.preload = 'auto'; delete v.dataset.src; }
+            });
+        }, { rootMargin: '350% 0px 350% 0px' }); // ~3 اسکرین آگے تک لوڈ
+        function observeFeedMedia() {
+            document.querySelectorAll('.feed-slide video:not([data-obs])').forEach(v => { v.dataset.obs = '1'; playIO.observe(v); loadIO.observe(v); });
+            document.querySelectorAll('.feed-slide:not([data-slide-obs])').forEach(sl => { sl.dataset.slideObs = '1'; slideIO.observe(sl); });
+        }
+
         function renderNextPropertyChunk() {
             const container = document.getElementById('explore-property-list');
             const sentinel = document.getElementById('infinite-scroll-sentinel');
@@ -865,115 +1042,19 @@
             let favs = [];
             try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch(e) {}
 
-            const cardsHTML = nextChunk.map(prop => {
-              try {
-                const photosList = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=500"]);
-                const formattedDaily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR');
-                const hasHourly = prop.hourlyPrice && prop.hourlyPrice > 0;
-                const formattedHourly = hasHourly ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : '';
-                const isFav = favs.includes(String(prop.id));
-
-                const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-                const activeDeals = deals.filter(d => d && d.enabled !== false);
-                const currentDeal = activeDeals.length > 0 ? activeDeals[0] : null;
-                const moreDealsCount = activeDeals.length > 1 ? (activeDeals.length - 1) : 0;
-
-                let offerRowHTML = '';
-                if (currentDeal) {
-                    const formattedDealPrice = LikeStaysEngine.formatCompactPrice(currentDeal.discountPrice || currentDeal.price || 0, prop.currency || 'PKR');
-                    const timingText = formatOfferTimingLabel(currentDeal);
-                    const themeClass = `theme-${currentDeal.theme || 'emerald'}`;
-
-                    offerRowHTML = `
-                        <div class="pt-2 border-t border-gray-100 flex flex-wrap items-center justify-between gap-1.5">
-                            <div class="inline-flex items-center space-x-1.5 ${themeClass} text-[8.5px] font-black px-2.5 py-1 rounded-full shadow-md">
-                                <span class="spark-icon text-amber-300">⚡</span>
-                                <span>${timingText}</span>
-                                <span>•</span>
-                                <span class="font-extrabold">${formattedDealPrice}</span>
-                            </div>
-                            ${moreDealsCount > 0 ? `
-                                <div class="inline-flex items-center space-x-1 bg-amber-100 border border-amber-300 text-amber-950 font-black text-[8px] px-2 py-0.5 rounded-full shadow-xs">
-                                    <span>⚡</span> <span>+${moreDealsCount} More</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
+            const cardsHTML = nextChunk.map((prop, i) => {
+                try {
+                    const gi = currentRenderIndex + i + 1;
+                    const dest = (document.getElementById('home-search-dest') || {}).value || '';
+                    const showPrompt = !dest.trim() && (gi === 4 || (gi > 4 && (gi - 4) % 10 === 0));
+                    return buildFeedSlide(prop, favs) + (showPrompt ? buildSearchPromptSlide() : '');
+                } catch (cardErr) {
+                    return '';
                 }
-
-                return `
-                    <div onclick="navigateToDetailsPage('${prop.id}')" class="property-card-3d neu-flat bg-white rounded-3xl overflow-hidden cursor-pointer flex flex-col justify-between border border-gray-150 group">
-                        
-                        <!-- CAROUSEL -->
-                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
-                            <div id="carousel-track-${prop.id}" onscroll="handleCardCarouselScroll('${prop.id}', event)" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-                                ${photosList.map((photo, photoIdx) => {
-                                    const cleanUrl = photo.startsWith('http') || photo.startsWith('data:') ? photo : `https://images.unsplash.com/${photo}?auto=format&fit=crop&q=70&w=500`;
-                                    // 🎯 صرف cover (پہلی) تصویر پر host کا منتخب کردہ crop position لاگو ہوتا ہے
-                                    const objPos = (photoIdx === 0 && prop.coverPosition) ? prop.coverPosition : 'center';
-                                    return `
-                                        <div class="w-full h-full shrink-0 snap-center">
-                                            <img src="${cleanUrl}" loading="lazy" decoding="async" style="object-position: ${objPos};" class="w-full h-full object-cover pointer-events-none" alt="${prop.name}">
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-
-                            ${photosList.length > 1 ? `
-                                <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-20 flex items-center space-x-1.5 bg-black/40 backdrop-blur-xs px-2 py-1 rounded-full pointer-events-none">
-                                    ${photosList.map((_, dotIdx) => `
-                                        <span id="dot-${prop.id}-${dotIdx}" class="w-1.5 h-1.5 rounded-full transition-all ${dotIdx === 0 ? 'bg-white scale-125 shadow-xs' : 'bg-white/50'}"></span>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-
-                            <div class="absolute top-2.5 left-2.5 z-20 flex flex-col space-y-1 items-start pointer-events-none">
-                                <div class="bg-black/65 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded-lg border border-white/20">
-                                    <span class="text-emerald-400">●</span> ${formattedDaily}<span class="text-[7px] text-gray-300">/night</span>
-                                </div>
-                                ${hasHourly ? `
-                                    <div class="bg-black/65 backdrop-blur-md text-white text-[8px] font-bold px-2 py-0.5 rounded-lg border border-white/20">
-                                        <span>⏱️</span> ${formattedHourly}<span class="text-[7px] text-gray-300">/hr</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-
-                            <button type="button" onclick="togglePropertyFavorite(event, '${prop.id}')" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-xs shadow hover:scale-110 active:scale-95 transition-transform cursor-pointer">
-                                <span>${isFav ? '❤️' : '🤍'}</span>
-                            </button>
-                        </div>
-
-                        <!-- CARD BODY -->
-                        <div class="p-3.5 space-y-1.5 text-left">
-                            <div class="flex justify-between items-center text-[9px] font-bold text-gray-400">
-                                <span class="text-luxuryGreen font-extrabold">🏡 ${prop.category || 'Stay'}</span>
-                                <span class="text-gray-500">👥 Max ${prop.maxGuests || 8} Guests</span>
-                                <span class="text-emerald-700 font-black">${prop.rating || '⭐ New'}</span>
-                            </div>
-
-                            <h4 class="text-xs font-black text-luxuryGreen truncate">${prop.name}</h4>
-                            
-                            <div class="flex justify-between items-center text-[9.5px] font-bold pt-0.5">
-                                <span class="text-gray-400 truncate max-w-[170px]">📍 ${prop.location || prop.city || 'Prime Location'}</span>
-                                <span class="text-emerald-700 font-black text-[8px] bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md shrink-0">🛡️ Free Cancel</span>
-                            </div>
-                            
-                            ${offerRowHTML}
-                        </div>
-                    </div>
-                `;
-              } catch (cardErr) {
-                // 🆕 خرابی کو چھپانے کی بجائے سیدھا صفحے پر دکھا دیں تاکہ اصل وجہ فوراً نظر آئے
-                return `
-                    <div class="col-span-full p-4 bg-red-50 border-2 border-red-300 rounded-2xl text-left">
-                        <p class="text-[11px] font-black text-red-700">⚠️ Card render error for "${(prop.name || prop.id || 'unknown').toString().slice(0,40)}"</p>
-                        <p class="text-[10px] text-red-600 font-mono mt-1 break-all">${(cardErr && cardErr.message) || 'Unknown error'}</p>
-                    </div>
-                `;
-              }
             }).join('');
 
             container.insertAdjacentHTML('beforeend', cardsHTML);
+            setFeedTop(); observeFeedMedia();
             currentRenderIndex += CHUNK_SIZE;
 
             if (currentRenderIndex < currentlyRenderedList.length) {
@@ -984,16 +1065,11 @@
         }
 
         function setupInfiniteScrollObserver() {
-            const sentinel = document.getElementById('infinite-scroll-sentinel');
-            if (!sentinel) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting && currentRenderIndex < currentlyRenderedList.length) {
-                    renderNextPropertyChunk();
-                }
-            }, { rootMargin: '200px' });
-
-            observer.observe(sentinel);
+            const c = document.getElementById('explore-property-list');
+            if (!c) return;
+            c.addEventListener('scroll', () => {
+                if (currentRenderIndex < currentlyRenderedList.length && c.scrollTop + c.clientHeight * 4 > c.scrollHeight) renderNextPropertyChunk();
+            }, { passive: true });
         }
 
         function navigateToDetailsPage(propId) {
