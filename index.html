@@ -249,8 +249,8 @@
     </div>
 
     <!-- MAIN WORKSPACE -->
-    <!-- floating Book Now button, sits beside the real bottom nav (LikeStaysEngine.renderBottomNav), targets whichever card is on screen -->
-    <button type="button" id="g-book-btn" onclick="navigateToDetailsPage(window._activeFeedId)" style="position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:210;padding:12px 18px;border-radius:99px;font-size:12px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;border:0;box-shadow:0 4px 14px rgba(0,0,0,.25)">Book Now</button>
+    <!-- floating Book Now button: sits ABOVE the real bottom nav (LikeStaysEngine.renderBottomNav), never overlaps it, targets whichever card is on screen -->
+    <button type="button" id="g-book-btn" onclick="navigateToDetailsPage(window._activeFeedId)" style="position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);z-index:210;padding:12px 20px;border-radius:99px;font-size:12px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;border:0;box-shadow:0 4px 14px rgba(0,0,0,.3)">Book Now</button>
     <main id="feed-wrap">
         <div id="feed-title-row" class="hidden">
             <h2 id="search-title-label"></h2><p id="search-subtitle-label"></p>
