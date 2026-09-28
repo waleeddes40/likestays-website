@@ -220,12 +220,36 @@
     }
 
     // 🎯 4-BUTTON GUEST BOTTOM NAV (MESSAGES PERMANENTLY REMOVED)
-    function renderBottomNav(activeTab = 'explore') {
+    function renderBottomNav(activeTab = 'explore', opts) {
         const existing = document.getElementById('likestays-global-bottom-nav');
         if (existing) existing.remove();
 
         const lang = activeLocale.language || 'EN';
         const labels = NAV_TRANSLATIONS[lang] || NAV_TRANSLATIONS['EN'];
+
+        // 🎬 Explore-feed style: one floating white pill = 4 tabs + Book Now (enabled per page via window.__lsNavOptions = {bookNow:true})
+        opts = opts || window.__lsNavOptions || null;
+        if (opts && opts.bookNow) {
+            const items = [
+                { id: 'explore', url: 'index.html', icon: '🧭', label: labels.explore },
+                { id: 'map', url: 'map.html', icon: '📍', label: labels.map },
+                { id: 'highlights', url: 'highlights.html', icon: '✨', label: labels.highlights },
+                { id: 'booking', url: 'my-bookings.html', icon: '🗓️', label: (lang === 'EN' ? 'Bookings' : labels.booking) }
+            ];
+            const html = `
+                <div id="likestays-global-bottom-nav" style="position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:210;background:#fff;color:#0D4E2F;border-radius:999px;padding:8px 8px 8px 14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 12px rgba(0,0,0,.2)">
+                    <div style="display:flex;gap:12px;flex:1;min-width:0;justify-content:space-around">
+                        ${items.map(t => `
+                            <a href="${t.url}" style="text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:${t.id === activeTab ? 1 : 0.55};flex:0 0 auto">
+                                <span style="display:block;font-size:16px;line-height:1.2">${t.icon}</span>
+                                <span class="notranslate">${t.label}</span>
+                            </a>`).join('')}
+                    </div>
+                    <button type="button" onclick="window.__lsBookNow && window.__lsBookNow()" style="margin-left:8px;padding:11px 16px;border-radius:999px;border:0;font-size:11px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;white-space:nowrap;cursor:pointer">Book Now</button>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', html);
+            return;
+        }
 
         const tabsConfig = [
             { id: 'explore', url: 'index.html', label: labels.explore, iconSvg: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>` },
