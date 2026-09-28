@@ -233,8 +233,8 @@
             const items = [
                 { id: 'explore', url: 'index.html', icon: '🧭', label: labels.explore },
                 { id: 'map', url: 'map.html', icon: '📍', label: labels.map },
-                { id: 'highlights', url: 'highlights.html', icon: '✨', label: labels.highlights },
-                { id: 'booking', url: 'my-bookings.html', icon: '🗓️', label: (lang === 'EN' ? 'Bookings' : labels.booking) }
+                { id: 'booking', url: 'my-bookings.html', icon: '🗓️', label: (lang === 'EN' ? 'Bookings' : labels.booking) },
+                { id: 'highlights', url: 'highlights.html', icon: '✨', label: labels.highlights }
             ];
             const html = `
                 <div id="likestays-global-bottom-nav" style="position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:210;background:#fff;color:#0D4E2F;border-radius:999px;padding:8px 8px 8px 14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 12px rgba(0,0,0,.2)">
@@ -245,7 +245,7 @@
                                 <span class="notranslate">${t.label}</span>
                             </a>`).join('')}
                     </div>
-                    <button type="button" onclick="window.__lsBookNow && window.__lsBookNow()" style="margin-left:8px;padding:11px 16px;border-radius:999px;border:0;font-size:11px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;white-space:nowrap;cursor:pointer">Book Now</button>
+                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:8px;padding:11px 16px;border-radius:999px;border:0;font-size:11px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;white-space:nowrap;cursor:pointer">Book Now</button>
                 </div>`;
             document.body.insertAdjacentHTML('beforeend', html);
             return;

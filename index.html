@@ -169,6 +169,7 @@
   .side-circle{background:rgba(0,0,0,.25)!important;color:#fff!important;border:1px solid rgba(255,255,255,.4)!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #likestays-global-bottom-nav{background:rgba(0,0,0,.25)!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:none!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
   #likestays-global-bottom-nav button{background:rgba(13,78,47,.65)!important;border:1px solid rgba(255,255,255,.4)!important}
+  .price-stack.no-offer{top:var(--offer-top,60px)!important}
 </style>
 <style>
   html,body{height:100%;overflow:hidden!important}
@@ -818,6 +819,46 @@
             updateMainSearchPillDisplay();
         }
 
+        // ---- OFFER EXPIRY RULES (guest side) ----
+        // hourly offer (same day, has start/end time): ends exactly at its START time
+        // day-based offer (start date -> end date): ends at 8:00 PM on its START date
+        function parseDealTime(t) {
+            if (!t) return null;
+            const m = String(t).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+            if (!m) return null;
+            let h = +m[1]; const mi = +m[2]; const ap = m[3] && m[3].toUpperCase();
+            if (ap === 'PM' && h < 12) h += 12;
+            if (ap === 'AM' && h === 12) h = 0;
+            return [h, mi];
+        }
+        function dealStartDate(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const t = parseDealTime(deal.startTime) || [14, 0];
+            return new Date(y, mo - 1, d, t[0], t[1], 0);
+        }
+        function dealExpiry(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const isSameDay = !deal.endDate || deal.endDate === deal.startDate;
+            if (isSameDay) { const t = parseDealTime(deal.startTime); return t ? new Date(y, mo - 1, d, t[0], t[1], 0) : null; }
+            return new Date(y, mo - 1, d, 20, 0, 0);
+        }
+        function getActiveDeal(prop, now = new Date()) {
+            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+            const live = deals.filter(d => {
+                if (!d || d.enabled === false) return false;
+                const exp = dealExpiry(d);
+                return !exp || now < exp;
+            });
+            live.sort((a, b) => (dealStartDate(a) || 0) - (dealStartDate(b) || 0));
+            return live[0] || null;
+        }
+        function buildOfferText(prop, deal) {
+            if (!deal) return '';
+            return `${formatOfferTimingLabel(deal)} • ${LikeStaysEngine.formatCompactPrice(deal.discountPrice || deal.price || 0, prop.currency || 'PKR')}`;
+        }
+
         function formatOfferTimingLabel(deal) {
             const formatStr = (d) => {
                 if (!d) return '';
@@ -935,9 +976,15 @@
         let feedMuted = true;
         const escF = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+        setInterval(() => {
+            const sl = document.querySelector(`.feed-slide[data-id="${window._activeFeedId}"]`);
+            if (sl) updateGlobalOverlayForSlide(sl);
+        }, 30000);
         function setFeedTop() {
             const h = document.querySelector('header');
             if (h) document.documentElement.style.setProperty('--hdr', h.offsetHeight + 'px');
+            const ob = document.getElementById('g-offer-badge');
+            if (ob) document.documentElement.style.setProperty('--offer-top', ob.getBoundingClientRect().top + 'px');
         }
         window.addEventListener('resize', setFeedTop);
 
@@ -961,18 +1008,16 @@
 
             const dots = items.length > 1 ? `<div class="feed-dots" data-video-first="${hasVideo ? '1' : '0'}" style="visibility:${hasVideo ? 'hidden' : 'visible'}">${items.map((_, d) => `<span id="dot-${id}-${d}" class="w-1.5 h-1.5 rounded-full transition-all ${d === 0 ? 'bg-white scale-125 shadow-xs' : 'bg-white/50'}"></span>`).join('')}</div>` : '';
 
-            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-            const deal = deals.filter(d => d && d.enabled !== false)[0];
-            const offerText = deal ? `${escF(formatOfferTimingLabel(deal))} • ${escF(LikeStaysEngine.formatCompactPrice(deal.discountPrice || deal.price || 0, prop.currency || 'PKR'))}` : '';
+            const activeDeal = getActiveDeal(prop);
 
             return `
-            <section class="feed-slide" data-id="${id}" data-offer="${offerText.replace(/"/g, '&quot;')}">
+            <section class="feed-slide" data-id="${id}">
                 <div id="carousel-track-${id}" class="feed-media" onscroll="handleCardCarouselScroll('${id}', event)">${items.join('')}</div>
                 <div class="feed-shade"></div>
                 ${dots}
-                <div class="price-stack">
+                <div class="price-stack${activeDeal ? '' : ' no-offer'}">
                     <span class="price-chip" style="font-size:10px"><span style="color:#34d399">●</span> ${daily}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Daily</small></span>
-                    ${hourly ? `<span class="price-chip" style="font-size:9.5px">⏱️ ${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}
+                    ${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}
                 </div>
                 <div class="side-circles">
                     <button type="button" class="side-circle" onclick="shareProperty('${id}','${escF(prop.name).replace(/'/g, '')}')" style="font-size:17px" aria-label="Share">↗</button>
@@ -1026,11 +1071,16 @@
         function updateGlobalOverlayForSlide(slide) {
             if (!slide) return;
             window._activeFeedId = slide.dataset.id;
-            const offerText = slide.dataset.offer || '';
+            const prop = (typeof masterPropertiesList !== 'undefined' ? masterPropertiesList : []).find(p => String(p.id) === String(slide.dataset.id));
+            const deal = prop ? getActiveDeal(prop) : null;
+            const offerText = deal ? buildOfferText(prop, deal) : '';
             const badge = document.getElementById('g-offer-badge');
             const textEl = document.getElementById('g-offer-text');
             if (badge) badge.style.visibility = offerText ? 'visible' : 'hidden';
             if (textEl) textEl.textContent = offerText;
+            const stack = slide.querySelector('.price-stack');
+            if (stack) stack.classList.toggle('no-offer', !offerText);
+            setFeedTop();
         }
         const playIO = new IntersectionObserver(entries => {
             entries.forEach(e => {

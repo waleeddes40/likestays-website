@@ -21,6 +21,7 @@
     <!-- 🌐 GLOBAL LIKESTAYS UNIVERSAL ENGINE & FILTERS -->
     <script src="likestays-engine.js"></script>
     <script src="filters.js"></script>
+    <script>window.__lsNavOptions={bookNow:true};window.__lsBookNowDisabled=true;window.__lsBookNow=function(){ if(typeof navigateToSelectedMapStay==='function') navigateToSelectedMapStay(); };</script>
 
     <script>
         tailwind.config = {
@@ -97,38 +98,36 @@
         }
         input[type=range]::-moz-range-track { width: 100%; height: 5px; cursor: pointer; background: #D2DCD4; border-radius: 9999px; }
         input[type=range]::-moz-range-thumb { height: 18px; width: 18px; border-radius: 50%; background: #0D4E2F; cursor: pointer; border: 2px solid #FFFFFF; }
+
+        /* ===== see-through UI over a full-screen map ===== */
+        #map-header{position:fixed;top:0;left:0;right:0;z-index:1200;padding:calc(env(safe-area-inset-top,0px) + 10px) 10px 0}
+        .map-glass{background:rgba(0,0,0,.30)!important;border:1px solid rgba(255,255,255,.4)!important;box-shadow:none!important;color:#fff}
+        #map-header .text-luxuryGreen,#map-header input{color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+        #map-header input::placeholder{color:rgba(255,255,255,.75)}
+        #map-header .bg-gray-200{background:rgba(255,255,255,.45)!important}
+        #map-header .neu-btn-green{background:rgba(13,78,47,.65)!important;box-shadow:none!important;border:1px solid rgba(255,255,255,.45)}
+        #map-header button:hover{background:transparent}
+        .rate-chip{padding:4px 11px;border-radius:999px;font-size:10px;font-weight:800;color:#fff;background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.4);text-shadow:0 1px 3px rgba(0,0,0,.8);cursor:pointer}
+        .rate-chip.active{background:rgba(13,78,47,.78);border-color:rgba(255,255,255,.8)}
+        .leaflet-top.leaflet-right{margin-top:calc(env(safe-area-inset-top,0px) + 104px)}
+        .leaflet-bottom.leaflet-right{margin-bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}
+        #floating-property-preview-card{bottom:calc(env(safe-area-inset-bottom,0px) + 92px)!important;background:rgba(0,0,0,.35)!important;border:1px solid rgba(255,255,255,.4)!important;box-shadow:none!important;color:#fff}
+        #floating-property-preview-card .text-luxuryGreen,#floating-property-preview-card .text-luxuryLightGreen,#floating-property-preview-card .text-emerald-700{color:#fff!important}
+        #floating-property-preview-card .text-gray-400{color:rgba(255,255,255,.85)!important}
+        #floating-property-preview-card .border-gray-100{border-color:rgba(255,255,255,.3)!important}
+        #floating-property-preview-card h4,#floating-property-preview-card span,#floating-property-preview-card p{text-shadow:0 1px 3px rgba(0,0,0,.8)}
+        #likestays-global-bottom-nav{background:rgba(0,0,0,.30)!important;color:#fff!important;border:1px solid rgba(255,255,255,.4)!important;box-shadow:none!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+        #likestays-global-bottom-nav button{background:rgba(13,78,47,.7)!important;border:1px solid rgba(255,255,255,.45)!important}
+        #likestays-global-bottom-nav button[disabled]{opacity:.45;pointer-events:none}
     </style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 flex flex-col h-screen overflow-hidden relative">
 
-    <!-- TOP HEADER -->
-    <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2 px-3 sm:px-6 shrink-0">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5">
-            
-            <div class="flex items-center justify-between w-full md:w-auto shrink-0">
-                <a href="index.html" class="flex items-center cursor-pointer group">
-                    <div class="neu-logo-card px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl flex items-center space-x-2 border border-gray-200/60 transition-transform active:scale-95">
-                        <svg class="w-4 h-4 text-luxuryGreen" fill="none" stroke="currentColor" stroke-width="3.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 22V10a8 8 0 1116 0v12"/></svg>
-                        <span class="font-cinzel-logo text-luxuryGreen text-xs sm:text-sm tracking-wider uppercase">Like Stays</span>
-                    </div>
-                </a>
-
-                <!-- MOBILE RATE SWITCHER -->
-                <div class="flex items-center space-x-1 md:hidden">
-                    <button type="button" id="mob-rate-daily" onclick="switchMapRateInterval('daily')" class="neu-flat px-2 py-1 rounded-xl bg-luxuryGreen text-white text-[10px] font-black border border-luxuryGreen shadow-xs">
-                        🌙 Daily
-                    </button>
-                    <button type="button" id="mob-rate-hourly" onclick="switchMapRateInterval('hourly')" class="neu-flat px-2 py-1 rounded-xl bg-white text-gray-600 text-[10px] font-bold border border-gray-200">
-                        ⏱️ Hourly
-                    </button>
-                    <button type="button" id="mob-rate-offers" onclick="switchMapRateInterval('offers')" class="neu-flat px-2 py-1 rounded-xl bg-white text-gray-600 text-[10px] font-bold border border-gray-200">
-                        🔥 Offers
-                    </button>
-                </div>
-            </div>
-
+    <!-- TOP HEADER (floats over the map, see-through) -->
+    <header id="map-header">
+        <div class="max-w-xl mx-auto flex flex-col gap-1.5">
             <!-- UNIFIED SEARCH BAR -->
-            <div class="w-full max-w-xl mx-auto bg-white rounded-full neu-flat px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-1.5 border border-gray-200/70">
+            <div class="map-glass w-full rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-1.5">
                 <div class="flex-1 min-w-[70px] flex items-center space-x-1 pl-1">
                     <span class="text-[10px]">📍</span>
                     <input type="text" id="home-search-dest" oninput="executeLiveMapFilter()" placeholder="Search on map..." class="w-full text-[10.5px] font-bold text-luxuryGreen outline-none bg-transparent placeholder-gray-400 truncate">
@@ -160,26 +159,17 @@
                 </button>
             </div>
 
-            <!-- DESKTOP TOP-RIGHT: DAILY & HOURLY SWITCHER BUTTONS -->
-            <div class="hidden md:flex items-center space-x-2 shrink-0">
-                <button type="button" id="dt-rate-daily" onclick="switchMapRateInterval('daily')" class="neu-flat px-3 py-1.5 rounded-xl bg-luxuryGreen text-white text-xs font-black border border-luxuryGreen flex items-center space-x-1.5 cursor-pointer hover:scale-105 transition-transform shadow-xs">
-                    <span>🌙</span> <span>Daily Stays</span>
-                </button>
-
-                <button type="button" id="dt-rate-hourly" onclick="switchMapRateInterval('hourly')" class="neu-flat px-3 py-1.5 rounded-xl bg-white text-gray-600 text-xs font-bold border border-gray-200 flex items-center space-x-1.5 cursor-pointer hover:scale-105 hover:text-luxuryGreen transition-transform shadow-xs">
-                    <span>⏱️</span> <span>Hourly Stays</span>
-                </button>
-
-                <button type="button" id="dt-rate-offers" onclick="switchMapRateInterval('offers')" class="neu-flat px-3 py-1.5 rounded-xl bg-white text-gray-600 text-xs font-bold border border-gray-200 flex items-center space-x-1.5 cursor-pointer hover:scale-105 hover:text-luxuryGreen transition-transform shadow-xs">
-                    <span>🔥</span> <span>Offers</span>
-                </button>
+            <!-- what the pins show: Daily / Hourly / Offers -->
+            <div class="flex items-center gap-1.5">
+                <button type="button" class="rate-chip active" data-rate="daily" onclick="switchMapRateInterval('daily')">🌙 Daily</button>
+                <button type="button" class="rate-chip" data-rate="hourly" onclick="switchMapRateInterval('hourly')">⏱️ Hourly</button>
+                <button type="button" class="rate-chip" data-rate="offers" onclick="switchMapRateInterval('offers')">🔥 Offers</button>
             </div>
-
         </div>
     </header>
 
     <!-- FULLSCREEN INTERACTIVE LEAFLET MAP WORKSPACE -->
-    <main class="flex-grow relative w-full h-full">
+    <main class="fixed inset-0">
         <div id="main-interactive-map" class="w-full h-full bg-[#eef2ef] z-10"></div>
 
         <!-- 🎯 FLOATING HOVER/TOUCH LUXURY PREVIEW CARD -->
@@ -377,6 +367,46 @@
 
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
+        // ---- OFFER EXPIRY RULES ----
+        // hourly offer (same day + time window): ends at its START time; day offer: ends 8:00 PM on its START date
+        function parseDealTime(t) {
+            if (!t) return null;
+            const m = String(t).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+            if (!m) return null;
+            let h = +m[1]; const mi = +m[2]; const ap = m[3] && m[3].toUpperCase();
+            if (ap === 'PM' && h < 12) h += 12;
+            if (ap === 'AM' && h === 12) h = 0;
+            return [h, mi];
+        }
+        function dealStartDate(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const t = parseDealTime(deal.startTime) || [14, 0];
+            return new Date(y, mo - 1, d, t[0], t[1], 0);
+        }
+        function dealExpiry(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const isSameDay = !deal.endDate || deal.endDate === deal.startDate;
+            if (isSameDay) { const t = parseDealTime(deal.startTime); return t ? new Date(y, mo - 1, d, t[0], t[1], 0) : null; }
+            return new Date(y, mo - 1, d, 20, 0, 0);
+        }
+        function getActiveDeal(prop, now = new Date()) {
+            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+            const live = deals.filter(d => {
+                if (!d || d.enabled === false) return false;
+                const exp = dealExpiry(d);
+                return !exp || now < exp;
+            });
+            live.sort((a, b) => (dealStartDate(a) || 0) - (dealStartDate(b) || 0));
+            return live[0] || null;
+        }
+        function setBookNowEnabled(on) {
+            window.__lsBookNowDisabled = !on;
+            const b = document.getElementById('ls-book-now-btn');
+            if (b) { b.disabled = !on; b.style.opacity = on ? '1' : '.45'; b.style.pointerEvents = on ? 'auto' : 'none'; }
+        }
+
         let masterPropertiesList = [];
         let mapInstance = null;
         let mapMarkersGroup = null;
@@ -429,6 +459,8 @@
             mapInstance.on('click', () => {
                 document.getElementById('floating-property-preview-card').classList.add('hidden');
                 document.querySelectorAll('.map-price-pill').forEach(p => p.classList.remove('active-pin'));
+                selectedStayId = null;
+                setBookNowEnabled(false);
             });
         }
 
@@ -436,26 +468,7 @@
             activeMapRateInterval = type;
             LikeStaysFilter.state.rateType = type;
 
-            const buttonPairs = [
-                ['dt-rate-daily', 'daily'], ['dt-rate-hourly', 'hourly'], ['dt-rate-offers', 'offers'],
-                ['mob-rate-daily', 'daily'], ['mob-rate-hourly', 'hourly'], ['mob-rate-offers', 'offers']
-            ];
-
-            buttonPairs.forEach(([id, val]) => {
-                const btn = document.getElementById(id);
-                if (!btn) return;
-                const isDesktop = id.startsWith('dt-');
-                const isActive = val === type;
-                if (isDesktop) {
-                    btn.className = isActive
-                        ? "neu-flat px-3 py-1.5 rounded-xl bg-luxuryGreen text-white text-xs font-black border border-luxuryGreen flex items-center space-x-1.5 cursor-pointer hover:scale-105 transition-transform shadow-xs"
-                        : "neu-flat px-3 py-1.5 rounded-xl bg-white text-gray-600 text-xs font-bold border border-gray-200 flex items-center space-x-1.5 cursor-pointer hover:scale-105 hover:text-luxuryGreen transition-transform shadow-xs";
-                } else {
-                    btn.className = isActive
-                        ? "neu-flat px-2 py-1 rounded-xl bg-luxuryGreen text-white text-[10px] font-black border border-luxuryGreen shadow-xs"
-                        : "neu-flat px-2 py-1 rounded-xl bg-white text-gray-600 text-[10px] font-bold border border-gray-200";
-                }
-            });
+            document.querySelectorAll('.rate-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.rate === type));
 
             renderMapPins();
         }
@@ -503,10 +516,7 @@
 
             // 🔥 Offers موڈ میں صرف اُن properties کے pins دکھائیں جن پر ابھی کوئی فعال deal موجود ہے
             const staysToShow = activeMapRateInterval === 'offers'
-                ? filteredStays.filter(p => {
-                    const deals = p.flashDeals || (p.flashOffer && p.flashOffer.enabled ? [p.flashOffer] : []);
-                    return deals.some(d => d && d.enabled !== false);
-                })
+                ? filteredStays.filter(p => !!getActiveDeal(p))
                 : filteredStays;
 
             staysToShow.forEach(prop => {
@@ -519,8 +529,7 @@
                 let priceLabel = '';
 
                 if (isOffers) {
-                    const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-                    const currentDeal = deals.find(d => d && d.enabled !== false);
+                    const currentDeal = getActiveDeal(prop);
                     const dealPrice = currentDeal ? (currentDeal.discountPrice || currentDeal.price || 0) : (prop.dailyPrice || 5000);
                     priceLabel = `🔥 ${LikeStaysEngine.formatCompactPrice(dealPrice, propCurrency)}`;
                 } else if (isHourly) {
@@ -567,8 +576,7 @@
 
             let priceText;
             if (isOffers) {
-                const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-                const currentDeal = deals.find(d => d && d.enabled !== false);
+                const currentDeal = getActiveDeal(prop);
                 const dealPrice = currentDeal ? (currentDeal.discountPrice || currentDeal.price || 0) : (prop.dailyPrice || 5000);
                 priceText = `🔥 ${LikeStaysEngine.formatPrice(dealPrice, propCurrency)} <span class="text-[7.5px] text-gray-400">/night deal</span>`;
             } else if (isHourly) {
@@ -584,13 +592,13 @@
             document.getElementById('prev-card-location').innerText = `📍 ${prop.location || prop.city || 'Prime Location'}`;
             document.getElementById('prev-card-price').innerHTML = priceText;
 
-            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-            document.getElementById('prev-card-deal-badge').classList.toggle('hidden', deals.length === 0);
+            document.getElementById('prev-card-deal-badge').classList.toggle('hidden', !getActiveDeal(prop));
 
             document.querySelectorAll('.map-price-pill').forEach(p => p.classList.remove('active-pin'));
             document.getElementById(`pin-badge-${prop.id}`)?.classList.add('active-pin');
 
             card.classList.remove('hidden');
+            setBookNowEnabled(true);
         }
 
         function navigateToSelectedMapStay() {

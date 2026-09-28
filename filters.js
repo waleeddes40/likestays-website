@@ -88,7 +88,21 @@ const LikeStaysFilter = (function() {
 
             // 2. Special Offers Only
             const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-            if (state.onlyOffers && deals.length === 0) return false;
+            if (state.onlyOffers) {
+                // live offers only: hourly offer ends at its start time, day offer ends 8:00 PM on its start date
+                const nowT = new Date();
+                const hasLive = deals.some(d => {
+                    if (!d || d.enabled === false) return false;
+                    if (!/^\d{4}-\d{2}-\d{2}$/.test(d.startDate || '')) return true;
+                    const [y, mo, dd] = d.startDate.split('-').map(Number);
+                    const sameDay = !d.endDate || d.endDate === d.startDate;
+                    if (!sameDay) return nowT < new Date(y, mo - 1, dd, 20, 0, 0);
+                    const tm = String(d.startTime || '').match(/^(\d{1,2}):(\d{2})/);
+                    if (!tm) return true;
+                    return nowT < new Date(y, mo - 1, dd, +tm[1], +tm[2], 0);
+                });
+                if (!hasLive) return false;
+            }
 
             // 3. Rate Type & Dual Min/Max Price Filter
             const dailyPrice = Number(prop.dailyPrice || prop.price || 0);
