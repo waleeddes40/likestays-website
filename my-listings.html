@@ -498,35 +498,46 @@
                     <input type="hidden" id="new-prop-lng" value="74.3587">
                 </div>
 
-                <!-- 3. PHOTOS & VIDEO (ONE UPLOAD BOX) -->
+                <!-- 3. PHOTOS & VIDEO (one or the other — never both) -->
                 <div class="neu-flat bg-white rounded-3xl p-5 border border-gray-150 space-y-3">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
                         <div>
-                            <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen block">3. Photos & Video (Up to 8 photos + 1 video)</span>
-                            <span class="text-[8px] text-gray-400 font-bold">First photo is the Main Cover. Video is optional (max 60 sec / 60 MB) and shown in the Reels tab</span>
+                            <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen block">3. Photos & Video</span>
+                            <span class="text-[8px] text-gray-400 font-bold">Add photos OR a single video — pick one</span>
                         </div>
-                        <div class="flex flex-col items-end gap-1">
-                            <span id="selected-photos-count" class="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">0 selected</span>
-                            <span id="video-status-label" class="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">No video</span>
-                        </div>
+                        <span id="selected-photos-count" class="text-[8px] font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">0 selected</span>
                     </div>
 
-                    <div class="space-y-2.5">
+                    <div class="flex gap-2 p-1 rounded-2xl neu-inset bg-softMint">
+                        <button type="button" id="media-tab-photos-btn" onclick="switchMediaTab('photos')" class="flex-1 py-2 rounded-xl text-[10px] font-black transition-colors">📸 Photos</button>
+                        <button type="button" id="media-tab-video-btn" onclick="switchMediaTab('video')" class="flex-1 py-2 rounded-xl text-[10px] font-black transition-colors">🎬 Video</button>
+                    </div>
+                    <p id="media-tab-lock-note" class="hidden text-[8px] font-bold text-amber-700 bg-amber-50 rounded-xl px-2.5 py-1.5"></p>
+
+                    <div id="media-panel-photos" class="space-y-2.5">
                         <div class="relative w-full p-4 rounded-2xl neu-inset bg-softMint border-2 border-dashed border-gray-300 hover:border-luxuryGreen flex flex-col items-center justify-center cursor-pointer transition-colors text-center">
-                            <input type="file" id="prop-media-input" multiple accept="image/*,video/*" onchange="handleMediaSelect(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
-                            <span class="text-xl mb-1">📸 🎬</span>
-                            <span class="text-xs font-black text-luxuryGreen">Click to Select Photos & Video</span>
-                            <span class="text-[8px] text-gray-400 font-bold">Photos: up to 8 (auto-compressed) &bull; Video: 1 clip, 60 sec / 60 MB (auto-optimized if larger)</span>
+                            <input type="file" id="prop-photos-input" multiple accept="image/*" onchange="handleLightweightPhotoUpload(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                            <span class="text-xl mb-1">📸</span>
+                            <span class="text-xs font-black text-luxuryGreen">Click to Select Photos</span>
+                            <span class="text-[8px] text-gray-400 font-bold">Auto-converted to lightweight HD (30-60 KB). First photo is the Main Cover.</span>
                         </div>
 
+                        <!-- DYNAMIC PHOTOS MANAGER GRID -->
+                        <div id="photos-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1"></div>
+                    </div>
+
+                    <div id="media-panel-video" class="hidden space-y-2.5">
+                        <div class="relative w-full p-4 rounded-2xl neu-inset bg-softMint border-2 border-dashed border-gray-300 hover:border-luxuryGreen flex flex-col items-center justify-center cursor-pointer text-center">
+                            <input type="file" id="prop-video-input" accept="video/*" onchange="handleListingVideoUpload(this)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                            <span class="text-xl mb-1">🎬</span>
+                            <span id="video-status-label" class="text-xs font-black text-luxuryGreen">Click to Select Video</span>
+                            <span class="text-[8px] text-gray-400 font-bold">MP4 / MOV, max 60 MB. Longer clips are auto-trimmed to 30 sec.</span>
+                        </div>
                         <div id="video-progress-wrap" class="hidden w-full h-2 rounded-full bg-gray-200 overflow-hidden"><div id="video-progress-bar" class="h-full bg-luxuryGreen" style="width:0%"></div></div>
                         <div id="video-preview-wrap" class="hidden relative w-40 mx-auto aspect-[9/16] rounded-2xl overflow-hidden bg-black">
                             <video id="video-preview" class="w-full h-full object-cover" controls playsinline muted></video>
                             <button type="button" onclick="removeListingVideo()" class="absolute top-1 right-1 bg-red-600 text-white text-[9px] font-black px-2 py-1 rounded-full">Remove</button>
                         </div>
-
-                        <!-- DYNAMIC PHOTOS MANAGER GRID -->
-                        <div id="photos-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1"></div>
                     </div>
                 </div>
 
@@ -1720,6 +1731,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            switchMediaTab('photos');
             renderAmenitiesCheckboxes();
             renderExtraServicesChecklist();
             renderHostMultiMonthCalendar();
@@ -2027,18 +2039,12 @@
         let pendingPhotoUploads = 0; // how many uploads are still in-flight
 
         function handleLightweightPhotoUpload(input) {
-            processPhotoFiles(Array.from((input && input.files) || []));
-        }
-
-        function processPhotoFiles(newFiles) {
-            if (newFiles.length > 0) {
+            if (input.files && input.files.length > 0) {
+                const newFiles = Array.from(input.files);
                 const remainingSlots = 8 - compressedPhotoUrls.length;
                 if (remainingSlots <= 0) {
                     showToast("Maximum 8 photos allowed.", "⚠️");
                     return;
-                }
-                if (newFiles.length > remainingSlots) {
-                    showToast("Only the first " + remainingSlots + " photos were added (max 8).", "ℹ️");
                 }
 
                 const filesToProcess = newFiles.slice(0, remainingSlots);
@@ -2152,8 +2158,8 @@
 
         // ================= 🎬 PROPERTY VIDEO (Cloudinary — free, no card) =================
         // ⚠️ اپنے Cloudinary اکاؤنٹ سے یہ دو قدریں بھریں (secret نہیں، محفوظ ہیں):
-        const CLOUDINARY_CLOUD_NAME = "YOUR_CLOUD_NAME";
-        const CLOUDINARY_UPLOAD_PRESET = "YOUR_UNSIGNED_PRESET"; // Unsigned preset
+        const CLOUDINARY_CLOUD_NAME = "oilefjb4";
+        const CLOUDINARY_UPLOAD_PRESET = "uozpal3u"; // Unsigned preset
         let listingVideoUrl = '';
         let listingVideoPoster = '';
 
@@ -2164,169 +2170,84 @@
             if (url) {
                 vid.src = url; wrap.classList.remove('hidden'); label.innerText = 'Video ready';
             } else {
-                vid.removeAttribute('src'); wrap.classList.add('hidden'); label.innerText = 'No video';
+                vid.removeAttribute('src'); wrap.classList.add('hidden'); label.innerText = 'Click to Select Video';
             }
+            updateMediaTabLocks();
         }
 
-        // ---- ONE picker for photos + video: splits the selection automatically ----
-        const VIDEO_MAX_BYTES = 60 * 1024 * 1024;
-        const VIDEO_MAX_SECONDS = 60;
-
-        function isVideoFile(f) { return (f.type || '').startsWith('video/') || /\.(mp4|mov|m4v|webm|3gp|mkv)$/i.test(f.name || ''); }
-        function isImageFile(f) { return (f.type || '').startsWith('image/') || /\.(jpe?g|png|webp|heic|heif|gif)$/i.test(f.name || ''); }
-
-        function handleMediaSelect(input) {
-            const files = Array.from(input.files || []);
-            input.value = ''; // lets the same file be picked again later
-            if (!files.length) return;
-            const videos = files.filter(isVideoFile);
-            const images = files.filter(f => !isVideoFile(f) && isImageFile(f));
-            if (images.length) processPhotoFiles(images);
-            if (videos.length) {
-                if (videos.length > 1) showToast("Only 1 video allowed — using the first one.", "ℹ️");
-                processVideoFile(videos[0]);
-            }
-            if (!images.length && !videos.length) showToast("Please select photos or a video.", "⚠️");
+        // ================= 📸/🎬 PHOTOS ↔ VIDEO — pick one, not both =================
+        let activeMediaTab = 'photos';
+        function switchMediaTab(tab) {
+            const hasPhotos = typeof compressedPhotoUrls !== 'undefined' && compressedPhotoUrls.length > 0;
+            const hasVideo = !!listingVideoUrl;
+            if (tab === 'video' && hasPhotos) { showToast("Remove your photos first to add a video instead.", "⚠️"); return; }
+            if (tab === 'photos' && hasVideo) { showToast("Remove the video first to add photos instead.", "⚠️"); return; }
+            activeMediaTab = tab;
+            document.getElementById('media-panel-photos').classList.toggle('hidden', tab !== 'photos');
+            document.getElementById('media-panel-video').classList.toggle('hidden', tab !== 'video');
+            document.getElementById('media-tab-photos-btn').className = 'flex-1 py-2 rounded-xl text-[10px] font-black transition-colors ' + (tab === 'photos' ? 'bg-luxuryGreen text-white shadow-md' : 'text-gray-400');
+            document.getElementById('media-tab-video-btn').className = 'flex-1 py-2 rounded-xl text-[10px] font-black transition-colors ' + (tab === 'video' ? 'bg-luxuryGreen text-white shadow-md' : 'text-gray-400');
+        }
+        function updateMediaTabLocks() {
+            const hasPhotos = typeof compressedPhotoUrls !== 'undefined' && compressedPhotoUrls.length > 0;
+            const hasVideo = !!listingVideoUrl;
+            const note = document.getElementById('media-tab-lock-note');
+            const photosBtn = document.getElementById('media-tab-photos-btn');
+            const videoBtn = document.getElementById('media-tab-video-btn');
+            if (!note || !photosBtn || !videoBtn) return;
+            videoBtn.disabled = hasPhotos; videoBtn.style.opacity = hasPhotos ? '.4' : '1'; videoBtn.style.pointerEvents = hasPhotos ? 'none' : 'auto';
+            photosBtn.disabled = hasVideo; photosBtn.style.opacity = hasVideo ? '.4' : '1'; photosBtn.style.pointerEvents = hasVideo ? 'none' : 'auto';
+            if (hasPhotos) { note.textContent = '📸 Photos added — remove them to switch to a video.'; note.classList.remove('hidden'); }
+            else if (hasVideo) { note.textContent = '🎬 Video added — remove it to switch to photos.'; note.classList.remove('hidden'); }
+            else { note.classList.add('hidden'); }
+            if (hasVideo && activeMediaTab !== 'video') switchMediaTab('video');
+            if (hasPhotos && activeMediaTab !== 'photos') switchMediaTab('photos');
         }
 
-        function probeVideo(file) {
-            return new Promise((resolve, reject) => {
-                const url = URL.createObjectURL(file);
-                const v = document.createElement('video');
-                v.preload = 'metadata';
-                const done = (fn, val) => { URL.revokeObjectURL(url); fn(val); };
-                v.onloadedmetadata = () => done(resolve, { duration: v.duration || 0, width: v.videoWidth, height: v.videoHeight });
-                v.onerror = () => done(reject, new Error('probe failed'));
-                setTimeout(() => done(reject, new Error('probe timeout')), 15000);
-                v.src = url;
-            });
-        }
+        function handleListingVideoUpload(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            if (file.size > 60 * 1024 * 1024) { showToast("Video must be under 60 MB.", "⚠️"); input.value = ''; return; }
+            if (CLOUDINARY_CLOUD_NAME.startsWith('YOUR_')) { showToast("Cloudinary is not configured yet.", "⚠️"); input.value = ''; return; }
 
-        // Re-encodes in the browser at a lower bitrate and cuts at 60 sec (plays in real time, so up to ~60 sec wait).
-        function shrinkVideo(file, info, onProgress) {
-            return new Promise((resolve, reject) => {
-                if (typeof MediaRecorder === 'undefined') return reject(new Error('MediaRecorder unsupported'));
-                const url = URL.createObjectURL(file);
-                const v = document.createElement('video');
-                v.playsInline = true; v.preload = 'auto'; v.src = url;
-                let settled = false, rec = null, timer = null;
-                const finish = (fn, val) => { if (settled) return; settled = true; clearTimeout(timer); URL.revokeObjectURL(url); try { v.pause(); } catch (e) {} fn(val); };
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            fd.append('folder', 'likestays-reels');
 
-                v.onloadedmetadata = async () => {
-                    const dur = Math.min(v.duration || VIDEO_MAX_SECONDS, VIDEO_MAX_SECONDS);
-                    const stream = v.captureStream ? v.captureStream() : (v.mozCaptureStream ? v.mozCaptureStream() : null);
-                    if (!stream) return finish(reject, new Error('captureStream unsupported'));
-
-                    const mimes = ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
-                    const mime = mimes.find(m => MediaRecorder.isTypeSupported(m)) || '';
-                    // target about 40 MB max, never above 2.5 Mbps, never below 0.6 Mbps
-                    const bps = Math.round(Math.max(600000, Math.min(2500000, (40 * 1024 * 1024 * 8 / dur) * 0.9)));
-                    try { rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: bps } : { videoBitsPerSecond: bps }); }
-                    catch (e) { return finish(reject, e); }
-
-                    const chunks = [];
-                    rec.ondataavailable = (ev) => { if (ev.data && ev.data.size) chunks.push(ev.data); };
-                    rec.onstop = () => {
-                        const type = (rec.mimeType || mime || 'video/webm').split(';')[0];
-                        const ext = type.includes('mp4') ? 'mp4' : 'webm';
-                        const blob = new Blob(chunks, { type });
-                        if (!blob.size) return finish(reject, new Error('empty recording'));
-                        finish(resolve, new File([blob], 'video-optimized.' + ext, { type }));
-                    };
-                    v.ontimeupdate = () => {
-                        if (onProgress) onProgress(Math.min(99, Math.round(v.currentTime / dur * 100)));
-                        if (v.currentTime >= dur - 0.05 && rec.state === 'recording') rec.stop();
-                    };
-                    v.onended = () => { if (rec.state === 'recording') rec.stop(); };
-                    timer = setTimeout(() => finish(reject, new Error('optimize timeout')), (dur + 20) * 1000);
-
-                    rec.start(1000);
-                    try { await v.play(); }
-                    catch (e) { v.muted = true; try { await v.play(); } catch (e2) { finish(reject, e2); } } // autoplay fallback (audio may be lost)
-                };
-                v.onerror = () => finish(reject, new Error('video decode failed'));
-            });
-        }
-
-        function cloudinaryUpload(file, onProgress) {
-            return new Promise((resolve, reject) => {
-                const fd = new FormData();
-                fd.append('file', file);
-                fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-                fd.append('folder', 'likestays-reels');
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
-                xhr.upload.onprogress = (e) => { if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100)); };
-                xhr.onload = () => {
-                    try {
-                        const res = JSON.parse(xhr.responseText);
-                        if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) resolve(res);
-                        else reject(new Error((res.error && res.error.message) || 'Upload failed'));
-                    } catch (err) { reject(err); }
-                };
-                xhr.onerror = () => reject(new Error('Network error'));
-                xhr.send(fd);
-            });
-        }
-
-        async function processVideoFile(file) {
             const bar = document.getElementById('video-progress-bar');
             const barWrap = document.getElementById('video-progress-wrap');
             const label = document.getElementById('video-status-label');
-
-            if (CLOUDINARY_CLOUD_NAME.startsWith('YOUR_')) { showToast("Cloudinary is not configured yet.", "⚠️"); return; }
-
             barWrap.classList.remove('hidden'); bar.style.width = '0%';
-            pendingPhotoUploads++; updateSubmitButtonUploadState(); // submit stays disabled until the video finishes
+            pendingPhotoUploads++; updateSubmitButtonUploadState(); // submit بٹن اپلوڈ تک بند
 
-            const upProgress = (pct) => { bar.style.width = pct + '%'; label.innerText = `Uploading ${pct}%`; };
-            const optProgress = (pct) => { bar.style.width = pct + '%'; label.innerText = `Optimizing ${pct}%`; };
-
-            try {
-                let f = file, optimized = false, info = null;
-                try { info = await probeVideo(file); } catch (e) { /* some formats can't be probed — continue */ }
-
-                const tooBig = file.size > VIDEO_MAX_BYTES;
-                const tooLong = info && info.duration > VIDEO_MAX_SECONDS + 1;
-                if (tooBig || tooLong) {
-                    label.innerText = 'Optimizing...';
-                    try { f = await shrinkVideo(file, info || { duration: VIDEO_MAX_SECONDS }, optProgress); optimized = true; }
-                    catch (e) { console.warn('Video optimize failed:', e); f = file; }
-                }
-                if (f.size > VIDEO_MAX_BYTES) throw new Error('TOO_BIG');
-
-                let res;
-                try { res = await cloudinaryUpload(f, upProgress); }
-                catch (e) {
-                    if (optimized) throw e;
-                    // first upload failed (size/format problem) → optimize once automatically and retry
-                    label.innerText = 'Optimizing...';
-                    f = await shrinkVideo(file, info || { duration: VIDEO_MAX_SECONDS }, optProgress);
-                    optimized = true;
-                    if (f.size > VIDEO_MAX_BYTES) throw new Error('TOO_BIG');
-                    res = await cloudinaryUpload(f, upProgress);
-                }
-
-                // eo_60 = delivered video is never longer than 60 sec; .mp4 = plays on every phone
-                const base = res.secure_url;
-                listingVideoUrl = base.replace('/upload/', '/upload/eo_60,f_mp4,q_auto,w_720/').replace(/\.[a-z0-9]+$/i, '.mp4');
-                listingVideoPoster = base.replace('/upload/', '/upload/so_0,f_jpg,w_720/').replace(/\.[a-z0-9]+$/i, '.jpg');
-                setVideoUI(listingVideoUrl);
-                if (optimized) showToast("Video was optimized automatically.", "✅");
-            } catch (err) {
-                console.error('Video error:', err);
-                label.innerText = listingVideoUrl ? 'Video ready' : 'No video';
-                showToast(err.message === 'TOO_BIG'
-                    ? "Video is too large and could not be reduced. Please choose a shorter clip."
-                    : "Video upload failed. Please try again.", "⚠️");
-            } finally {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) { const pct = Math.round(e.loaded / e.total * 100); bar.style.width = pct + '%'; label.innerText = `Uploading ${pct}%`; }
+            };
+            xhr.onload = () => {
                 pendingPhotoUploads--; updateSubmitButtonUploadState(); barWrap.classList.add('hidden');
-            }
+                try {
+                    const res = JSON.parse(xhr.responseText);
+                    if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) {
+                        // 30 سیکنڈ سے لمبی ویڈیو خود بخود 30 سیکنڈ تک کاٹ دی جاتی ہے، کوئی ایرر نہیں
+                        const wasTrimmed = res.duration && res.duration > 30;
+                        // f_auto,q_auto,w_720,du_30: چھوٹی، تیز اور 30 سیکنڈ تک محدود ویڈیو؛ poster: پہلا فریم
+                        listingVideoUrl = res.secure_url.replace('/upload/', '/upload/f_mp4,q_auto,w_720,du_30/');
+                        listingVideoPoster = res.secure_url.replace('/upload/', '/upload/so_0,f_jpg,w_720/').replace(/\.[a-z0-9]+$/i, '.jpg');
+                        setVideoUI(listingVideoUrl);
+                        if (wasTrimmed) showToast("Video trimmed to 30 seconds.", "✂️");
+                    } else { throw new Error((res.error && res.error.message) || 'Upload failed'); }
+                } catch (err) { label.innerText = 'Upload failed'; showToast("Video upload failed. Try again.", "⚠️"); }
+            };
+            xhr.onerror = () => { pendingPhotoUploads--; updateSubmitButtonUploadState(); barWrap.classList.add('hidden'); label.innerText = 'Upload failed'; showToast("Video upload failed. Check your connection.", "⚠️"); };
+            xhr.send(fd);
         }
 
         function removeListingVideo() {
             listingVideoUrl = ''; listingVideoPoster = '';
-            
+            document.getElementById('prop-video-input').value = '';
             setVideoUI('');
         }
 
@@ -2337,6 +2258,7 @@
 
             grid.innerHTML = '';
             countLabel.innerText = `${compressedPhotoUrls.length} of 8 Photos`;
+            updateMediaTabLocks();
 
             compressedPhotoUrls.forEach((photo, idx) => {
                 const isCover = idx === 0;
