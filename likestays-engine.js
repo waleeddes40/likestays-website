@@ -197,16 +197,26 @@
         } catch (e) {}
     }
 
-    function formatPrice(amountInUSD) {
-        if (!amountInUSD || isNaN(amountInUSD)) return `${activeLocale.symbol}0`;
-        const converted = amountInUSD * activeLocale.rate;
+    // amount کو اس کی اپنی (ہوسٹ کی چنی ہوئی) کرنسی سے ڈالر میں بدلتا ہے
+    function toUSD(amount, fromCode) {
+        if (!amount || isNaN(amount)) return 0;
+        const from = WORLD_CURRENCIES.find(c => c.code === fromCode) || WORLD_CURRENCIES[0]; // default USD
+        return amount / (from.rate || 1);
+    }
+
+    // amount کسی بھی کرنسی (fromCode) میں ہو سکتی ہے — پہلے USD، پھر دیکھنے والے کی چنی ہوئی کرنسی میں بدلتی ہے
+    function formatPrice(amount, fromCode) {
+        if (!amount || isNaN(amount)) return `${activeLocale.symbol}0`;
+        const usd = fromCode ? toUSD(amount, fromCode) : amount; // fromCode نہ ہو تو پرانے رویے کی طرح amount کو ہی USD مانا جائے
+        const converted = usd * activeLocale.rate;
         return `${activeLocale.symbol}${Math.round(converted).toLocaleString()}`;
     }
 
     // 🆕 چھوٹی جگہ (deal بیجز) کے لیے مختصر قیمت — بڑی رقم کو K/M میں دکھاتی ہے
-    function formatCompactPrice(amountInUSD) {
-        if (!amountInUSD || isNaN(amountInUSD)) return `${activeLocale.symbol}0`;
-        const converted = amountInUSD * activeLocale.rate;
+    function formatCompactPrice(amount, fromCode) {
+        if (!amount || isNaN(amount)) return `${activeLocale.symbol}0`;
+        const usd = fromCode ? toUSD(amount, fromCode) : amount;
+        const converted = usd * activeLocale.rate;
         if (converted >= 1000000) return `${activeLocale.symbol}${(converted / 1000000).toFixed(1)}M`;
         if (converted >= 1000) return `${activeLocale.symbol}${(converted / 1000).toFixed(1)}K`;
         return `${activeLocale.symbol}${Math.round(converted).toLocaleString()}`;
