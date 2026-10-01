@@ -247,10 +247,10 @@
                 { id: 'highlights', url: 'highlights.html', icon: '✨', label: labels.highlights }
             ];
             const html = `
-                <div id="likestays-global-bottom-nav" style="position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:210;background:#fff;color:#0D4E2F;border-radius:999px;padding:8px 8px 8px 14px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 12px rgba(0,0,0,.2)">
+                <div id="likestays-global-bottom-nav" style="position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:210;background:rgba(0,0,0,.28);backdrop-filter:blur(8px);color:#fff;border:1.5px solid rgba(255,255,255,.85);border-radius:999px;padding:8px 8px 8px 14px;display:flex;justify-content:space-between;align-items:center">
                     <div style="display:flex;gap:12px;flex:1;min-width:0;justify-content:space-around">
                         ${items.map(t => `
-                            <a href="${t.url}" style="text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:${t.id === activeTab ? 1 : 0.55};flex:0 0 auto">
+                            <a href="${t.url}" style="text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:${t.id === activeTab ? 1 : 0.65};flex:0 0 auto;text-shadow:0 1px 3px rgba(0,0,0,.7)">
                                 <span style="display:block;font-size:16px;line-height:1.2">${t.icon}</span>
                                 <span class="notranslate">${t.label}</span>
                             </a>`).join('')}
