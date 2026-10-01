@@ -180,6 +180,8 @@
   .center-play-btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:7;cursor:pointer}
   .center-play-btn.show{display:flex}
   .center-play-btn svg{width:30px;height:30px;fill:#fff;margin-left:4px}
+
+  .center-sound-btn{position:absolute;left:50%;top:calc(50% - 58px);transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;border:0;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:7}
 </style>
 <style>
   html,body{height:100%;overflow:hidden!important}
@@ -1013,24 +1015,19 @@
                     ${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}
                 </div>
                 <div class="side-circles">
-                    ${hasVideo ? `<button type="button" class="side-circle feed-mute" onclick="toggleFeedMute()" aria-label="Sound">🔇</button>` : ''}
+                    <button type="button" class="side-circle" onclick="toggleGlobalLangModal(true)" aria-label="Language" style="font-size:24px">🌐</button>
+                    <button type="button" class="side-circle" onclick="toggleGlobalCurrencyModal(true)" aria-label="Currency" style="font-size:24px">💱</button>
                     <button type="button" class="side-circle" onclick="togglePropertyFavorite(event,'${id}')" aria-label="Like">
                         <svg viewBox="0 0 24 24" width="27" height="27" fill="${isFav ? '#ff3040' : 'none'}" stroke="#fff" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.3 8 1.8 4 5.6 3.2 8 2.7 10.3 3.9 12 6.4c1.7-2.5 4-3.7 6.4-3.2C22.2 4 23.7 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg>
-                    </button>
-                    <button type="button" class="side-circle" onclick="openReviews('${id}')" aria-label="Reviews">
-                        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H8l-5 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                        <small>${escF(prop.reviewCount || 0)}</small>
                     </button>
                     <button type="button" class="side-circle" onclick="shareProperty('${id}','${escF(prop.name).replace(/'/g, '')}')" aria-label="Share">
                         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                     </button>
-                    <button type="button" class="side-circle" onclick="toggleGlobalCurrencyModal(true)" aria-label="Currency">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5c0-1 .9-1.8 2.5-1.8s2.5.8 2.5 1.6c0 2.2-5 1.4-5 3.7 0 .9 1 1.7 2.5 1.7s2.5-.7 2.5-1.7M12 5.5v1.2M12 16.8V18"/></svg>
-                    </button>
-                    <button type="button" class="side-circle" onclick="toggleGlobalLangModal(true)" aria-label="Language">
-                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+                    <button type="button" class="side-circle" onclick="openReviews('${id}')" aria-label="Reviews" style="font-size:22px">
+                        ⭐<small>${escF(prop.rating != null ? prop.rating : 'New')}</small>
                     </button>
                 </div>
+                ${hasVideo ? `<button type="button" class="center-sound-btn feed-mute" onclick="toggleFeedMute()" aria-label="Sound">🔇</button>` : ''}
                 <div class="feed-info" style="right:64px">
                     <div style="font-size:15px;font-weight:900">${escF(prop.name)}</div>
                     <div style="font-size:11px;font-weight:700;opacity:.9">🏡 ${escF(prop.category || 'Stay')}</div>
