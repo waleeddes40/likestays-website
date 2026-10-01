@@ -346,7 +346,9 @@
             activeLocale.flag = matched.flag;
             saveLocale();
             closeCurrencyModal();
-            window.location.reload();
+            // پیج ری لوڈ نہ ہو، جہاں یوزر ہے وہیں رہے — اگر صفحے نے یہ ہُک دیا ہو تو صرف قیمتیں خود بخود اپڈیٹ ہوں
+            if (typeof window.__lsOnLocaleChange === 'function') { window.__lsOnLocaleChange(); }
+            else { window.location.reload(); }
         }
     }
 

@@ -140,7 +140,7 @@
   #explore-real-header .neu-logo-card span,
   #explore-real-header .neu-logo-card svg,
   #explore-real-header .neu-flat span{color:#fff!important}
-  #explore-real-header .airbnb-search-pill{background:#fff!important;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+  #explore-real-header .airbnb-search-pill{background:#fff!important;box-shadow:0 3px 10px rgba(0,0,0,.18);border:1.5px solid rgba(13,78,47,.18)!important}
   #explore-real-header #general-search-pill-row{margin-top:2px}
 
   /* ---- full-screen feed layout (header floats over it, nav floats under it) ---- */
@@ -157,18 +157,6 @@
   .feed-item img.fi-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(26px) brightness(.55);transform:scale(1.2)}
   .feed-item img.fi-main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 
-  /* ---- TEST: fully see-through UI (text stays clear, video/photo visible behind) ---- */
-  #explore-real-header .airbnb-search-pill{background:rgba(0,0,0,.22)!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:none!important;backdrop-filter:none!important}
-  #explore-real-header #main-search-bar-title{color:#fff!important;text-shadow:0 1px 4px rgba(0,0,0,.8)}
-  #explore-real-header #main-search-bar-subtitle{color:rgba(255,255,255,.92)!important;text-shadow:0 1px 4px rgba(0,0,0,.8)}
-  #explore-real-header .neu-btn-green{background:rgba(13,78,47,.55)!important;border:1px solid rgba(255,255,255,.45);box-shadow:none!important}
-  #explore-real-header .neu-flat{background:rgba(0,0,0,.22)!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:none!important;backdrop-filter:none!important}
-  #explore-real-header .neu-flat span{color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #g-offer-badge{background:rgba(245,165,36,.5)!important;color:#fff!important;border:1px solid rgba(255,220,150,.6);box-shadow:none!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  .price-chip{background:rgba(0,0,0,.22)!important;border:1px solid rgba(255,255,255,.3)!important;backdrop-filter:none!important;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  .side-circle{background:rgba(0,0,0,.25)!important;color:#fff!important;border:1px solid rgba(255,255,255,.4)!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #likestays-global-bottom-nav{background:rgba(0,0,0,.25)!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;box-shadow:none!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-  #likestays-global-bottom-nav button{background:rgba(13,78,47,.65)!important;border:1px solid rgba(255,255,255,.4)!important}
   .price-stack.no-offer{top:var(--offer-top,60px)!important}
 
   /* ---- Instagram-style vertical right rail: sound, like, reviews, share, currency, language ---- */
@@ -180,8 +168,6 @@
   .center-play-btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:7;cursor:pointer}
   .center-play-btn.show{display:flex}
   .center-play-btn svg{width:30px;height:30px;fill:#fff;margin-left:4px}
-
-  .center-sound-btn{position:absolute;left:50%;top:calc(50% - 58px);transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;border:0;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:7}
 </style>
 <style>
   html,body{height:100%;overflow:hidden!important}
@@ -190,7 +176,7 @@
   #explore-property-list{display:block!important;height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;background:#000}
   #explore-property-list::-webkit-scrollbar{display:none}
   .feed-slide{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:#000;color:#fff}
-  .feed-media{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+  .feed-media{position:absolute;inset:3% 0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
   .feed-media::-webkit-scrollbar{display:none}
   .feed-item{flex:0 0 100%;height:100%;scroll-snap-align:center;position:relative}
   .feed-item img,.feed-item video{width:100%;height:100%;object-fit:cover;display:block}
@@ -875,13 +861,12 @@
         }
 
         function fitFeedImg(img) {
-            // portrait (fills screen) => cover; landscape/square => centred with blurred backdrop
-            const r = img.naturalWidth / (img.naturalHeight || 1);
-            img.style.objectFit = r < 0.85 ? 'cover' : 'contain';
+            // کبھی کراپ/زوم نہ ہو — ہمیشہ پوری تصویر، معیار برقرار
+            img.style.objectFit = 'contain';
         }
         function fitFeedVideo(v) {
-            const r = v.videoWidth / (v.videoHeight || 1);
-            v.style.objectFit = r < 0.85 ? 'cover' : 'contain';
+            // کبھی کراپ/زوم نہ ہو — ہمیشہ پوری ویڈیو، معیار برقرار
+            v.style.objectFit = 'contain';
         }
         function handleCardCarouselScroll(propId, event) {
             const track = event.target;
@@ -971,6 +956,21 @@
         let feedMuted = true;
         const escF = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+        // کرنسی/زبان بدلنے پر پیج ری لوڈ نہیں ہوگا — صرف نظر آنے والی قیمتیں اور آفر فوری اپڈیٹ ہوں گی، اسکرول/پوزیشن وہیں رہے گی
+        window.__lsOnLocaleChange = function () {
+            document.querySelectorAll('.feed-slide').forEach(slide => {
+                const prop = (typeof masterPropertiesList !== 'undefined' ? masterPropertiesList : []).find(p => String(p.id) === String(slide.dataset.id));
+                if (!prop) return;
+                const stack = slide.querySelector('.price-stack');
+                if (!stack) return;
+                const daily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR');
+                const hourly = (prop.hourlyPrice && prop.hourlyPrice > 0) ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : '';
+                stack.innerHTML = `<span class="price-chip" style="font-size:10px"><span style="color:#34d399">●</span> ${daily}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Daily</small></span>${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}`;
+            });
+            const activeSlide = document.querySelector(`.feed-slide[data-id="${window._activeFeedId}"]`);
+            if (activeSlide) updateGlobalOverlayForSlide(activeSlide);
+        };
+
         setInterval(() => {
             const sl = document.querySelector(`.feed-slide[data-id="${window._activeFeedId}"]`);
             if (sl) updateGlobalOverlayForSlide(sl);
@@ -1015,19 +1015,23 @@
                     ${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}
                 </div>
                 <div class="side-circles">
-                    <button type="button" class="side-circle" onclick="toggleGlobalLangModal(true)" aria-label="Language" style="font-size:24px">🌐</button>
-                    <button type="button" class="side-circle" onclick="toggleGlobalCurrencyModal(true)" aria-label="Currency" style="font-size:24px">💱</button>
+                    ${hasVideo ? `<button type="button" class="side-circle feed-mute" onclick="toggleFeedMute()" aria-label="Sound" style="font-size:22px">🔇</button>` : ''}
+                    <button type="button" class="side-circle" onclick="toggleGlobalLangModal(true)" aria-label="Language">
+                        <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="12" r="4.3"/><path d="M7 7.7c1.5 1.3 1.5 5.3 0 8.6M3.1 12h7.8"/><circle cx="17" cy="12" r="4.3"/><path d="M17 7.7c1.5 1.3 1.5 5.3 0 8.6M13.1 12h7.8"/></svg>
+                    </button>
+                    <button type="button" class="side-circle" onclick="toggleGlobalCurrencyModal(true)" aria-label="Currency">
+                        <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>
+                    </button>
                     <button type="button" class="side-circle" onclick="togglePropertyFavorite(event,'${id}')" aria-label="Like">
                         <svg viewBox="0 0 24 24" width="27" height="27" fill="${isFav ? '#ff3040' : 'none'}" stroke="#fff" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C.3 8 1.8 4 5.6 3.2 8 2.7 10.3 3.9 12 6.4c1.7-2.5 4-3.7 6.4-3.2C22.2 4 23.7 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg>
                     </button>
                     <button type="button" class="side-circle" onclick="shareProperty('${id}','${escF(prop.name).replace(/'/g, '')}')" aria-label="Share">
-                        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        <svg viewBox="0 0 24 24" width="25" height="25" fill="#fff"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
                     </button>
-                    <button type="button" class="side-circle" onclick="openReviews('${id}')" aria-label="Reviews" style="font-size:22px">
+                    <button type="button" class="side-circle" onclick="openReviews('${id}')" aria-label="Reviews" style="font-size:20px">
                         ⭐<small>${escF(prop.rating != null ? prop.rating : 'New')}</small>
                     </button>
                 </div>
-                ${hasVideo ? `<button type="button" class="center-sound-btn feed-mute" onclick="toggleFeedMute()" aria-label="Sound">🔇</button>` : ''}
                 <div class="feed-info" style="right:64px">
                     <div style="font-size:15px;font-weight:900">${escF(prop.name)}</div>
                     <div style="font-size:11px;font-weight:700;opacity:.9">🏡 ${escF(prop.category || 'Stay')}</div>
