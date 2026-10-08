@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Like Stays | Interactive Luxury Map</title>
+    <meta name="theme-color" content="#000000">
+    <title>Like Stays | Map</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- 🔥 REALTIME FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    <!-- LEAFLET OPENSTREETMAP -->
+    <!-- 🌐 GLOBAL LIKESTAYS UNIVERSAL ENGINE, FILTERS & LANGUAGE ENGINE -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- 🌐 GLOBAL LIKESTAYS UNIVERSAL ENGINE & FILTERS -->
     <script src="likestays-engine.js"></script>
     <script src="filters.js"></script>
-    <script>window.__lsNavOptions={bookNow:true};window.__lsBookNowDisabled=true;window.__lsBookNow=function(){ if(typeof navigateToSelectedMapStay==='function') navigateToSelectedMapStay(); };</script>
+    <script src="language-engine.js"></script>
+    <script>window.__lsNavOptions={threeTab:true};</script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        luxuryGreen: '#0D4E2F',
-                        luxuryLightGreen: '#1E6F45',
-                        softMint: '#F2F5F3',
-                        softShadowDark: '#D2DCD4',
+                        luxuryGreen: '#111827',
+                        luxuryLightGreen: '#374151',
+                        softMint: '#F6F6F7',
+                        softShadowDark: '#E5E7EB',
                         softShadowLight: '#FFFFFF',
                         goldWarm: '#D4AF37'
                     }
@@ -45,159 +45,439 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100%;
-            height: 100%;
-            background-color: #F2F5F3 !important;
-            overflow: hidden !important;
+            min-height: 100%;
+            background-color: #F7F7F8 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
 
         .font-cinzel-logo { font-family: 'Cinzel', serif; font-weight: 900; }
-        .neu-flat { background: #F2F5F3; box-shadow: 4px 4px 10px #D2DCD4, -4px -4px 10px #FFFFFF; }
-        .neu-inset { background: #F2F5F3; box-shadow: inset 2px 2px 5px #D2DCD4, inset -2px -2px 5px #FFFFFF; }
-        .neu-btn-green { background: #0D4E2F; box-shadow: 3px 3px 10px rgba(13, 78, 47, 0.35); }
-        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 6px #D2DCD4, -2px -2px 6px #FFFFFF; }
-        .neu-logo-card { background: #FFFFFF; box-shadow: 3px 3px 8px #D2DCD4, -3px -3px 8px #FFFFFF; }
+        .neu-flat { background: #F7F7F8; box-shadow: 5px 5px 12px #E5E7EB, -5px -5px 12px #FFFFFF; }
+        .neu-inset { background: #F7F7F8; box-shadow: inset 3px 3px 6px #E5E7EB, inset -3px -3px 6px #FFFFFF; }
+        .neu-btn-green { background: #D97757; box-shadow: 3px 3px 10px rgba(217, 119, 87, 0.35), -3px -3px 10px #FFFFFF; }
+        .neu-btn-green:active { box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4); transform: scale(0.96); }
+        .neu-circle-btn { background: #FFFFFF; box-shadow: 2px 2px 6px #E5E7EB, -2px -2px 6px #FFFFFF; }
+        .neu-logo-card { background: #FFFFFF; box-shadow: 3px 3px 8px #E5E7EB, -3px -3px 8px #FFFFFF; }
+
+        /* ✨ AIRBNB FLOATING SEARCH PILL */
+        .airbnb-search-pill {
+            background: #FFFFFF;
+            box-shadow: 0 6px 20px rgba(217, 119, 87, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(210, 220, 212, 0.9);
+            transition: all 0.25s ease;
+        }
+        .airbnb-search-pill:hover {
+            box-shadow: 0 10px 25px rgba(217, 119, 87, 0.14);
+            transform: translateY(-1px);
+        }
+        .airbnb-search-pill:active { transform: scale(0.98); }
+
+        .property-card-3d {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .property-card-3d:active { transform: scale(0.99); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .animate-pop-in { animation: popIn 0.2s ease-out forwards; }
+        .animate-pop-in { animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* 📍 SLEEK LUXURY MAP CAPSULE PINS (NO UGLY BLACK BORDERS) */
-        .map-price-pill {
-            background: #FFFFFF;
-            color: #0D4E2F;
-            font-weight: 900;
-            font-size: 10.5px;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            box-shadow: 0 4px 14px rgba(13, 78, 47, 0.22);
-            border: 1.5px solid #0D4E2F;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            white-space: nowrap;
-            cursor: pointer;
+        @keyframes luxuryShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .theme-emerald {
+            background: linear-gradient(110deg, #D97757 15%, #C15F3C 35%, #D4AF37 50%, #C15F3C 65%, #D97757 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            color: #FFFFFF;
         }
-        .map-price-pill:hover, .map-price-pill.active-pin {
-            background: #0D4E2F !important;
-            color: #FFFFFF !important;
-            transform: scale(1.15) translateY(-2px);
-            box-shadow: 0 8px 20px rgba(13, 78, 47, 0.35);
-            border-color: #D4AF37 !important;
+        .theme-gold {
+            background: linear-gradient(110deg, #8C6D1F 10%, #C89F2D 35%, #FFF0AA 50%, #C89F2D 65%, #8C6D1F 90%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            color: #FFFFFF;
+        }
+        .theme-midnight {
+            background: linear-gradient(110deg, #0F172A 15%, #1E293B 35%, #D4AF37 50%, #1E293B 65%, #0F172A 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            color: #FFFFFF;
+        }
+        .theme-ruby {
+            background: linear-gradient(110deg, #7F1D1D 15%, #991B1B 35%, #F87171 50%, #991B1B 65%, #7F1D1D 85%);
+            background-size: 200% 100%;
+            animation: luxuryShimmer 3s infinite linear;
+            border: 1px solid rgba(254, 202, 202, 0.7);
+            color: #FFFFFF;
         }
 
         /* 🎚️ CUSTOM RANGE SLIDERS */
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 5px; cursor: pointer; background: #D2DCD4; border-radius: 9999px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 5px; cursor: pointer; background: #E5E7EB; border-radius: 9999px; }
         input[type=range]::-webkit-slider-thumb {
-            height: 18px; width: 18px; border-radius: 50%; background: #0D4E2F; cursor: pointer;
-            -webkit-appearance: none; margin-top: -6.5px; box-shadow: 0 2px 5px rgba(13, 78, 47, 0.35); border: 2px solid #FFFFFF;
+            height: 18px; width: 18px; border-radius: 50%; background: #D97757; cursor: pointer;
+            -webkit-appearance: none; margin-top: -6.5px; box-shadow: 0 2px 5px rgba(217, 119, 87, 0.35); border: 2px solid #FFFFFF;
         }
-        input[type=range]::-moz-range-track { width: 100%; height: 5px; cursor: pointer; background: #D2DCD4; border-radius: 9999px; }
-        input[type=range]::-moz-range-thumb { height: 18px; width: 18px; border-radius: 50%; background: #0D4E2F; cursor: pointer; border: 2px solid #FFFFFF; }
+    
+  .offer-cycle{position:relative;height:12px;overflow:hidden;flex:1;min-width:0}
+  .offer-cycle span{position:absolute;left:0;right:0;top:0;white-space:nowrap;opacity:0}
+  .offer-cycle .s1{animation:offerFade1 4s infinite}
+  .offer-cycle .s2{animation:offerFade2 4s infinite}
+  @keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+  @keyframes offerFade1{0%{opacity:0}5%{opacity:1}22%{opacity:1}30%{opacity:0}100%{opacity:0}}
+  @keyframes offerFade2{0%{opacity:0}30%{opacity:0}38%{opacity:1}95%{opacity:1}100%{opacity:0}}
+  .price-stack{position:absolute;left:10px;top:8px;z-index:10;display:flex;flex-direction:column;gap:2px}
+  .price-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:7px;font-weight:800;padding:3px 8px;width:fit-content}
+  #feed-wrap{top:0!important}
+  #explore-property-list{padding-top:0}
+  .side-circles{position:absolute;right:12px;bottom:170px;display:flex;flex-direction:column;gap:11px;align-items:center;z-index:6}
+  .side-circle{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.92);color:#D97757;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:10px;line-height:1.05;border:0;cursor:pointer}
 
-        /* ===== see-through UI over a full-screen map ===== */
-        #map-header{position:fixed;top:0;left:0;right:0;z-index:1200;padding:calc(env(safe-area-inset-top,0px) + 10px) 10px 0}
-        .map-glass{background:rgba(0,0,0,.30)!important;border:1px solid rgba(255,255,255,.4)!important;box-shadow:none!important;color:#fff}
-        #map-header .text-luxuryGreen,#map-header input{color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-        #map-header input::placeholder{color:rgba(255,255,255,.75)}
-        #map-header .bg-gray-200{background:rgba(255,255,255,.45)!important}
-        #map-header .neu-btn-green{background:rgba(13,78,47,.65)!important;box-shadow:none!important;border:1px solid rgba(255,255,255,.45)}
-        #map-header button:hover{background:transparent}
-        .rate-chip{padding:4px 11px;border-radius:999px;font-size:10px;font-weight:800;color:#fff;background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.4);text-shadow:0 1px 3px rgba(0,0,0,.8);cursor:pointer}
-        .rate-chip.active{background:rgba(13,78,47,.78);border-color:rgba(255,255,255,.8)}
-        .leaflet-top.leaflet-right{margin-top:calc(env(safe-area-inset-top,0px) + 104px)}
-        .leaflet-bottom.leaflet-right{margin-bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}
-        #floating-property-preview-card{bottom:calc(env(safe-area-inset-bottom,0px) + 92px)!important;background:rgba(0,0,0,.35)!important;border:1px solid rgba(255,255,255,.4)!important;box-shadow:none!important;color:#fff}
-        #floating-property-preview-card .text-luxuryGreen,#floating-property-preview-card .text-luxuryLightGreen,#floating-property-preview-card .text-emerald-700{color:#fff!important}
-        #floating-property-preview-card .text-gray-400{color:rgba(255,255,255,.85)!important}
-        #floating-property-preview-card .border-gray-100{border-color:rgba(255,255,255,.3)!important}
-        #floating-property-preview-card h4,#floating-property-preview-card span,#floating-property-preview-card p{text-shadow:0 1px 3px rgba(0,0,0,.8)}
-        #likestays-global-bottom-nav{background:rgba(0,0,0,.30)!important;color:#fff!important;border:1px solid rgba(255,255,255,.4)!important;box-shadow:none!important;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-        #likestays-global-bottom-nav button{background:rgba(13,78,47,.7)!important;border:1px solid rgba(255,255,255,.45)!important}
-        #likestays-global-bottom-nav button[disabled]{opacity:.45;pointer-events:none}
-    </style>
+  #explore-real-header .neu-logo-card,
+  #explore-real-header .neu-flat{background:rgba(0,0,0,.45)!important;backdrop-filter:blur(8px);border-color:rgba(255,255,255,.25)!important}
+  #explore-real-header .neu-logo-card span,
+  #explore-real-header .neu-logo-card svg,
+  #explore-real-header .neu-flat span{color:#fff!important}
+  #explore-real-header .airbnb-search-pill{background:rgba(0,0,0,.28)!important;backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.85)!important;box-shadow:none!important}
+  #explore-real-header #main-search-bar-title{color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  #explore-real-header #main-search-bar-subtitle{color:rgba(255,255,255,.85)!important;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  #explore-real-header .neu-btn-green{background:rgba(13,78,47,.6)!important;box-shadow:none!important}
+  #explore-real-header #general-search-pill-row{margin-top:2px}
+
+  /* ---- full-screen feed layout (header floats over it, nav floats under it) ---- */
+  .price-stack{top:calc(env(safe-area-inset-top,0px) + 14px)!important}
+  .feed-dots{top:calc(env(safe-area-inset-top,0px) + 14px)!important}
+  .feed-info{bottom:calc(env(safe-area-inset-bottom,0px) + 68px)!important}
+  .side-circles{bottom:calc(env(safe-area-inset-bottom,0px) + 68px)!important}
+  #explore-real-header .neu-flat{padding:3px 7px!important;font-size:9px!important;border-radius:10px!important;flex-shrink:0}
+  #explore-real-header .airbnb-search-pill{padding-top:6px!important;padding-bottom:6px!important}
+  #g-offer-badge::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.75) 48%,transparent 66%);background-size:250% 100%;animation:shine 2.6s ease-in-out infinite;pointer-events:none}
+  .offer-cycle{height:13px!important}
+  /* photos: portrait fills the whole screen; landscape/small photos sit centred over a blurred copy of themselves */
+  .feed-item{background:#000;overflow:hidden}
+  .feed-item img.fi-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(26px) brightness(.55);transform:scale(1.2)}
+  .feed-item img.fi-main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+
+  .offer-badge-inline{display:flex;align-items:center;background:#F5A524;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden;margin-bottom:3px;max-width:230px}
+
+  /* ================= 🟠 POPUP THEME: search / filter / currency / language / more-menu ================= */
+  /* search bar inside the Search popup: less rounded (not a full capsule) */
+  #airbnb-search-modal .airbnb-search-pill{border-radius:14px!important}
+  /* default = black text; ONLY selected things are orange */
+  [class~="bg-luxuryGreen"]{background:#D97757!important;color:#fff!important}
+  .neu-btn-green{background:#D97757!important;box-shadow:none!important}
+/* chips/pills (e.g. filter "Any", "Budget <5K", quick date buttons): orange when active, softer corners */
+  #airbnb-search-modal button.rounded-full:not(.w-9):not(.w-10):not(.h-9):not(.h-10),
+  #filter-modal-overlay button.rounded-full:not(.w-9):not(.w-10):not(.h-9):not(.h-10){border-radius:12px!important}
+  #airbnb-search-modal, #filter-modal-overlay, #global-currency-modal, #ls-more-sheet{font-family:'Plus Jakarta Sans',sans-serif}
+
+  /* ---- Instagram-style vertical right rail: sound, like, reviews, share, currency, language ---- */
+  .side-circles{gap:16px}
+  .side-circle{background:transparent!important;border:0!important;color:#fff!important;width:auto;height:auto;font-size:26px;text-shadow:0 1px 4px rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;gap:1px}
+  .feed-mute-chip{background:rgba(0,0,0,.45)!important;width:32px;height:32px;border-radius:50%}
+  .side-circle small{font-size:9px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  .feed-mute{position:static!important}
+  /* center play/pause overlay, shown when a video is paused or has ended */
+  .center-play-btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:7;cursor:pointer}
+  .center-play-btn.show{display:flex}
+  .center-play-btn svg{width:30px;height:30px;fill:#fff;margin-left:4px}
+
+  #ls-more-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:195;width:36px;height:36px;border-radius:0;background:transparent;border:0;color:#fff;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+  #ls-more-sheet{position:fixed;top:calc(env(safe-area-inset-top,0px) + 54px);right:12px;z-index:196;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);min-width:200px;padding:6px;display:none;max-height:70vh;overflow-y:auto}
+  #ls-more-sheet.open{display:block}
+  #ls-more-sheet a{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;text-decoration:none;color:#1f2937;font-size:12px;font-weight:700}
+  #ls-more-sheet a:hover{background:#f2f5f3}
+  #ls-more-sheet .sep{height:1px;background:#eee;margin:5px 2px}
+  #ls-more-backdrop{position:fixed;inset:0;z-index:194;display:none}
+  #ls-more-backdrop.open{display:block}
+</style>
+<style>
+  /* ===== NEW HOME DESIGN (card list, orange, Inter) ===== */
+  :root{--pri:#D97757;--soft:#FBEAE3;--br:#e5e7eb;--mut:#8b93a1}
+  html,body{height:auto!important;overflow-x:hidden!important;overflow-y:auto!important;background:#fff!important;font-family:'Inter',system-ui,sans-serif!important;color:#0f172a}
+  body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))!important}
+  #explore-real-header{display:none!important}
+  #ls-home-header{position:sticky;top:0;z-index:50;background:#fff;max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 0}
+  .hs-bar{display:flex;align-items:center;gap:8px;border:1px solid var(--br);border-radius:28px;padding:9px 6px 9px 10px;box-shadow:0 3px 10px rgba(0,0,0,.08);background:#fff}
+  .hs-main{display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer}
+  .hs-ic{width:36px;height:36px;border-radius:50%;background:#f3f4f6;color:#111827;display:grid;place-items:center;flex:none}
+  .hs-t{min-width:0}.hs-t b{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hs-t span{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hs-btn{position:relative;width:36px;height:36px;border-radius:50%;border:0;background:none;color:#0f172a;display:grid;place-items:center;cursor:pointer;flex:none}
+  .hs-btn.flt{border:1px solid var(--br)}
+  #hdr-filter-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--pri)}
+  .type-chips{display:flex;gap:9px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+  .type-chips::-webkit-scrollbar{display:none}
+  .type-chip{flex:none;border:1px solid var(--br);border-radius:999px;padding:8px 15px;font:600 13px Inter,sans-serif;background:#fff;color:#0f172a;cursor:pointer}
+  .type-chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+  
+  #feed-wrap{position:static;max-width:480px;margin:0 auto;padding:6px 14px 0}
+  #explore-property-list{display:block!important;height:auto;overflow:visible;background:#fff}
+  .feed-slide{position:relative;margin:0 0 34px;height:auto;overflow:visible;background:#fff;color:#0f172a;cursor:pointer}
+  .cd-img{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb}
+  .cd-track{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .cd-track::-webkit-scrollbar{display:none}
+  .cd-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;display:block}
+  .cd-fav{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:#fff;color:#0f172a;border:0;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);z-index:6}
+  .cd-fav.on svg{fill:var(--pri);stroke:var(--pri)}
+  .cd-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border:2px solid rgba(255,255,255,.85);display:grid;place-items:center;cursor:pointer;padding:0;z-index:6}
+  .cd-dots{position:absolute;bottom:10px;right:12px;display:flex;gap:5px;pointer-events:none;z-index:6}
+  .cd-dots span{display:block;width:6px;height:6px;border-radius:50%}
+  .cd-title{font-size:13.5px;font-weight:700;margin:10px 0 4px;line-height:1.3;display:flex;justify-content:space-between;gap:8px}
+  .cd-title em{font-style:normal;font-size:12px;font-weight:600;white-space:nowrap}
+  .cd-loc,.cd-meta{display:flex;align-items:center;gap:6px;color:var(--mut);font-size:12px;margin:3px 0}
+  .cd-meta span+span{border-left:1px solid var(--br);padding-left:10px;margin-left:2px}
+  .feed-slide .price-stack{position:absolute!important;left:10px!important;top:10px!important;z-index:6;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+  .feed-slide .price-chip{border-radius:7px;padding:4px 7px;font-weight:800;font-size:11.5px;border:0;backdrop-filter:none;box-shadow:0 1px 4px rgba(0,0,0,.25);width:fit-content}
+  .price-chip.pc-d{background:var(--pri);color:#fff}.price-chip.pc-d small{font-weight:500;font-size:9px;opacity:.9}
+  .price-chip.pc-h{background:rgba(15,23,42,.78);color:#fff;font-weight:600;font-size:10px;padding:3px 7px}
+  .feed-slide .offer-badge-inline{font-size:9px;padding:3px 8px;max-width:200px}
+  #ls-more-sheet{top:calc(env(safe-area-inset-top,0px) + 62px)!important;right:14px!important}
+  /* full-screen video viewer */
+  #reel-view{position:fixed;inset:0;z-index:31000;background:#000;display:none}
+  #reel-feed{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain}
+  #reel-feed::-webkit-scrollbar{display:none}
+  .reel-slide{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;background:#000;color:#fff}
+  .reel-slide video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+  .reel-info{position:absolute;left:16px;right:76px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);z-index:5;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+  .reel-info b{display:block;font-size:16px}.reel-info p{margin:3px 0;font-size:12px;opacity:.9}.reel-info .rp{font-weight:800;font-size:17px}
+  .reel-info a{display:inline-block;margin-top:8px;background:var(--pri);color:#fff;border-radius:999px;padding:9px 18px;font-size:12px;font-weight:800;text-shadow:none;cursor:pointer}
+  .reel-rail{position:absolute;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 40px);z-index:6;display:flex;flex-direction:column;gap:14px}
+  .rl-btn{width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);border:0;color:#fff;display:grid;place-items:center;cursor:pointer}
+  .rl-btn.on svg{fill:#D97757;stroke:#D97757}
+  #reel-close{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:12px;z-index:40;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:#fff;display:grid;place-items:center;cursor:pointer}
+    /* ===== right-side drawers (like the 'All Categories' panel) ===== */
+  @keyframes drawerIn{from{transform:translateX(100%)}to{transform:none}}
+  :is(#filter-modal-overlay,#airbnb-search-modal,#cat-modal,#global-currency-modal,#global-lang-modal){align-items:stretch!important;justify-content:flex-end!important;padding:0!important;overflow:hidden!important;background:rgba(0,0,0,.45)!important;backdrop-filter:blur(3px)}
+  :is(#filter-modal-overlay,#airbnb-search-modal,#cat-modal,#global-currency-modal,#global-lang-modal)>div{width:82%!important;max-width:400px!important;height:100%!important;max-height:100%!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:-8px 0 30px rgba(0,0,0,.2)!important;animation:drawerIn .22s ease-out!important;background:#fff!important}
+  #airbnb-search-modal>div,#cat-modal>div{overflow-y:auto!important}
+  #filter-modal-overlay>div{overflow:hidden!important}
+  .drawer-title{font-size:18px;font-weight:700;color:#111827;letter-spacing:0;text-transform:none}
+  .drawer-x{width:34px;height:34px;border:0;background:none;font-size:18px;font-weight:700;color:#111827;cursor:pointer;border-radius:8px}
+  #ls-more-backdrop{background:rgba(0,0,0,.45);backdrop-filter:blur(3px);z-index:31000}
+  #ls-more-sheet{position:fixed!important;top:0!important;right:0!important;bottom:0;left:auto;width:82%;max-width:400px;max-height:none!important;border-radius:0!important;padding:0!important;z-index:31001!important;box-shadow:-8px 0 30px rgba(0,0,0,.2)!important;overflow-y:auto}
+  #ls-more-sheet.open{display:block;animation:drawerIn .22s ease-out}
+  #ls-more-sheet .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 12px 18px;border-bottom:1px solid #e5e7eb;margin-bottom:10px}
+  #ls-more-sheet a{padding:13px 16px;margin:0 14px 2px;border-radius:10px!important;font-size:15px!important;font-weight:500!important;color:#374151!important}
+  #ls-more-sheet a:active,#ls-more-sheet a:hover{background:#D97757;color:#fff!important}
+  /* filter items: one per row, nothing merged */
+  #filter-modal-overlay label{width:100%}
+    /* ===== v4: bare play triangle, minimal video viewer, filter layout ===== */
+  .cd-play{width:auto!important;height:auto!important;background:none!important;border:0!important;backdrop-filter:none!important;border-radius:0!important}
+  .cd-play svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.55))}
+  .cd-track video{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;display:block;pointer-events:none;background:#e5e7eb}
+  .reel-rail{top:calc(env(safe-area-inset-top,0px) + 12px)!important;bottom:auto!important;right:12px!important;flex-direction:row!important;gap:10px!important}
+  .reel-detail{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 28px);z-index:6;background:#D97757;color:#fff;border:0;border-radius:12px;padding:13px 40px;font:700 14px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+  #filter-modal-overlay label{font-size:11px!important;padding:7px 8px!important;border-radius:8px!important}
+  #modal-amenities-list label,#modal-categories-list label,#modal-services-list label{font-size:10.5px!important;padding:6px 7px!important;border:1px solid #e5e7eb;border-radius:8px!important;min-width:0;line-height:1.2}
+  #filter-modal-overlay .p-5{padding:14px!important}
+  #filter-modal-overlay .neu-flat{padding:10px!important}
+  #filter-modal-overlay .space-y-4>*+*{margin-top:11px!important}
+  #filter-modal-overlay [id^="btn-bed-"],#filter-modal-overlay [id^="btn-rating-"]{padding:6px 2px!important;font-size:11px!important;border-radius:8px!important}
+  #btn-filter-rate-daily,#btn-filter-rate-hourly{padding:7px 6px!important;font-size:11px!important;border-radius:8px!important}
+  #filter-modal-overlay input[type=checkbox]{width:14px;height:14px;flex:none}
+  #filter-cat-search{font-size:11px!important;padding:6px 8px!important}
+  #filter-modal-overlay label span{overflow-wrap:anywhere}
+    /* ===== v5: property-type drawer + calmer chips ===== */
+  .type-chips{gap:7px!important;padding:9px 0!important}
+  .type-chip{border-radius:7px!important;padding:5px 11px!important;font-size:11.5px!important}
+  .cat-head{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 12px 18px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:2}
+  .cat-tags{display:flex;flex-wrap:wrap;gap:8px;padding:16px}
+  .cat-tag{border:1px solid #e5e7eb;background:#fff;color:#111827;border-radius:8px;padding:8px 12px;font:500 13px Inter,sans-serif;cursor:pointer}
+  .cat-tag.on{background:#D97757;border-color:#D97757;color:#fff;font-weight:600}
+    /* ===== v6: compact meta, glass price chips, offer bar, currency/language drawers ===== */
+  .cd-loc{flex-wrap:nowrap!important;justify-content:space-between;gap:8px}
+  .cd-loc>.cd-locname{display:flex;align-items:center;gap:5px;flex:1;min-width:0}
+  .cd-loc>.cd-locname span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cd-loc .cd-meta{display:flex;gap:9px;margin:0;flex:none;font-size:11.5px;color:#6b7280}
+  .cd-loc .cd-meta span{display:flex;align-items:center;gap:3px;border:0!important;padding:0!important;margin:0!important}
+  .feed-slide .price-chip.pc-d{background:rgba(15,23,42,.36)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .feed-slide .price-chip.pc-h{background:rgba(15,23,42,.28)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .cd-offer-bar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 6px;padding:6px 10px;border-left:3px solid #000;font-size:12px;font-weight:600;color:#111827}
+  .cd-offer-bar::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
+  @keyframes offerSweep{0%{left:0;opacity:0}10%{opacity:1}72%{left:calc(100% - 2px);opacity:1}86%,100%{left:calc(100% - 2px);opacity:0}}
+  .of-more{flex:none;font-size:10.5px;font-weight:700;color:#D97757}
+  #currencies-options-list,#lang-options-list{max-height:none!important}
+  #global-currency-modal>div,#global-lang-modal>div{overflow-y:auto!important}
+    /* ===== v7: minimal video viewer (tap to show controls) + Video tag on cards ===== */
+  #reel-close{display:none!important}
+  .reel-rail{display:none!important}
+  .reel-ctl{transition:opacity .25s}
+  .reel-slide:not(.show-ctl) .reel-ctl{opacity:0;pointer-events:none}
+  .reel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;width:68px;height:68px;border-radius:50%;border:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;padding:0}
+  .reel-bottom{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);z-index:6;display:flex;align-items:center;justify-content:center;gap:12px}
+  .reel-bottom .reel-detail{position:static!important;transform:none!important}
+  .reel-x{width:46px;height:46px;border-radius:12px;border:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+  .cd-vtag{position:absolute;bottom:10px;right:12px;z-index:6;display:flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;letter-spacing:.2px;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .cd-vtag i{width:6px;height:6px;border-radius:50%;background:#D97757;display:block}
+  /* ===== colour + corner overrides (Claude terracotta, smaller radius) ===== */
+  .bg-emerald-50,.hover\:bg-emerald-50:hover{background:#F6F6F7!important}
+  .text-emerald-700,.text-emerald-800{color:#111827!important}
+  .border-emerald-300{border-color:#e5e7eb!important}
+  .neu-btn-green{box-shadow:none!important}
+  .hs-bar{border-radius:16px!important}
+  :is(#airbnb-search-modal,#filter-modal-overlay,#global-currency-modal,#global-lang-modal,#home-calendar-modal,#home-guests-modal,#ls-more-sheet)>div,#ls-more-sheet{border-radius:14px!important}
+  :is(#airbnb-search-modal,#filter-modal-overlay,#global-currency-modal,#global-lang-modal,#home-calendar-modal,#home-guests-modal) :is(.rounded-3xl,.rounded-2xl,.rounded-xl,.airbnb-search-pill){border-radius:10px!important}
+  :is(#airbnb-search-modal,#filter-modal-overlay,#global-currency-modal,#global-lang-modal,#home-calendar-modal,#home-guests-modal) button.rounded-full:not(.w-6):not(.w-7):not(.w-8):not(.w-9):not(.w-10):not(.h-6):not(.h-7):not(.h-8):not(.h-9):not(.h-10){border-radius:10px!important}
+  /* property card: calmer price chips + plain black-outlined offer button */
+  .feed-slide .price-chip.pc-d{background:rgba(15,23,42,.82);color:#fff}
+  
+  .price-chip.pc-h{background:rgba(15,23,42,.6)}
+  .cd-loc{flex-wrap:wrap}
+  .cd-offer{border:1px solid #000;border-radius:6px;padding:2px 7px;font-size:10.5px;font-weight:600;color:#000;background:transparent;margin-left:4px;white-space:nowrap}
+  /* single-line dual price slider */
+  .dual-range{position:relative;height:30px;margin-top:6px}
+  .dr-track{position:absolute;left:0;right:0;top:12px;height:5px;border-radius:9px;background:#E5E7EB}
+  .dr-fill{position:absolute;top:0;bottom:0;border-radius:9px;background:#D97757}
+  .dual-range input[type=range]{position:absolute;left:0;top:3px;width:100%;height:24px;margin:0;pointer-events:none;background:transparent}
+  .dual-range input[type=range]::-webkit-slider-runnable-track{background:transparent;height:24px}
+  .dual-range input[type=range]::-webkit-slider-thumb{pointer-events:auto;margin-top:3px}
+  .dual-range input[type=range]::-moz-range-thumb{pointer-events:auto;height:18px;width:18px;border-radius:50%;background:#D97757;border:2px solid #fff}
+  .dual-range input[type=range]::-moz-range-track{background:transparent}
+</style>
 </head>
-<body class="no-scrollbar bg-softMint text-gray-800 flex flex-col h-screen overflow-hidden relative">
 
-    <!-- TOP HEADER (floats over the map, see-through) -->
-    <header id="map-header">
-        <div class="max-w-xl mx-auto flex flex-col gap-1.5">
-            <!-- UNIFIED SEARCH BAR -->
-            <div class="map-glass w-full rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-1.5">
-                <div class="flex-1 min-w-[70px] flex items-center space-x-1 pl-1">
-                    <span class="text-[10px]">📍</span>
-                    <input type="text" id="home-search-dest" oninput="executeLiveMapFilter()" placeholder="Search on map..." class="w-full text-[10.5px] font-bold text-luxuryGreen outline-none bg-transparent placeholder-gray-400 truncate">
-                </div>
-                
-                <div class="w-[1px] h-4 bg-gray-200"></div>
+<style>
+  /* ===== MAP PAGE (same look as Home) ===== */
+  html,body{height:100%!important;overflow:hidden!important;background:#fff!important;padding-bottom:0!important}
+  body{padding-bottom:0!important}
+  #main-interactive-map{position:fixed;inset:0;z-index:1;background:#eef0f1}
+  #ls-home-header{position:fixed!important;top:0;left:0;right:0;z-index:1200;background:transparent!important;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 0!important;pointer-events:none}
+  #ls-home-header>*{pointer-events:auto;max-width:480px;margin-left:auto;margin-right:auto}
+  .map-tabs{display:flex;gap:8px;padding:10px 0 0}
+  .map-tab{border:1px solid #e5e7eb;background:#fff;color:#111827;border-radius:8px;padding:6px 13px;font:600 12px Inter,sans-serif;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .map-tab.on{background:#D97757;border-color:#D97757;color:#fff}
+  .leaflet-top.leaflet-right{margin-top:calc(env(safe-area-inset-top,0px) + 118px)}
+  .leaflet-bottom.leaflet-right{margin-bottom:calc(env(safe-area-inset-bottom,0px) + 230px)}
+  .leaflet-container{font-family:Inter,sans-serif}
+  .map-price-pill{background:#fff;color:#111827;font:700 11px Inter,sans-serif;padding:4px 9px;border-radius:8px;border:1px solid #111827;box-shadow:0 2px 8px rgba(0,0,0,.2);display:inline-flex;align-items:center;white-space:nowrap;cursor:pointer;transition:transform .15s}
+  .map-price-pill.active-pin{background:#D97757!important;color:#fff!important;border-color:#D97757!important;transform:scale(1.12)}
+  /* bottom property strip */
+  #map-strip{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 72px);z-index:1100;display:none;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 14px 8px;scrollbar-width:none}
+  #map-strip::-webkit-scrollbar{display:none}
+  .mp-card{flex:0 0 66%;max-width:260px;scroll-snap-align:center;background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.2);overflow:hidden;cursor:pointer;border:2px solid transparent}
+  .mp-card.sel{border-color:#D97757}
+  .mp-img{position:relative;aspect-ratio:16/10;background:#e5e7eb}
+  .mp-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .mp-tag{position:absolute;top:8px;left:8px;background:rgba(15,23,42,.45);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:700 10px Inter,sans-serif;padding:3px 7px;border-radius:7px}
+  .mp-body{padding:8px 10px 10px}
+  .mp-name{font:700 12.5px Inter,sans-serif;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mp-loc{display:flex;align-items:center;gap:4px;font:500 11px Inter,sans-serif;color:#8b93a1;margin:2px 0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mp-price{font:800 14px Inter,sans-serif;color:#111827}
+  .mp-price small{font:500 10.5px Inter,sans-serif;color:#8b93a1}
+  #map-empty{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:1100;display:none;background:#fff;border-radius:10px;padding:10px 16px;font:600 12px Inter,sans-serif;color:#111827;box-shadow:0 3px 14px rgba(0,0,0,.2);white-space:nowrap}
+  .map-price-pill.offer::before{content:'';width:6px;height:6px;border-radius:50%;background:#D97757;margin-right:5px;flex:none}
+  .map-price-pill.offer.active-pin::before{background:#fff}
+  #likestays-global-bottom-nav{z-index:1300!important}
+</style>
+</head>
+<body class="no-scrollbar text-gray-800" style="background:#fff">
 
-                <button type="button" onclick="toggleHomeCalendarModal(true)" class="flex-1 min-w-[85px] text-left flex items-center space-x-1 cursor-pointer outline-none px-0.5">
-                    <span class="text-[10px] text-luxuryGreen">📅</span>
-                    <span id="home-dates-display" class="text-[10px] font-bold text-luxuryGreen truncate">Add Dates</span>
-                </button>
-
-                <div class="w-[1px] h-4 bg-gray-200"></div>
-
-                <button type="button" onclick="toggleGuestsModal(true)" class="flex-1 min-w-[70px] text-left flex items-center space-x-1 cursor-pointer outline-none px-0.5">
-                    <span class="text-[10px] text-luxuryGreen">👥</span>
-                    <span id="home-guests-display-btn" class="text-[10px] font-bold text-luxuryGreen truncate">2 Guests</span>
-                </button>
-
-                <button type="button" onclick="executeLiveMapFilter()" class="neu-btn-green text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] font-black flex items-center space-x-1 hover:scale-105 shrink-0 cursor-pointer">
-                    <span>🔍</span>
-                </button>
-
-                <div class="w-[1px] h-4 bg-gray-200"></div>
-
-                <button type="button" onclick="openIntegratedFilterModal()" class="p-1 rounded-lg text-luxuryGreen hover:bg-softMint cursor-pointer shrink-0 relative" title="Filters">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4v2m0-6V4"/></svg>
-                    <span id="active-filter-dot" class="hidden absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-amber-500"></span>
-                </button>
+    <!-- TOP: same search bar as Home (search icon left, filter, three dots) + 3 map tabs -->
+    <div id="ls-home-header">
+        <div class="hs-bar">
+            <div class="hs-main" id="general-search-pill-row" onclick="openAirbnbSearchModal()">
+                <div class="hs-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+                <div class="hs-t"><b id="main-search-bar-title">Where are you going?</b><span id="main-search-bar-subtitle">Dates · Guests</span></div>
             </div>
-
-            <!-- what the pins show: Daily / Hourly / Offers -->
-            <div class="flex items-center gap-1.5">
-                <button type="button" class="rate-chip active" data-rate="daily" onclick="switchMapRateInterval('daily')">🌙 Daily</button>
-                <button type="button" class="rate-chip" data-rate="hourly" onclick="switchMapRateInterval('hourly')">⏱️ Hourly</button>
-                <button type="button" class="rate-chip" data-rate="offers" onclick="switchMapRateInterval('offers')">🔥 Offers</button>
-            </div>
+            <button type="button" class="hs-btn flt" onclick="openIntegratedFilterModal()" aria-label="Filters">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+                <span id="hdr-filter-dot" class="hidden"></span>
+            </button>
+            <button type="button" class="hs-btn" onclick="toggleMoreMenu()" aria-label="Menu"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
         </div>
-    </header>
-
-    <!-- FULLSCREEN INTERACTIVE LEAFLET MAP WORKSPACE -->
-    <main class="fixed inset-0">
-        <div id="main-interactive-map" class="w-full h-full bg-[#eef2ef] z-10"></div>
-
-        <!-- 🎯 FLOATING HOVER/TOUCH LUXURY PREVIEW CARD -->
-        <div id="floating-property-preview-card" class="hidden absolute bottom-20 left-1/2 -translate-x-1/2 z-[1000] w-[90%] max-w-sm bg-white rounded-3xl p-3 shadow-2xl neu-flat border border-gray-200 animate-pop-in cursor-pointer" onclick="navigateToSelectedMapStay()">
-            <div class="flex items-center space-x-3 text-left">
-                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-gray-100 shrink-0 relative">
-                    <img id="prev-card-img" src="" class="w-full h-full object-cover">
-                    <span id="prev-card-deal-badge" class="hidden absolute top-1 left-1 bg-amber-500 text-white text-[7px] font-black px-1 rounded">⚡ Deal</span>
-                </div>
-                <div class="flex-grow min-w-0 space-y-1">
-                    <div class="flex justify-between items-center text-[8.5px] font-bold text-gray-400">
-                        <span class="text-luxuryGreen font-black truncate" id="prev-card-category">🏡 Villa</span>
-                        <span class="text-emerald-700 font-black" id="prev-card-rating">⭐ 5.0</span>
-                    </div>
-                    <h4 class="text-xs font-black text-luxuryGreen truncate" id="prev-card-name">Property Name</h4>
-                    <p class="text-[9px] text-gray-400 truncate" id="prev-card-location">📍 Location</p>
-                    <div class="flex justify-between items-center pt-0.5 border-t border-gray-100">
-                        <span class="text-xs font-black text-luxuryGreen" id="prev-card-price">Rs 5,000 <span class="text-[8px] font-normal text-gray-400">/night</span></span>
-                        <span class="text-[8.5px] font-black text-luxuryLightGreen">View Details ➔</span>
-                    </div>
-                </div>
-            </div>
+        <div class="map-tabs">
+            <button type="button" class="map-tab" data-rate="hourly" onclick="switchMapRateInterval('hourly')">Hourly</button>
+            <button type="button" class="map-tab on" data-rate="daily" onclick="switchMapRateInterval('daily')">Daily Stay</button>
+            <button type="button" class="map-tab" data-rate="offers" onclick="switchMapRateInterval('offers')">Offers</button>
         </div>
-    </main>
+    </div>
 
-    <!-- ========================================== 📅 2-DATES RANGE CALENDAR (2 SECONDS AUTO CLOSE) ========================================== -->
+    <div id="main-interactive-map"></div>
+    <div id="map-empty">No stays here yet</div>
+    <div id="map-strip"></div>
+
+<div id="ls-more-backdrop" onclick="toggleMoreMenu(false)"></div>
+    <div id="ls-more-sheet">
+        <div class="drawer-head"><span class="drawer-title">Menu</span><button type="button" class="drawer-x" onclick="toggleMoreMenu(false)" aria-label="Close">✕</button></div>
+        <a href="#" onclick="toggleMoreMenu(false);toggleGlobalLangModal(true);return false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/><path d="M5 6.2h5.200M7.600 4.800v1.400M6 11c1.800-1 3-2.700 3.500-4.800M6.300 8.200c.6 1.500 1.700 2.600 3.200 3.200"/><rect x="10.500" y="10.500" width="11" height="11" rx="2.5" fill="#fff"/><path d="M13 19l2.800-6.500 2.800 6.500M14 17h3.600"/><path d="M19.500 8V6.500a2 2 0 0 0-2-2h-2.300M16.200 3l-1.700 1.500 1.700 1.500"/><path d="M4.500 14.500V17a2 2 0 0 0 2 2h2M7.300 17.500 9 19l-1.700 1.500"/></svg><span>Language</span></a>
+        <a href="#" onclick="toggleMoreMenu(false);toggleGlobalCurrencyModal(true);return false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9.500"/><path d="M14.800 9.200c-.4-1-1.400-1.500-2.800-1.500-1.600 0-2.700.8-2.700 2 0 3 5.700 1.300 5.700 4.300 0 1.300-1.200 2.100-2.900 2.100-1.500 0-2.600-.6-3-1.700M12 6v1.700M12 16.300V18"/></svg><span>Currency</span></a>
+        <div class="sep"></div>
+        <a href="my-bookings.html">🗓️ My Bookings</a>
+        <a href="my-reviews.html">⭐ My Reviews</a>
+        <a href="pending-reviews.html">📝 Pending Reviews</a>
+        <a href="favorites.html">🤍 Favorite Properties</a>
+        <div class="sep"></div>
+        <a href="host-dashboard.html">🏡 Hosting & Listings</a>
+        <a href="my-listings.html">📋 My Listings</a>
+        <div class="sep"></div>
+        <a href="highlights.html">✨ Highlights</a>
+        <a href="https://wa.me/" target="_blank" rel="noopener">💬 Contact Support</a>
+        <a href="about.html">ℹ️ About Like Stays</a>
+    </div>
+    <!-- ======================================================================= -->
+    <!-- 🌟 AIRBNB GLOBAL SEARCH POPUP MODAL -->
+    <!-- ======================================================================= -->
+    <div id="airbnb-search-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[24000] flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-lg rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-4 animate-pop-in text-left my-auto">
+            
+            <div class="flex justify-between items-center pb-2 border-b border-gray-150">
+                <div>
+                    <span class="drawer-title">Search</span>
+                    <p class="text-[9px] text-gray-400 font-bold">Search destination, dates and guests</p>
+                </div>
+                <button type="button" onclick="closeAirbnbSearchModal()" class="drawer-x" aria-label="Close">✕</button>
+            </div>
+
+            <!-- STEP 1: DESTINATION -->
+            <div class="neu-flat bg-softMint/50 p-3.5 rounded-2xl border border-gray-200 space-y-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm">📍</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen">Where are you going?</span>
+                </div>
+                <input type="text" id="home-search-dest" placeholder="Search any destination, city or country..." class="w-full text-xs font-extrabold p-3 bg-white rounded-xl border border-gray-200 outline-none text-luxuryGreen placeholder-gray-400">
+            </div>
+
+            <!-- STEP 2 & 3: DATES & GUESTS -->
+            <div class="grid grid-cols-1 gap-3">
+                <button type="button" onclick="toggleHomeCalendarModal(true)" class="neu-flat bg-softMint/50 p-3 rounded-2xl border border-gray-200 text-left cursor-pointer hover:border-luxuryGreen space-y-1 group">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-xs">📅</span>
+                        <span class="text-[9px] font-black uppercase text-gray-400 tracking-wider">When</span>
+                    </div>
+                    <span id="home-dates-display" class="block text-xs font-black text-luxuryGreen truncate group-hover:text-luxuryLightGreen">Add Dates</span>
+                </button>
+
+                <button type="button" onclick="toggleGuestsModal(true)" class="neu-flat bg-softMint/50 p-3 rounded-2xl border border-gray-200 text-left cursor-pointer hover:border-luxuryGreen space-y-1 group">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-xs">👥</span>
+                        <span class="text-[9px] font-black uppercase text-gray-400 tracking-wider">Who</span>
+                    </div>
+                    <span id="home-guests-display-btn" class="block text-xs font-black text-luxuryGreen truncate group-hover:text-luxuryLightGreen">2 Guests</span>
+                </button>
+            </div>
+
+            <!-- Filters ab teen dots ke saath wale filter button mein hain -->
+            <div class="pt-1 flex items-center justify-end border-t border-gray-150">
+                <span id="active-filter-dot" class="hidden"></span>
+                <button type="button" onclick="resetAllSearchFields()" class="text-[11px] font-bold text-gray-400 hover:text-red-500 cursor-pointer">Clear</button>
+            </div>
+
+            <!-- STEP 5: FINAL SEARCH BUTTON -->
+            <button type="button" onclick="submitAirbnbSearch()" class="w-full neu-btn-green text-white text-xs font-black py-3.5 rounded-2xl uppercase tracking-wider cursor-pointer shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-2">
+                <span>🔍</span>
+                <span>Search Stays</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== 📅 2-DATES RANGE CALENDAR ========================================== -->
     <div id="home-calendar-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
-        <div class="bg-[#F2F5F3] w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-white space-y-3.5 animate-pop-in text-left">
+        <div class="bg-[#F7F7F8] w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-white space-y-3.5 animate-pop-in text-left">
             <div class="flex justify-between items-center pb-2 border-b border-gray-200/70">
                 <button type="button" onclick="changeHomeCalendarMonth(-1)" class="w-7 h-7 rounded-lg neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❮</button>
                 <div class="text-center">
@@ -226,7 +506,7 @@
 
     <!-- ========================================== 👥 GUESTS SELECTOR MODAL ========================================== -->
     <div id="home-guests-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
-        <div class="bg-[#F2F5F3] w-full max-w-xs rounded-3xl p-5 shadow-2xl neu-flat border border-white space-y-4 animate-pop-in text-left">
+        <div class="bg-[#F7F7F8] w-full max-w-xs rounded-3xl p-5 shadow-2xl neu-flat border border-white space-y-4 animate-pop-in text-left">
             <div class="flex justify-between items-center pb-2 border-b border-gray-200">
                 <span class="text-xs font-black text-luxuryGreen uppercase tracking-wider">Select Guests</span>
                 <button type="button" onclick="toggleGuestsModal(false)" class="text-xs font-bold text-gray-400 hover:text-luxuryGreen">✕</button>
@@ -248,22 +528,25 @@
         </div>
     </div>
 
-    <!-- ========================================== ⚙️ ADVANCED FILTERS MODAL ========================================== -->
-    <div id="filter-modal-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <!-- ======================================================================= -->
+    <!-- ⚙️ ADVANCED FILTERS MODAL -->
+    <!-- ======================================================================= -->
+    <div id="filter-modal-overlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[26000] flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-white w-full max-w-xl rounded-t-[32px] sm:rounded-[32px] max-h-[88vh] flex flex-col justify-between shadow-2xl border border-gray-200 overflow-hidden animate-pop-in pb-safe text-left">
             
             <div class="px-5 py-3.5 border-b border-gray-150 space-y-2 bg-softMint/40 shrink-0">
                 <div class="flex justify-between items-center">
-                    <span class="text-xs font-black text-luxuryGreen uppercase tracking-widest">Filter Map Stays</span>
+                    <span class="drawer-title">Filters</span>
                     <div class="flex items-center space-x-2">
                         <button type="button" onclick="resetFiltersInModal()" class="text-[11px] font-bold text-luxuryLightGreen hover:underline cursor-pointer">Clear All</button>
-                        <button type="button" onclick="closeIntegratedFilterModal()" class="text-xs font-black text-gray-400 hover:text-luxuryGreen cursor-pointer">✕</button>
+                        <button type="button" onclick="closeIntegratedFilterModal()" class="drawer-x" aria-label="Close">✕</button>
                     </div>
                 </div>
             </div>
 
             <div class="p-5 overflow-y-auto no-scrollbar space-y-4 text-left flex-grow">
                 
+                <!-- 1. SPECIAL OFFERS ONLY -->
                 <div class="bg-gradient-to-r from-amber-50 to-amber-100/70 p-3 rounded-2xl border border-amber-300 flex items-center justify-between shadow-xs">
                     <div class="space-y-0.5">
                         <span class="text-xs font-black text-amber-950 uppercase flex items-center space-x-1">
@@ -274,49 +557,56 @@
                     <input type="checkbox" id="filter-only-offers" onchange="handleOfferToggle(this.checked)" class="w-4 h-4 accent-luxuryGreen cursor-pointer">
                 </div>
 
-                <!-- DUAL PRICE RANGE CONTROLS -->
+                <!-- 2. DAILY VS HOURLY RATE SWITCHER CARDS -->
+                <div class="space-y-1.5">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Booking Rate Type</span>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <button type="button" id="btn-filter-rate-daily" onclick="setFilterRateType('daily')" class="p-2.5 rounded-2xl border border-transparent bg-luxuryGreen text-white font-black text-xs flex items-center justify-center space-x-1.5 shadow-xs cursor-pointer">
+                            <span>🌙</span> <span>Daily Stays (/night)</span>
+                        </button>
+                        <button type="button" id="btn-filter-rate-hourly" onclick="setFilterRateType('hourly')" class="p-2.5 rounded-2xl border border-gray-200 bg-white text-gray-500 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer hover:border-luxuryGreen">
+                            <span>⏱️</span> <span>Hourly Stays (/hr)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. DUAL MIN & MAX PRICE RANGE CONTROLS -->
                 <div class="neu-flat bg-white p-4 rounded-2xl border border-gray-150 space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] font-black uppercase text-luxuryGreen">Price Range Filter</span>
                         <span id="filter-range-live-summary" class="text-xs font-black text-emerald-800">All Budgets</span>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3 pt-1">
-                        <div class="space-y-1 bg-softMint/50 p-2.5 rounded-xl border border-gray-200">
-                            <div class="flex justify-between items-center">
-                                <span class="text-[8px] font-black text-gray-400 uppercase">Min Price</span>
-                                <span id="filter-min-val-label" class="text-[10px] font-black text-luxuryGreen">Rs 0</span>
-                            </div>
-                            <input type="range" id="filter-min-slider" min="0" max="150000" step="500" value="0" oninput="handleMinPriceChange(this.value)" class="cursor-pointer">
-                        </div>
-
-                        <div class="space-y-1 bg-softMint/50 p-2.5 rounded-xl border border-gray-200">
-                            <div class="flex justify-between items-center">
-                                <span class="text-[8px] font-black text-gray-400 uppercase">Max Price</span>
-                                <span id="filter-max-val-label" class="text-[10px] font-black text-luxuryGreen">Rs 300k</span>
-                            </div>
-                            <input type="range" id="filter-max-slider" min="500" max="300000" step="1000" value="300000" oninput="handleMaxPriceChange(this.value)" class="cursor-pointer">
-                        </div>
+                    <div class="dual-range">
+                        <div class="dr-track"><div class="dr-fill" id="dr-fill"></div></div>
+                        <input type="range" id="filter-min-slider" min="0" max="300000" step="1000" value="0" oninput="handleMinPriceChange(this.value)">
+                        <input type="range" id="filter-max-slider" min="0" max="300000" step="1000" value="300000" oninput="handleMaxPriceChange(this.value)">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span id="filter-min-val-label" class="text-[11px] font-black text-luxuryGreen">Rs 0</span>
+                        <span id="filter-max-val-label" class="text-[11px] font-black text-luxuryGreen">Rs 300k</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2">
-                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center justify-center text-center space-y-1 hover:border-luxuryGreen">
+                <!-- 4. KEY AMENITIES -->
+                <div class="grid grid-cols-3 gap-1.5">
+                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-row-reverse items-center justify-between text-left hover:border-luxuryGreen">
                         <input type="checkbox" id="filter-self-checkin" onchange="LikeStaysFilter.state.selfCheckinOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
                         <span class="text-[9px] font-bold text-gray-700 leading-tight">🔑 Self Check-in</span>
                     </label>
 
-                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center justify-center text-center space-y-1 hover:border-luxuryGreen">
+                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-row-reverse items-center justify-between text-left hover:border-luxuryGreen">
                         <input type="checkbox" id="filter-pets" onchange="LikeStaysFilter.state.petsOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
                         <span class="text-[9px] font-bold text-gray-700 leading-tight">🐾 Pets Allowed</span>
                     </label>
 
-                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center justify-center text-center space-y-1 hover:border-luxuryGreen">
+                    <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-row-reverse items-center justify-between text-left hover:border-luxuryGreen">
                         <input type="checkbox" id="filter-smoking" onchange="LikeStaysFilter.state.smokingOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
                         <span class="text-[9px] font-bold text-gray-700 leading-tight">🚭 Smoking</span>
                     </label>
                 </div>
 
+                <!-- 5. BEDROOMS CAPACITY -->
                 <div class="neu-flat bg-white p-3.5 rounded-2xl border border-gray-150 space-y-2 text-xs font-bold text-gray-600">
                     <span class="text-[10px] font-black uppercase text-luxuryGreen block">Bedrooms Capacity</span>
                     <div class="grid grid-cols-4 gap-1.5">
@@ -327,21 +617,36 @@
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Property Type</span>
-                    <input type="text" id="filter-cat-search" oninput="filterCategoriesInModal()" placeholder="🔍 Search category..." class="w-full text-xs font-bold p-2 bg-softMint rounded-xl border border-gray-200 outline-none text-luxuryGreen">
-                    <div id="modal-categories-list" class="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto no-scrollbar border border-gray-200 rounded-xl p-2 bg-softMint/20"></div>
+                <!-- 5b. STAR RATING -->
+                <div class="neu-flat bg-white p-3.5 rounded-2xl border border-gray-150 space-y-2 text-xs font-bold text-gray-600">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Rating</span>
+                    <div class="grid grid-cols-4 gap-1.5">
+                        <button type="button" onclick="setRatingFilter(0)" id="btn-rating-0" class="py-2 rounded-xl text-xs font-black bg-luxuryGreen text-white shadow-xs">Any</button>
+                        <button type="button" onclick="setRatingFilter(3)" id="btn-rating-3" class="py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200">★ 3+</button>
+                        <button type="button" onclick="setRatingFilter(4)" id="btn-rating-4" class="py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200">★ 4+</button>
+                        <button type="button" onclick="setRatingFilter(4.5)" id="btn-rating-4.5" class="py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200">★ 4.5+</button>
+                    </div>
                 </div>
 
+                <!-- 7. AMENITIES -->
                 <div class="space-y-2">
                     <span class="text-[10px] font-black uppercase text-luxuryGreen block">Amenities</span>
-                    <div id="modal-amenities-list" class="grid grid-cols-2 gap-1.5 max-h-40 overflow-y-auto no-scrollbar border border-gray-200 rounded-xl p-2 bg-softMint/20"></div>
+                    <div id="modal-amenities-list" class="grid grid-cols-3 gap-1.5 border border-gray-200 rounded-xl p-2 bg-softMint/20"></div>
                 </div>
 
+                <!-- 8. EXTRA SERVICES -->
                 <div class="space-y-2">
                     <span class="text-[10px] font-black uppercase text-luxuryGreen block">Extra Services Add-ons</span>
-                    <div id="modal-services-list" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-40 overflow-y-auto no-scrollbar"></div>
+                    <div id="modal-services-list" class="grid grid-cols-2 gap-1.5"></div>
                 </div>
+
+                <!-- 6. 51 PROPERTY TYPES -->
+                <div class="space-y-2">
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Property Type (51 Categories)</span>
+                    <input type="text" id="filter-cat-search" oninput="filterCategoriesInModal()" placeholder="🔍 Search category..." class="w-full text-xs font-bold p-2 bg-softMint rounded-xl border border-gray-200 outline-none text-luxuryGreen">
+                    <div id="modal-categories-list" class="grid grid-cols-3 gap-1.5 border border-gray-200 rounded-xl p-2 bg-softMint/20"></div>
+                </div>
+
             </div>
 
             <div class="p-3.5 bg-white border-t border-gray-200 shrink-0">
@@ -352,7 +657,36 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <!-- ========================================== CURRENCY & LANG MODALS ========================================== -->
+    <div id="global-currency-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3 animate-pop-in text-left">
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
+                <div>
+                    <span class="drawer-title">Currency</span>
+                    <p class="text-[8.5px] text-gray-400 font-bold">150 Global Currencies</p>
+                </div>
+                <button type="button" onclick="toggleGlobalCurrencyModal(false)" class="drawer-x" aria-label="Close">✕</button>
+            </div>
+            <input type="text" id="currency-search-input" oninput="filterCurrenciesList()" placeholder="🔍 Search currency code or name..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
+            <div id="currencies-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
+        </div>
+    </div>
+
+    <div id="global-lang-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3.5 animate-pop-in text-left">
+            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
+                <div>
+                    <span class="drawer-title" style="display:flex;align-items:center;gap:9px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/><path d="M5 6.2h5.200M7.600 4.800v1.400M6 11c1.800-1 3-2.700 3.500-4.800M6.300 8.200c.6 1.500 1.700 2.600 3.200 3.200"/><rect x="10.500" y="10.500" width="11" height="11" rx="2.5" fill="#fff"/><path d="M13 19l2.800-6.500 2.800 6.500M14 17h3.600"/><path d="M19.500 8V6.500a2 2 0 0 0-2-2h-2.300M16.200 3l-1.700 1.500 1.700 1.500"/><path d="M4.500 14.500V17a2 2 0 0 0 2 2h2M7.300 17.500 9 19l-1.700 1.500"/></svg>Language</span>
+                    <p class="text-[8.5px] text-gray-400 font-bold">40 Global Languages</p>
+                </div>
+                <button type="button" onclick="toggleGlobalLangModal(false)" class="drawer-x" aria-label="Close">✕</button>
+            </div>
+            <input type="text" id="lang-search-input" oninput="filterLanguagesList()" placeholder="🔍 Search language..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
+            <div id="lang-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
+        </div>
+    </div>
+
+    
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyA4Bv8au4L_DH42FvbG1hz_bkaN75dUhj4",
@@ -364,304 +698,20 @@
             appId: "1:529363561874:web:3e42f54bbbe7fcb8d0a54b",
             measurementId: "G-JX301VFVHK"
         };
-
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
-        // ---- OFFER EXPIRY RULES ----
-        // hourly offer (same day + time window): ends at its START time; day offer: ends 8:00 PM on its START date
-        function parseDealTime(t) {
-            if (!t) return null;
-            const m = String(t).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
-            if (!m) return null;
-            let h = +m[1]; const mi = +m[2]; const ap = m[3] && m[3].toUpperCase();
-            if (ap === 'PM' && h < 12) h += 12;
-            if (ap === 'AM' && h === 12) h = 0;
-            return [h, mi];
-        }
-        function dealStartDate(deal) {
-            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
-            const [y, mo, d] = deal.startDate.split('-').map(Number);
-            const t = parseDealTime(deal.startTime) || [14, 0];
-            return new Date(y, mo - 1, d, t[0], t[1], 0);
-        }
-        function dealExpiry(deal) {
-            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
-            const [y, mo, d] = deal.startDate.split('-').map(Number);
-            const isSameDay = !deal.endDate || deal.endDate === deal.startDate;
-            if (isSameDay) { const t = parseDealTime(deal.startTime); return t ? new Date(y, mo - 1, d, t[0], t[1], 0) : null; }
-            return new Date(y, mo - 1, d, 20, 0, 0);
-        }
-        function getActiveDeal(prop, now = new Date()) {
-            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-            const live = deals.filter(d => {
-                if (!d || d.enabled === false) return false;
-                const exp = dealExpiry(d);
-                return !exp || now < exp;
-            });
-            live.sort((a, b) => (dealStartDate(a) || 0) - (dealStartDate(b) || 0));
-            return live[0] || null;
-        }
-        function setBookNowEnabled(on) {
-            window.__lsBookNowDisabled = !on;
-            const b = document.getElementById('ls-book-now-btn');
-            if (b) { b.disabled = !on; b.style.opacity = on ? '1' : '.45'; b.style.pointerEvents = on ? 'auto' : 'none'; }
-        }
-
-        let masterPropertiesList = [];
-        let mapInstance = null;
-        let mapMarkersGroup = null;
-        let selectedStayId = null;
-
-        let activeMapRateInterval = 'daily'; // 'daily' or 'hourly'
-        let homeStartDate = null;
-        let homeEndDate = null;
-        let homeGuestsCount = 2;
-        let tempModalGuests = 2;
-        let calCurrentMonth = new Date().getMonth();
-        let calCurrentYear = new Date().getFullYear();
-
         const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initLeafletMap();
-            renderFilterChecklists();
-            loadUniversalSearchHandshake();
-            renderHomeCalendar();
-            listenToFirebaseRealtimeCloud();
-
-            if (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.renderBottomNav) {
-                LikeStaysEngine.renderBottomNav('map');
-            }
-        });
-
-        window.addEventListener('likestays:locale_changed', () => {
-            updateSliderCurrencyLabels();
-            renderMapPins();
-        });
-
-        // ================= LEAFLET MAP INITIALIZATION =================
-        function initLeafletMap() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetLat = parseFloat(urlParams.get('lat')) || 31.5204;
-            const targetLng = parseFloat(urlParams.get('lng')) || 74.3587;
-            const targetId = urlParams.get('id');
-
-            mapInstance = L.map('main-interactive-map', { zoomControl: false }).setView([targetLat, targetLng], targetId ? 14 : 12);
-            L.control.zoom({ position: 'topright' }).addTo(mapInstance);
-
-            L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=MOxpRpKBHrWYcJ4BVchk', {
-                attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 20
-            }).addTo(mapInstance);
-
-            mapMarkersGroup = L.layerGroup().addTo(mapInstance);
-
-            mapInstance.on('click', () => {
-                document.getElementById('floating-property-preview-card').classList.add('hidden');
-                document.querySelectorAll('.map-price-pill').forEach(p => p.classList.remove('active-pin'));
-                selectedStayId = null;
-                setBookNowEnabled(false);
-            });
-        }
-
-        function switchMapRateInterval(type) {
-            activeMapRateInterval = type;
-            LikeStaysFilter.state.rateType = type;
-
-            document.querySelectorAll('.rate-chip').forEach(btn => btn.classList.toggle('active', btn.dataset.rate === type));
-
-            renderMapPins();
-        }
-
-        // ⚡ Cloudflare Worker کے edge cache سے properties منگوانا — Firebase پر مستقل کنکشن نہیں رکھتا
-        const PROPERTIES_API_URL = "https://likestays-api.waleeddes40.workers.dev/api/properties";
-
-        function listenToFirebaseRealtimeCloud() {
-            fetchPropertiesFromEdgeCache();
-        }
-
-        async function fetchPropertiesFromEdgeCache() {
-            try {
-                const res = await fetch(PROPERTIES_API_URL, { cache: "no-store" });
-                if (!res.ok) throw new Error("Edge cache fetch failed: " + res.status);
-                const payload = await res.json();
-                masterPropertiesList = (payload && payload.properties) ? payload.properties : [];
-                renderMapPins();
-            } catch (err) {
-                console.error("Edge cache fetch error, falling back to direct Firebase read:", err);
-                try {
-                    firebase.database().ref('properties').limitToFirst(300).once('value')
-                        .then((snapshot) => {
-                            const data = snapshot.val();
-                            masterPropertiesList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-                            renderMapPins();
-                        })
-                        .catch(() => renderMapPins());
-                } catch (e) {
-                    renderMapPins();
-                }
-            }
-        }
-
-        // ================= RENDER DYNAMIC PRICE PINS ON MAP =================
-        function renderMapPins() {
-            if (!mapInstance || !mapMarkersGroup) return;
-            mapMarkersGroup.clearLayers();
-
-            const destInput = document.getElementById('home-search-dest')?.value || '';
-            const filteredStays = LikeStaysFilter.applyFilter(masterPropertiesList, destInput);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetId = urlParams.get('id');
-
-            // 🔥 Offers موڈ میں صرف اُن properties کے pins دکھائیں جن پر ابھی کوئی فعال deal موجود ہے
-            const staysToShow = activeMapRateInterval === 'offers'
-                ? filteredStays.filter(p => !!getActiveDeal(p))
-                : filteredStays;
-
-            staysToShow.forEach(prop => {
-                const lat = parseFloat(prop.lat) || 31.5204;
-                const lng = parseFloat(prop.lng) || 74.3587;
-                const propCurrency = prop.currency || 'PKR';
-
-                const isHourly = activeMapRateInterval === 'hourly';
-                const isOffers = activeMapRateInterval === 'offers';
-                let priceLabel = '';
-
-                if (isOffers) {
-                    const currentDeal = getActiveDeal(prop);
-                    const dealPrice = currentDeal ? (currentDeal.discountPrice || currentDeal.price || 0) : (prop.dailyPrice || 5000);
-                    priceLabel = `🔥 ${LikeStaysEngine.formatCompactPrice(dealPrice, propCurrency)}`;
-                } else if (isHourly) {
-                    const hPrice = prop.hourlyPrice || Math.round((prop.dailyPrice || 5000) / 10);
-                    priceLabel = `${LikeStaysEngine.formatCompactPrice(hPrice, propCurrency)}/hr`;
-                } else {
-                    const dPrice = prop.dailyPrice || prop.price || 5000;
-                    priceLabel = LikeStaysEngine.formatCompactPrice(dPrice, propCurrency);
-                }
-
-                const isTarget = targetId && String(prop.id) === String(targetId);
-
-                // 📍 CUSTOM SLEEK PILL ICON
-                const customIcon = L.divIcon({
-                    className: 'custom-map-div-icon',
-                    html: `<div id="pin-badge-${prop.id}" class="map-price-pill ${isTarget ? 'active-pin' : ''}">${priceLabel}</div>`,
-                    iconSize: [64, 28],
-                    iconAnchor: [32, 14]
-                });
-
-                const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapMarkersGroup);
-
-                // Hover (Desktop) & Click (Mobile & Desktop)
-                marker.on('mouseover', () => displayFloatingPropertyCard(prop, true));
-                marker.on('click', () => displayFloatingPropertyCard(prop, false));
-
-                if (isTarget) {
-                    displayFloatingPropertyCard(prop, false);
-                }
-            });
-        }
-
-        function displayFloatingPropertyCard(prop, isHover) {
-            selectedStayId = prop.id;
-            const card = document.getElementById('floating-property-preview-card');
-            if (!card) return;
-
-            const photos = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=300"]);
-            const mainImg = photos[0].startsWith('http') || photos[0].startsWith('data:') ? photos[0] : `https://images.unsplash.com/${photos[0]}?auto=format&fit=crop&q=70&w=300`;
-
-            const propCurrency = prop.currency || 'PKR';
-            const isHourly = activeMapRateInterval === 'hourly';
-            const isOffers = activeMapRateInterval === 'offers';
-
-            let priceText;
-            if (isOffers) {
-                const currentDeal = getActiveDeal(prop);
-                const dealPrice = currentDeal ? (currentDeal.discountPrice || currentDeal.price || 0) : (prop.dailyPrice || 5000);
-                priceText = `🔥 ${LikeStaysEngine.formatPrice(dealPrice, propCurrency)} <span class="text-[7.5px] text-gray-400">/night deal</span>`;
-            } else if (isHourly) {
-                priceText = `${LikeStaysEngine.formatPrice(prop.hourlyPrice || 500, propCurrency)} <span class="text-[7.5px] text-gray-400">/hr</span>`;
-            } else {
-                priceText = `${LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, propCurrency)} <span class="text-[7.5px] text-gray-400">/night</span>`;
-            }
-
-            document.getElementById('prev-card-img').src = mainImg;
-            document.getElementById('prev-card-name').innerText = prop.name;
-            document.getElementById('prev-card-category').innerText = `🏡 ${prop.category || 'Stay'}`;
-            document.getElementById('prev-card-rating').innerText = prop.rating || '⭐ New';
-            document.getElementById('prev-card-location').innerText = `📍 ${prop.location || prop.city || 'Prime Location'}`;
-            document.getElementById('prev-card-price').innerHTML = priceText;
-
-            document.getElementById('prev-card-deal-badge').classList.toggle('hidden', !getActiveDeal(prop));
-
-            document.querySelectorAll('.map-price-pill').forEach(p => p.classList.remove('active-pin'));
-            document.getElementById(`pin-badge-${prop.id}`)?.classList.add('active-pin');
-
-            card.classList.remove('hidden');
-            setBookNowEnabled(true);
-        }
-
-        function navigateToSelectedMapStay() {
-            if (!selectedStayId) return;
-            saveSearchState();
-            let sStr = '';
-            let eStr = '';
-            if (homeStartDate && homeEndDate) {
-                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
-                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
-                sStr = `${sM} ${homeStartDate.getDate()}`;
-                eStr = `${eM} ${homeEndDate.getDate()}`;
-            }
-            const params = new URLSearchParams({
-                id: selectedStayId,
-                guests: homeGuestsCount,
-                checkin: sStr,
-                checkout: eStr
-            });
-            window.location.href = `details.html?${params.toString()}`;
-        }
-
-        function executeLiveMapFilter() {
-            renderMapPins();
-        }
-
-        // ================= SEARCH, CALENDAR & GUESTS (2 SECONDS AUTO CLOSE) =================
-        function loadUniversalSearchHandshake() {
-            const session = LikeStaysEngine.getSearchSession();
-            const urlParams = new URLSearchParams(window.location.search);
-
-            const dest = urlParams.get('destination') || session.destination || '';
-            const guests = parseInt(urlParams.get('guests')) || session.guests || 2;
-
-            if (dest) document.getElementById('home-search-dest').value = dest;
-            if (guests) {
-                homeGuestsCount = guests;
-                document.getElementById('home-guests-display-btn').innerText = `${guests} Guests`;
-                document.getElementById('modal-guests-num').innerText = guests;
-            }
-        }
-
-        function saveSearchState() {
-            let sStr = '';
-            let eStr = '';
-            if (homeStartDate && homeEndDate) {
-                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
-                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
-                sStr = `${sM} ${homeStartDate.getDate()}`;
-                eStr = `${eM} ${homeEndDate.getDate()}`;
-            }
-            LikeStaysEngine.saveSearchSession({
-                destination: document.getElementById('home-search-dest').value.trim(),
-                checkin: sStr,
-                checkout: eStr,
-                guests: homeGuestsCount
-            });
-        }
+        let masterPropertiesList = [];
+        let homeStartDate = null, homeEndDate = null, homeGuestsCount = 2, tempModalGuests = 2;
+        let calCurrentMonth = new Date().getMonth(), calCurrentYear = new Date().getFullYear();
+        let activeHotelName = null;
+        const escF = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
         function toggleHomeCalendarModal(open) {
             document.getElementById('home-calendar-modal').classList.toggle('hidden', !open);
             if (open) renderHomeCalendar();
         }
+
 
         function changeHomeCalendarMonth(delta) {
             calCurrentMonth += delta;
@@ -669,6 +719,7 @@
             else if (calCurrentMonth > 11) { calCurrentMonth = 0; calCurrentYear++; }
             renderHomeCalendar();
         }
+
 
         function renderHomeCalendar() {
             const label = document.getElementById('home-calendar-month-label');
@@ -721,6 +772,7 @@
             }
         }
 
+
         function handleHomeDateClick(day) {
             const clickedDate = new Date(calCurrentYear, calCurrentMonth, day);
             clickedDate.setHours(0, 0, 0, 0);
@@ -751,10 +803,11 @@
 
                 setTimeout(() => {
                     toggleHomeCalendarModal(false);
-                    renderMapPins();
+                    updateMainSearchPillDisplay();
                 }, 2000);
             }
         }
+
 
         function resetHomeDates() {
             homeStartDate = null;
@@ -762,8 +815,9 @@
             document.getElementById('home-dates-display').innerText = "Add Dates";
             saveSearchState();
             renderHomeCalendar();
-            renderMapPins();
+            updateMainSearchPillDisplay();
         }
+
 
         function toggleGuestsModal(open) {
             document.getElementById('home-guests-modal').classList.toggle('hidden', !open);
@@ -773,50 +827,87 @@
             }
         }
 
+
         function updateModalGuestsCount(delta) {
             tempModalGuests = Math.max(1, tempModalGuests + delta);
             document.getElementById('modal-guests-num').innerText = tempModalGuests;
         }
+
 
         function confirmModalGuestsSelection() {
             homeGuestsCount = tempModalGuests;
             document.getElementById('home-guests-display-btn').innerText = `${homeGuestsCount} Guests`;
             saveSearchState();
             toggleGuestsModal(false);
-            renderMapPins();
+            updateMainSearchPillDisplay();
         }
 
-        // ================= FILTERS LOGIC =================
+
         function openIntegratedFilterModal() {
             document.getElementById('filter-modal-overlay').classList.remove('hidden');
             updateSliderCurrencyLabels();
             updateLiveFilterMatchesCount();
         }
 
+
         function closeIntegratedFilterModal() {
             document.getElementById('filter-modal-overlay').classList.add('hidden');
         }
+
 
         function handleOfferToggle(checked) {
             LikeStaysFilter.state.onlyOffers = checked;
             updateLiveFilterMatchesCount();
         }
 
+
+        function setFilterRateType(type) {
+            LikeStaysFilter.state.rateType = type;
+            const btnDaily = document.getElementById('btn-filter-rate-daily');
+            const btnHourly = document.getElementById('btn-filter-rate-hourly');
+            const minSlider = document.getElementById('filter-min-slider');
+            const maxSlider = document.getElementById('filter-max-slider');
+
+            if (type === 'hourly') {
+                btnHourly.className = "p-2.5 rounded-2xl border border-transparent bg-luxuryGreen text-white font-black text-xs flex items-center justify-center space-x-1.5 shadow-xs cursor-pointer";
+                btnDaily.className = "p-2.5 rounded-2xl border border-gray-200 bg-white text-gray-500 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer hover:border-luxuryGreen";
+                
+                minSlider.max = "50000"; minSlider.step = "500"; minSlider.value = LikeStaysFilter.state.minHourlyPrice;
+                maxSlider.max = "50000"; maxSlider.step = "500"; maxSlider.value = LikeStaysFilter.state.maxHourlyPrice;
+            } else {
+                btnDaily.className = "p-2.5 rounded-2xl border border-transparent bg-luxuryGreen text-white font-black text-xs flex items-center justify-center space-x-1.5 shadow-xs cursor-pointer";
+                btnHourly.className = "p-2.5 rounded-2xl border border-gray-200 bg-white text-gray-500 font-bold text-xs flex items-center justify-center space-x-1.5 cursor-pointer hover:border-luxuryGreen";
+                
+                minSlider.max = "300000"; minSlider.step = "1000"; minSlider.value = LikeStaysFilter.state.minDailyPrice;
+                maxSlider.max = "300000"; maxSlider.step = "1000"; maxSlider.value = LikeStaysFilter.state.maxDailyPrice;
+            }
+
+            updateSliderCurrencyLabels();
+            updateLiveFilterMatchesCount();
+        }
+
+
         function handleMinPriceChange(val) {
-            const minVal = parseInt(val);
-            if (LikeStaysFilter.state.rateType === 'hourly') LikeStaysFilter.state.minHourlyPrice = minVal;
+            let minVal = parseInt(val);
+            { const mx = document.getElementById('filter-max-slider'); if (minVal > +mx.value) { minVal = +mx.value; document.getElementById('filter-min-slider').value = minVal; } }
+            const isHourly = LikeStaysFilter.state.rateType === 'hourly';
+            if (isHourly) LikeStaysFilter.state.minHourlyPrice = minVal;
             else LikeStaysFilter.state.minDailyPrice = minVal;
             updateSliderCurrencyLabels();
             updateLiveFilterMatchesCount();
         }
 
+
         function handleMaxPriceChange(val) {
-            const maxVal = parseInt(val);
-            if (LikeStaysFilter.state.rateType === 'hourly') LikeStaysFilter.state.maxHourlyPrice = maxVal;
+            let maxVal = parseInt(val);
+            { const mn = document.getElementById('filter-min-slider'); if (maxVal < +mn.value) { maxVal = +mn.value; document.getElementById('filter-max-slider').value = maxVal; } }
+            const isHourly = LikeStaysFilter.state.rateType === 'hourly';
+            if (isHourly) LikeStaysFilter.state.maxHourlyPrice = maxVal;
             else LikeStaysFilter.state.maxDailyPrice = maxVal;
             updateSliderCurrencyLabels();
             updateLiveFilterMatchesCount();
         }
+
 
         function updateSliderCurrencyLabels() {
             if (typeof LikeStaysEngine === 'undefined') return;
@@ -830,7 +921,10 @@
             document.getElementById('filter-min-val-label').innerText = minFmt;
             document.getElementById('filter-max-val-label').innerText = maxFmt;
             document.getElementById('filter-range-live-summary').innerText = `${minFmt} - ${maxFmt} ${isHourly ? '/hr' : '/night'}`;
+            const _mn = document.getElementById('filter-min-slider'), _mx = document.getElementById('filter-max-slider'), _f = document.getElementById('dr-fill');
+            if (_f) { const m = +_mx.max || 1; _f.style.left = (_mn.value / m * 100) + '%'; _f.style.right = (100 - _mx.value / m * 100) + '%'; }
         }
+
 
         function setBedroomFilter(count) {
             LikeStaysFilter.state.bedrooms = count;
@@ -843,6 +937,18 @@
             });
             updateLiveFilterMatchesCount();
         }
+
+
+        function setRatingFilter(v) {
+            LikeStaysFilter.state.minRating = v;
+            [0, 3, 4, 4.5].forEach(x => {
+                const btn = document.getElementById(`btn-rating-${x}`);
+                if (!btn) return;
+                btn.className = (x === v) ? "py-2 rounded-xl text-xs font-black bg-luxuryGreen text-white shadow-xs" : "py-2 rounded-xl text-xs font-bold bg-white text-gray-700 border border-gray-200";
+            });
+            updateLiveFilterMatchesCount();
+        }
+
 
         function renderFilterChecklists() {
             filterCategoriesInModal();
@@ -864,6 +970,7 @@
             `).join('');
         }
 
+
         function filterCategoriesInModal() {
             const q = (document.getElementById('filter-cat-search')?.value || '').toLowerCase().trim();
             const container = document.getElementById('modal-categories-list');
@@ -877,6 +984,7 @@
             `).join('');
         }
 
+
         function toggleFilterItem(type, val, checked) {
             if (checked) {
                 if (!LikeStaysFilter.state[type].includes(val)) LikeStaysFilter.state[type].push(val);
@@ -886,18 +994,23 @@
             updateLiveFilterMatchesCount();
         }
 
+
         function updateLiveFilterMatchesCount() {
             const matched = LikeStaysFilter.applyFilter(masterPropertiesList, document.getElementById('home-search-dest')?.value || '');
             document.getElementById('btn-filter-live-text').innerText = `Show ${matched.length} Stays ➔`;
         }
 
+
         function applyFiltersAndCloseModal() {
             closeIntegratedFilterModal();
+            syncTypeChips();
             const s = LikeStaysFilter.state;
-            const hasActive = s.onlyOffers || s.rateType === 'hourly' || s.minDailyPrice > 0 || s.maxDailyPrice < 300000 || s.minHourlyPrice > 0 || s.maxHourlyPrice < 50000 || s.selfCheckinOnly || s.petsOnly || s.smokingOnly || s.bedrooms > 0 || s.categories.length > 0 || s.amenities.length > 0 || s.addons.length > 0;
+            const hasActive = (s.minRating > 0) || s.onlyOffers || s.rateType === 'hourly' || s.minDailyPrice > 0 || s.maxDailyPrice < 300000 || s.minHourlyPrice > 0 || s.maxHourlyPrice < 50000 || s.selfCheckinOnly || s.petsOnly || s.smokingOnly || s.bedrooms > 0 || s.categories.length > 0 || s.amenities.length > 0 || s.addons.length > 0;
             document.getElementById('active-filter-dot').classList.toggle('hidden', !hasActive);
-            renderMapPins();
+            document.getElementById('hdr-filter-dot').classList.toggle('hidden', !hasActive);
+            executeLiveSearch(true);
         }
+
 
         function resetFiltersInModal() {
             LikeStaysFilter.reset();
@@ -905,16 +1018,523 @@
             document.getElementById('filter-self-checkin').checked = false;
             document.getElementById('filter-pets').checked = false;
             document.getElementById('filter-smoking').checked = false;
+            
             document.getElementById('filter-min-slider').value = 0;
             document.getElementById('filter-max-slider').value = 300000;
+            
+            setFilterRateType('daily');
             setBedroomFilter(0);
+            setRatingFilter(0);
             document.querySelectorAll('#filter-modal-overlay input[type="checkbox"]').forEach(cb => cb.checked = false);
             document.getElementById('active-filter-dot').classList.add('hidden');
+            document.getElementById('hdr-filter-dot').classList.add('hidden');
+            syncTypeChips();
+            
             updateSliderCurrencyLabels();
             updateLiveFilterMatchesCount();
             closeIntegratedFilterModal();
-            renderMapPins();
+            executeLiveSearch(true);
         }
+
+
+        function toggleGlobalCurrencyModal(open) { document.getElementById('global-currency-modal').classList.toggle('hidden', !open); }
+        function renderCurrenciesList() { filterCurrenciesList(); }
+        function filterCurrenciesList() {
+            const q = (document.getElementById('currency-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('currencies-options-list');
+            if (!container) return;
+            const filtered = LikeStaysEngine.currencies.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(c => `
+                <button type="button" onclick="LikeStaysEngine.selectCurrency('${c.code}'); toggleGlobalCurrencyModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span>${c.flag}</span><span>${c.name} (${c.code})</span></div>
+                    <span class="text-luxuryGreen font-black">${c.symbol}</span>
+                </button>
+            `).join('');
+        }
+
+
+        function renderCurrenciesList() { filterCurrenciesList(); }
+        function filterCurrenciesList() {
+            const q = (document.getElementById('currency-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('currencies-options-list');
+            if (!container) return;
+            const filtered = LikeStaysEngine.currencies.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(c => `
+                <button type="button" onclick="LikeStaysEngine.selectCurrency('${c.code}'); toggleGlobalCurrencyModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span>${c.flag}</span><span>${c.name} (${c.code})</span></div>
+                    <span class="text-luxuryGreen font-black">${c.symbol}</span>
+                </button>
+            `).join('');
+        }
+
+
+        function filterCurrenciesList() {
+            const q = (document.getElementById('currency-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('currencies-options-list');
+            if (!container) return;
+            const filtered = LikeStaysEngine.currencies.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(c => `
+                <button type="button" onclick="LikeStaysEngine.selectCurrency('${c.code}'); toggleGlobalCurrencyModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span>${c.flag}</span><span>${c.name} (${c.code})</span></div>
+                    <span class="text-luxuryGreen font-black">${c.symbol}</span>
+                </button>
+            `).join('');
+        }
+
+
+        function toggleGlobalLangModal(open) { document.getElementById('global-lang-modal').classList.toggle('hidden', !open); }
+        function renderLanguagesList() { filterLanguagesList(); }
+        function filterLanguagesList() {
+            const q = (document.getElementById('lang-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('lang-options-list');
+            if (!container || typeof LanguageEngine === 'undefined') return;
+            const filtered = LanguageEngine.languages.filter(l => l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(l => `
+                <button type="button" onclick="LanguageEngine.selectLanguage('${l.code}'); toggleGlobalLangModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span class="text-base">${l.flag}</span><span>${l.name}</span></div>
+                    <span class="text-[10px] text-gray-400 font-semibold">${l.native}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderLanguagesList() { filterLanguagesList(); }
+        function filterLanguagesList() {
+            const q = (document.getElementById('lang-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('lang-options-list');
+            if (!container || typeof LanguageEngine === 'undefined') return;
+            const filtered = LanguageEngine.languages.filter(l => l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(l => `
+                <button type="button" onclick="LanguageEngine.selectLanguage('${l.code}'); toggleGlobalLangModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span class="text-base">${l.flag}</span><span>${l.name}</span></div>
+                    <span class="text-[10px] text-gray-400 font-semibold">${l.native}</span>
+                </button>
+            `).join('');
+        }
+
+        function filterLanguagesList() {
+            const q = (document.getElementById('lang-search-input')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('lang-options-list');
+            if (!container || typeof LanguageEngine === 'undefined') return;
+            const filtered = LanguageEngine.languages.filter(l => l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q));
+            container.innerHTML = filtered.map(l => `
+                <button type="button" onclick="LanguageEngine.selectLanguage('${l.code}'); toggleGlobalLangModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
+                    <div class="flex items-center space-x-2"><span class="text-base">${l.flag}</span><span>${l.name}</span></div>
+                    <span class="text-[10px] text-gray-400 font-semibold">${l.native}</span>
+                </button>
+            `).join('');
+        }
+
+        function saveSearchState() {
+            let sStr = '';
+            let eStr = '';
+            if (homeStartDate && homeEndDate) {
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
+                sStr = `${sM} ${homeStartDate.getDate()}`;
+                eStr = `${eM} ${homeEndDate.getDate()}`;
+            }
+            LikeStaysEngine.saveSearchSession({
+                destination: document.getElementById('home-search-dest').value.trim(),
+                checkin: sStr,
+                checkout: eStr,
+                guests: homeGuestsCount
+            });
+        }
+
+
+        function openAirbnbSearchModal() {
+            document.getElementById('airbnb-search-modal').classList.remove('hidden');
+        }
+
+
+        function closeAirbnbSearchModal() {
+            document.getElementById('airbnb-search-modal').classList.add('hidden');
+        }
+
+
+        function resetAllSearchFields() {
+            document.getElementById('home-search-dest').value = '';
+            resetHomeDates();
+            homeGuestsCount = 2;
+            document.getElementById('home-guests-display-btn').innerText = `2 Guests`;
+            updateMainSearchPillDisplay();
+        }
+
+
+        function updateMainSearchPillDisplay() {
+            const dest = document.getElementById('home-search-dest')?.value.trim();
+            const title = document.getElementById('main-search-bar-title');
+            const sub = document.getElementById('main-search-bar-subtitle');
+
+            let dateStr = 'Any week';
+            if (homeStartDate && homeEndDate) {
+                const sM = MONTH_NAMES[homeStartDate.getMonth()].slice(0,3);
+                const eM = MONTH_NAMES[homeEndDate.getMonth()].slice(0,3);
+                dateStr = `${sM} ${homeStartDate.getDate()} - ${eM} ${homeEndDate.getDate()}`;
+            }
+
+            if (activeHotelName) {
+                title.innerText = `Search in ${activeHotelName}`;
+                sub.innerText = `${dateStr} • ${homeGuestsCount} Guests`;
+            } else if (dest) {
+                title.innerText = dest;
+                sub.innerText = `${dateStr} • ${homeGuestsCount} Guests`;
+            } else {
+                title.innerText = "Where are you going?";
+                sub.innerText = `${dateStr} • ${homeGuestsCount} Guests`;
+            }
+        }
+
+
+        function syncHeaderUI() {
+            if (typeof LikeStaysEngine === 'undefined') return;
+            const locale = LikeStaysEngine.activeLocale;
+
+            const hFlag = document.getElementById('header-curr-flag');
+            const hText = document.getElementById('header-curr-text');
+            const mFlag = document.getElementById('mobile-curr-flag');
+            const mText = document.getElementById('mobile-curr-text');
+
+            if (hFlag) hFlag.innerText = locale.flag;
+            if (hText) hText.innerText = `${locale.currency} (${locale.symbol})`;
+            if (mFlag) mFlag.innerText = locale.flag;
+            if (mText) mText.innerText = locale.currency;
+
+            const hlFlag = document.getElementById('header-lang-flag');
+            const hlText = document.getElementById('header-lang-text');
+            const mlFlag = document.getElementById('mobile-lang-flag');
+            const mlText = document.getElementById('mobile-lang-text');
+
+            // زبان کی حالت الگ LanguageEngine میں محفوظ ہوتی ہے (LikeStaysEngine میں نہیں)
+            let activeLangCode = 'en';
+            try { activeLangCode = localStorage.getItem('likestays_selected_lang') || 'en'; } catch (e) {}
+
+            const activeLangObj = (typeof LanguageEngine !== 'undefined' && LanguageEngine.languages)
+                ? (LanguageEngine.languages.find(l => l.code === activeLangCode) || LanguageEngine.languages[0])
+                : null;
+
+            if (activeLangObj) {
+                if (hlFlag) hlFlag.innerText = activeLangObj.flag;
+                if (hlText) hlText.innerText = activeLangObj.name;
+                if (mlFlag) mlFlag.innerText = activeLangObj.flag;
+                if (mlText) mlText.innerText = (activeLangObj.code || 'en').toUpperCase();
+            }
+        }
+
+
+        function toggleMoreMenu(force) {
+            const sheet = document.getElementById('ls-more-sheet');
+            const backdrop = document.getElementById('ls-more-backdrop');
+            const open = typeof force === 'boolean' ? force : !sheet.classList.contains('open');
+            sheet.classList.toggle('open', open);
+            backdrop.classList.toggle('open', open);
+        }
+
+
+        function parseDealTime(t) {
+            if (!t) return null;
+            const m = String(t).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+            if (!m) return null;
+            let h = +m[1]; const mi = +m[2]; const ap = m[3] && m[3].toUpperCase();
+            if (ap === 'PM' && h < 12) h += 12;
+            if (ap === 'AM' && h === 12) h = 0;
+            return [h, mi];
+        }
+
+        function dealStartDate(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const t = parseDealTime(deal.startTime) || [14, 0];
+            return new Date(y, mo - 1, d, t[0], t[1], 0);
+        }
+
+        function dealExpiry(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const isSameDay = !deal.endDate || deal.endDate === deal.startDate;
+            if (isSameDay) { const t = parseDealTime(deal.startTime); return t ? new Date(y, mo - 1, d, t[0], t[1], 0) : null; }
+            return new Date(y, mo - 1, d, 20, 0, 0);
+        }
+
+        function getActiveDeal(prop, now = new Date()) {
+            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+            const live = deals.filter(d => {
+                if (!d || d.enabled === false) return false;
+                const exp = dealExpiry(d);
+                return !exp || now < exp;
+            });
+            live.sort((a, b) => (dealStartDate(a) || 0) - (dealStartDate(b) || 0));
+            return live[0] || null;
+        }
+
+        function buildOfferText(prop, deal) {
+            if (!deal) return '';
+            return `${formatOfferTimingLabel(deal)} • ${LikeStaysEngine.formatCompactPrice(deal.discountPrice || deal.price || 0, prop.currency || 'PKR')}`;
+        }
+
+
+        function formatOfferTimingLabel(deal) {
+            const formatStr = (d) => {
+                if (!d) return '';
+                if (d.includes('-')) {
+                    const p = d.split('-');
+                    if (p.length === 3) {
+                        const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                        return `${parseInt(p[2])} ${m[parseInt(p[1])-1] || ''}`;
+                    }
+                }
+                return d;
+            };
+
+            const sDate = formatStr(deal.startDate);
+            const eDate = formatStr(deal.endDate);
+            const isSameDay = (deal.startDate === deal.endDate) || !deal.endDate;
+
+            return isSameDay ? `${sDate} (${deal.startTime} - ${deal.endTime})` : `${sDate} - ${eDate}`;
+        }
+
+
+        // ================= MAP PAGE LOGIC =================
+        let mapInstance = null;
+        let mapMarkersGroup = null;
+        let selectedStayId = null;
+        let activeMapRateInterval = 'daily';   // 'hourly' | 'daily' | 'offers'
+        let shownStays = [];
+        let lastShownSig = '';
+        const PROPERTIES_API_URL = "https://likestays-api.waleeddes40.workers.dev/api/properties";
+
+        // filter-modal helpers written for Home call these – map versions:
+        function syncTypeChips() {}
+        function closeCatModal() {}
+        function executeLiveSearch() { syncTabFromFilter(); renderMapPins(true); }
+        function submitAirbnbSearch() {
+            closeAirbnbSearchModal();
+            updateMainSearchPillDisplay();
+            saveSearchState();
+            renderMapPins(true);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initLeafletMap();
+            syncHeaderUI();
+            renderCurrenciesList();
+            renderLanguagesList();
+            renderFilterChecklists();
+            loadUniversalSearchHandshake();
+            renderHomeCalendar();
+            try {
+                const cached = localStorage.getItem('likestays_cached_properties');
+                if (cached) { masterPropertiesList = JSON.parse(cached); renderMapPins(true); }
+            } catch (e) {}
+            fetchPropertiesFromEdgeCache();
+            setInterval(() => { if (!document.hidden && shownSig() !== lastShownSig) renderMapPins(false); }, 30000);
+            if (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.renderBottomNav) LikeStaysEngine.renderBottomNav('map');
+        });
+
+        window.addEventListener('likestays:locale_changed', () => {
+            syncHeaderUI();
+            updateSliderCurrencyLabels();
+            renderMapPins(false);
+        });
+
+        // ---- map: no fixed city. Starts on an overview of Pakistan, then fits to the user's searched city / the stays shown ----
+        function initLeafletMap() {
+            mapInstance = L.map('main-interactive-map', { zoomControl: false }).setView([30.3753, 69.3451], 5);
+            L.control.zoom({ position: 'topright' }).addTo(mapInstance);
+            L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=MOxpRpKBHrWYcJ4BVchk', {
+                attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 20
+            }).addTo(mapInstance);
+            mapMarkersGroup = L.layerGroup().addTo(mapInstance);
+            mapInstance.on('click', () => clearSelection());
+        }
+
+        function clearSelection() {
+            selectedStayId = null;
+            document.querySelectorAll('.map-price-pill').forEach(p => p.classList.remove('active-pin'));
+            document.querySelectorAll('.mp-card').forEach(c => c.classList.remove('sel'));
+        }
+
+        async function fetchPropertiesFromEdgeCache() {
+            try {
+                const res = await fetch(PROPERTIES_API_URL, { cache: 'no-store' });
+                if (!res.ok) throw new Error('edge ' + res.status);
+                const payload = await res.json();
+                masterPropertiesList = (payload && payload.properties) ? payload.properties : [];
+                try { localStorage.setItem('likestays_cached_properties', JSON.stringify(masterPropertiesList)); } catch (e) {}
+                renderMapPins(true);
+            } catch (err) {
+                try {
+                    firebase.database().ref('properties').limitToFirst(300).once('value').then(snap => {
+                        const data = snap.val();
+                        masterPropertiesList = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+                        renderMapPins(true);
+                    }).catch(() => renderMapPins(false));
+                } catch (e) { renderMapPins(false); }
+            }
+        }
+
+        function loadUniversalSearchHandshake() {
+            const session = (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.getSearchSession) ? LikeStaysEngine.getSearchSession() : {};
+            const q = new URLSearchParams(window.location.search);
+            const dest = q.get('destination') || q.get('city') || q.get('q') || session.destination || '';
+            const guests = parseInt(q.get('guests')) || session.guests || 2;
+            if (dest) document.getElementById('home-search-dest').value = dest;
+            homeGuestsCount = guests;
+            document.getElementById('home-guests-display-btn').innerText = `${guests} Guests`;
+            document.getElementById('modal-guests-num').innerText = guests;
+            updateMainSearchPillDisplay();
+        }
+
+        // ---- tabs ----
+        function switchMapRateInterval(type) {
+            activeMapRateInterval = type;
+            LikeStaysFilter.state.rateType = (type === 'hourly') ? 'hourly' : 'daily';
+            document.querySelectorAll('.map-tab').forEach(b => b.classList.toggle('on', b.dataset.rate === type));
+            const f = document.getElementById('filter-modal-overlay');
+            if (typeof setFilterRateType === 'function') setFilterRateType(LikeStaysFilter.state.rateType);
+            renderMapPins(true);
+        }
+        function syncTabFromFilter() {
+            const want = LikeStaysFilter.state.rateType === 'hourly' ? 'hourly' : (activeMapRateInterval === 'offers' ? 'offers' : 'daily');
+            if (want !== activeMapRateInterval) {
+                activeMapRateInterval = want;
+                document.querySelectorAll('.map-tab').forEach(b => b.classList.toggle('on', b.dataset.rate === want));
+            }
+        }
+
+        // ---- which stays belong to the current tab ----
+        function computeShown() {
+            const dest = document.getElementById('home-search-dest')?.value || '';
+            let list = LikeStaysFilter.applyFilter(masterPropertiesList, dest);
+            list = list.filter(p => isFinite(parseFloat(p.lat)) && isFinite(parseFloat(p.lng)) && !(parseFloat(p.lat) === 0 && parseFloat(p.lng) === 0));
+            if (activeMapRateInterval === 'offers') list = list.filter(p => !!getActiveDeal(p));
+            else if (activeMapRateInterval === 'hourly') list = list.filter(p => Number(p.hourlyPrice || 0) > 0);
+            else list = list.filter(p => Number(p.dailyPrice || p.price || 0) > 0);
+            return list;
+        }
+        function shownSig() { return activeMapRateInterval + '|' + computeShown().map(p => p.id).join(','); }
+
+        function priceFor(prop) {
+            const cur = prop.currency || 'PKR';
+            if (activeMapRateInterval === 'offers') {
+                const d = getActiveDeal(prop);
+                const v = d ? (d.discountPrice || d.price || 0) : (prop.dailyPrice || prop.price || 0);
+                return { compact: LikeStaysEngine.formatCompactPrice(v, cur), full: LikeStaysEngine.formatPrice(v, cur), unit: 'offer' };
+            }
+            if (activeMapRateInterval === 'hourly') {
+                const v = prop.hourlyPrice || 0;
+                return { compact: LikeStaysEngine.formatCompactPrice(v, cur) + '/hr', full: LikeStaysEngine.formatPrice(v, cur), unit: '/hr' };
+            }
+            const v = prop.dailyPrice || prop.price || 0;
+            return { compact: LikeStaysEngine.formatCompactPrice(v, cur), full: LikeStaysEngine.formatPrice(v, cur), unit: '/night' };
+        }
+
+        function imgFor(prop) {
+            const photos = (prop.photos && prop.photos.length) ? prop.photos : (prop.image ? [prop.image] : []);
+            let p = photos[0] || prop.videoPoster || '';
+            if (!p) return 'https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=400';
+            return (p.startsWith('http') || p.startsWith('data:')) ? p : `https://images.unsplash.com/${p}?auto=format&fit=crop&q=70&w=400`;
+        }
+
+        // ---- pins + bottom cards ----
+        function renderMapPins(fit) {
+            if (!mapInstance || !mapMarkersGroup) return;
+            mapMarkersGroup.clearLayers();
+            shownStays = computeShown();
+            lastShownSig = shownSig();
+
+            const q = new URLSearchParams(window.location.search);
+            const targetId = q.get('id');
+            const pts = [];
+            const markers = {};
+
+            shownStays.forEach(prop => {
+                const lat = parseFloat(prop.lat), lng = parseFloat(prop.lng);
+                pts.push([lat, lng]);
+                const pr = priceFor(prop);
+                const icon = L.divIcon({
+                    className: 'custom-map-div-icon',
+                    html: `<div id="pin-badge-${escF(prop.id)}" class="map-price-pill${activeMapRateInterval === 'offers' ? ' offer' : ''}">${escF(pr.compact)}</div>`,
+                    iconSize: [64, 28], iconAnchor: [32, 14]
+                });
+                const mk = L.marker([lat, lng], { icon }).addTo(mapMarkersGroup);
+                mk.on('click', (e) => { if (e.originalEvent) L.DomEvent.stopPropagation(e.originalEvent); selectStay(prop.id, true); });
+                markers[prop.id] = mk;
+            });
+
+            buildStrip();
+            document.getElementById('map-empty').style.display = shownStays.length ? 'none' : 'block';
+
+            if (fit && pts.length) {
+                if (pts.length === 1) mapInstance.setView(pts[0], 14);
+                else mapInstance.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [30, 150], paddingBottomRight: [30, 270], maxZoom: 15 });
+            }
+            if (targetId && shownStays.some(p => String(p.id) === String(targetId))) selectStay(targetId, false);
+            else if (selectedStayId && shownStays.some(p => String(p.id) === String(selectedStayId))) selectStay(selectedStayId, false);
+            else selectedStayId = null;
+        }
+
+        function buildStrip() {
+            const strip = document.getElementById('map-strip');
+            if (!shownStays.length) { strip.style.display = 'none'; strip.innerHTML = ''; return; }
+            strip.innerHTML = shownStays.map(prop => {
+                const pr = priceFor(prop);
+                const id = escF(prop.id);
+                let tag = '';
+                if (activeMapRateInterval === 'offers') { const d = getActiveDeal(prop); if (d) tag = escF(formatOfferTimingLabel(d)); }
+                return `<div class="mp-card" data-id="${id}" onclick="navigateToSelectedMapStay('${id}')">
+                    <div class="mp-img"><img src="${escF(imgFor(prop))}" loading="lazy" alt="${escF(prop.name)}">${tag ? `<span class="mp-tag">${tag}</span>` : ''}</div>
+                    <div class="mp-body">
+                        <div class="mp-name">${escF(prop.name)}</div>
+                        <div class="mp-loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>${escF(prop.location || prop.city || 'Prime Location')}</div>
+                        <div class="mp-price">${escF(pr.full)} <small>${escF(pr.unit)}</small></div>
+                    </div>
+                </div>`;
+            }).join('');
+            strip.style.display = 'flex';
+        }
+
+        function selectStay(id, pan) {
+            selectedStayId = id;
+            document.querySelectorAll('.map-price-pill').forEach(p => p.classList.remove('active-pin'));
+            document.getElementById('pin-badge-' + id)?.classList.add('active-pin');
+            document.querySelectorAll('.mp-card').forEach(c => c.classList.toggle('sel', c.dataset.id === String(id)));
+            const card = document.querySelector(`.mp-card[data-id="${CSS.escape(String(id))}"]`);
+            if (card) card.scrollIntoView({ behavior: pan ? 'smooth' : 'auto', inline: 'center', block: 'nearest' });
+            if (pan) {
+                const p = shownStays.find(x => String(x.id) === String(id));
+                if (p) mapInstance.panTo([parseFloat(p.lat), parseFloat(p.lng)], { animate: true });
+            }
+        }
+
+        function navigateToSelectedMapStay(id) {
+            const sid = id || selectedStayId;
+            if (!sid) return;
+            saveSearchState();
+            let sStr = '', eStr = '';
+            if (homeStartDate && homeEndDate) {
+                sStr = `${MONTH_NAMES[homeStartDate.getMonth()].slice(0, 3)} ${homeStartDate.getDate()}`;
+                eStr = `${MONTH_NAMES[homeEndDate.getMonth()].slice(0, 3)} ${homeEndDate.getDate()}`;
+            }
+            const params = new URLSearchParams({ id: sid, guests: homeGuestsCount, checkin: sStr, checkout: eStr });
+            window.location.href = `details.html?${params.toString()}`;
+        }
+
+        // ---- tap outside any popup → closes it ----
+        document.addEventListener('click', function (e) {
+            const closers = {
+                'airbnb-search-modal': () => closeAirbnbSearchModal(),
+                'filter-modal-overlay': () => closeIntegratedFilterModal(),
+                'global-currency-modal': () => toggleGlobalCurrencyModal(false),
+                'global-lang-modal': () => toggleGlobalLangModal(false),
+                'home-calendar-modal': () => toggleHomeCalendarModal(false),
+                'home-guests-modal': () => toggleGuestsModal(false)
+            };
+            const fn = e.target && closers[e.target.id];
+            if (fn) fn();
+        });
+
     </script>
 </body>
 </html>
