@@ -240,25 +240,29 @@
         // 🎬 Explore-feed style: one floating white pill = 4 tabs + Book Now (enabled per page via window.__lsNavOptions = {bookNow:true})
         opts = opts || window.__lsNavOptions || null;
         if (opts && opts.bookNow) {
+            const navIcons = {
+                search: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>',
+                explore: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/></svg>',
+                map: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>'
+            };
             const items = [
-                { id: 'search', icon: '🔍', label: (lang === 'EN' ? 'Search' : labels.search || 'Search'), onclick: "openAirbnbSearchModal()" },
-                { id: 'explore', url: 'index.html', icon: '🧭', label: labels.explore },
-                { id: 'map', url: 'map.html', icon: '📍', label: labels.map }
+                { id: 'search', icon: navIcons.search, label: (lang === 'EN' ? 'Search' : labels.search || 'Search'), onclick: "openAirbnbSearchModal()" },
+                { id: 'explore', url: 'index.html', icon: navIcons.explore, label: labels.explore },
+                { id: 'map', url: 'map.html', icon: navIcons.map, label: labels.map }
             ];
+            const itemStyle = (active) => `text-decoration:none;background:none;border:0;padding:5px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;color:${active ? '#F5D98C' : 'rgba(255,255,255,.78)'};font-size:9px;font-weight:700;letter-spacing:.4px;flex:0 0 auto;cursor:pointer`;
             const html = `
-                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0));color:#fff;border:0;border-radius:0;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 8px);display:flex;justify-content:space-between;align-items:center">
-                    <div style="display:flex;gap:14px;flex:1;min-width:0;justify-content:space-around">
+                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));border:0;border-radius:0;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;justify-content:space-between;align-items:center;font-family:'Plus Jakarta Sans',sans-serif">
+                    <div style="display:flex;gap:6px;flex:1;min-width:0;justify-content:space-around">
                         ${items.map(t => t.onclick ? `
-                            <button type="button" onclick="${t.onclick}" style="background:none;border:0;padding:0;text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:0.9;flex:0 0 auto;text-shadow:0 1px 3px rgba(0,0,0,.9);cursor:pointer">
-                                <span style="display:block;font-size:17px;line-height:1.2">${t.icon}</span>
-                                <span class="notranslate">${t.label}</span>
+                            <button type="button" onclick="${t.onclick}" style="${itemStyle(false)}">
+                                ${t.icon}<span class="notranslate" style="text-transform:uppercase">${t.label}</span>
                             </button>` : `
-                            <a href="${t.url}" style="text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:${t.id === activeTab ? 1 : 0.65};flex:0 0 auto;text-shadow:0 1px 3px rgba(0,0,0,.9)">
-                                <span style="display:block;font-size:17px;line-height:1.2">${t.icon}</span>
-                                <span class="notranslate">${t.label}</span>
+                            <a href="${t.url}" style="${itemStyle(t.id === activeTab)}">
+                                ${t.icon}<span class="notranslate" style="text-transform:uppercase">${t.label}</span>
                             </a>`).join('')}
                     </div>
-                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:8px;padding:10px 15px;border-radius:999px;border:0;font-size:11px;font-weight:800;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;white-space:nowrap;cursor:pointer">Book Now</button>
+                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:10px;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:11px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)">Book Now</button>
                 </div>`;
             document.body.insertAdjacentHTML('beforeend', html);
             return;
