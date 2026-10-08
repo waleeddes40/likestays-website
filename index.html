@@ -301,6 +301,17 @@
   .of-more{flex:none;font-size:10.5px;font-weight:700;color:#D97757}
   #currencies-options-list,#lang-options-list{max-height:none!important}
   #global-currency-modal>div,#global-lang-modal>div{overflow-y:auto!important}
+    /* ===== v7: minimal video viewer (tap to show controls) + Video tag on cards ===== */
+  #reel-close{display:none!important}
+  .reel-rail{display:none!important}
+  .reel-ctl{transition:opacity .25s}
+  .reel-slide:not(.show-ctl) .reel-ctl{opacity:0;pointer-events:none}
+  .reel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;width:68px;height:68px;border-radius:50%;border:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;padding:0}
+  .reel-bottom{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);z-index:6;display:flex;align-items:center;justify-content:center;gap:12px}
+  .reel-bottom .reel-detail{position:static!important;transform:none!important}
+  .reel-x{width:46px;height:46px;border-radius:12px;border:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+  .cd-vtag{position:absolute;bottom:10px;right:12px;z-index:6;display:flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;letter-spacing:.2px;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .cd-vtag i{width:6px;height:6px;border-radius:50%;background:#D97757;display:block}
   /* ===== colour + corner overrides (Claude terracotta, smaller radius) ===== */
   .bg-emerald-50,.hover\:bg-emerald-50:hover{background:#F6F6F7!important}
   .text-emerald-700,.text-emerald-800{color:#111827!important}
@@ -1230,11 +1241,11 @@
             const barInner = offerBarHTML(prop);
             return `
             <section class="feed-slide" data-id="${id}" onclick="if(!event.target.closest('button'))navigateToDetailsPage('${id}')">
-                <div class="cd-img">
+                <div class="cd-img"${hasVideo ? ` onclick="event.stopPropagation();openReel('${id}')"` : ''}>
                     <div id="carousel-track-${id}" class="cd-track" onscroll="handleCardCarouselScroll('${id}', event)">${imgs}</div>
                     <div class="price-stack">${priceStackHTML(prop, '')}</div>
                     <button type="button" class="cd-fav${isFav ? ' on' : ''}" data-fav="${id}" onclick="togglePropertyFavorite(event,'${id}')" aria-label="Favourite">${HEART_SVG}</button>
-                    ${hasVideo ? `<button type="button" class="cd-play" onclick="event.stopPropagation();openReel('${id}')" aria-label="Play video"><svg width="46" height="46" viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l13-7.5z"/></svg></button>` : ''}
+                    ${hasVideo ? `<div class="cd-vtag"><i></i>Video</div>` : ''}
                     ${dots}
                 </div>
                 <div class="cd-title"><span>${escF(prop.name)}</span>${prop.rating != null ? `<em>★ ${escF(prop.rating)}</em>` : ''}</div>
@@ -1291,24 +1302,40 @@
         const PLAY_I = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l13-7.5z"/></svg>';
         const PAUSE_I = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>';
 
+        let reelHideT = null;
+        function reelShowCtl(sl) {
+            document.querySelectorAll('.reel-slide.show-ctl').forEach(x => { if (x !== sl) x.classList.remove('show-ctl'); });
+            sl.classList.add('show-ctl');
+            clearTimeout(reelHideT);
+            const v = sl.querySelector('video');
+            if (v && !v.paused) reelHideT = setTimeout(() => sl.classList.remove('show-ctl'), 2500);
+        }
+        function reelTap(ev, sl) {
+            if (ev.target.closest('button')) return;
+            if (sl.classList.contains('show-ctl') && !sl.querySelector('video').paused) { sl.classList.remove('show-ctl'); clearTimeout(reelHideT); }
+            else reelShowCtl(sl);
+        }
         function reelTogglePlay(btn) {
-            const v = btn.closest('.reel-slide').querySelector('video');
+            const sl = btn.closest('.reel-slide'), v = sl.querySelector('video');
             if (v.paused) v.play().catch(() => {}); else v.pause();
+            reelShowCtl(sl);
         }
         function reelSyncIcon(v) {
-            const b = v.closest('.reel-slide').querySelector('.rl-play');
-            if (b) b.innerHTML = v.paused ? PLAY_I : PAUSE_I;
+            const sl = v.closest('.reel-slide'), b = sl.querySelector('.reel-center');
+            if (b) b.innerHTML = v.paused ? PLAY_I.replace(/width="20" height="20"/, 'width="30" height="30"') : PAUSE_I.replace(/width="20" height="20"/, 'width="30" height="30"');
+            if (v.paused) { sl.classList.add('show-ctl'); clearTimeout(reelHideT); }
+            else reelHideT = setTimeout(() => sl.classList.remove('show-ctl'), 1800);
         }
 
         function reelSlide(prop) {
             const id = escF(prop.id);
-            return `<section class="reel-slide" data-id="${id}">
+            return `<section class="reel-slide" data-id="${id}" onclick="reelTap(event, this)">
                 <video data-src="${escF(prop.videoUrl)}" ${prop.videoPoster ? `poster="${escF(prop.videoPoster)}"` : ''} playsinline loop preload="none" onplay="reelSyncIcon(this)" onpause="reelSyncIcon(this)"></video>
-                <div class="reel-rail">
-                    <button type="button" class="rl-btn feed-mute" onclick="toggleFeedMute()" aria-label="Sound"><svg class="mute-on" style="display:none" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 8.5a4.5 4.5 0 010 7" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg><svg class="mute-off" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 9l5 6M21 9l-5 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
-                    <button type="button" class="rl-btn rl-play" onclick="reelTogglePlay(this)" aria-label="Play / Pause">${PAUSE_I}</button>
+                <button type="button" class="reel-center reel-ctl" onclick="reelTogglePlay(this)" aria-label="Play / Pause">${PAUSE_I.replace(/width="20" height="20"/, 'width="30" height="30"')}</button>
+                <div class="reel-bottom reel-ctl">
+                    <button type="button" class="reel-x" onclick="history.back()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+                    <button type="button" class="reel-detail" onclick="navigateToDetailsPage('${id}')">View details</button>
                 </div>
-                <button type="button" class="reel-detail" onclick="navigateToDetailsPage('${id}')">View details</button>
             </section>`;
         }
 
@@ -1319,20 +1346,30 @@
             try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch (e) {}
             const feed = document.getElementById('reel-feed');
             feed.innerHTML = list.map(p => reelSlide(p)).join('');
+            feedMuted = false;
             document.getElementById('reel-view').style.display = 'block';
             document.body.style.overflow = 'hidden';
+            if (!window.__reelOpen) { history.pushState({ reel: 1 }, ''); window.__reelOpen = true; }
             const idx = Math.max(0, list.findIndex(p => String(p.id) === String(id)));
             feed.scrollTop = idx * feed.clientHeight;
             feed.querySelectorAll('video').forEach(v => { loadIO.observe(v); reelIO.observe(v); });
         }
 
         function closeReel() {
+            if (window.__reelOpen && history.state && history.state.reel) { history.back(); return; }
+            hideReel();
+        }
+        function hideReel() {
+            window.__reelOpen = false;
+            clearTimeout(reelHideT);
             const feed = document.getElementById('reel-feed');
             feed.querySelectorAll('video').forEach(v => { reelIO.unobserve(v); v.pause(); });
             feed.innerHTML = '';
             document.getElementById('reel-view').style.display = 'none';
             document.body.style.overflow = '';
         }
+        // phone/browser Back → only the video viewer closes; the home list stays exactly where it was
+        window.addEventListener('popstate', () => { if (window.__reelOpen) hideReel(); });
 
         
 function buildSearchPromptSlide() {
