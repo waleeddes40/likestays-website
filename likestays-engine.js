@@ -241,15 +241,18 @@
         opts = opts || window.__lsNavOptions || null;
         if (opts && opts.bookNow) {
             const items = [
+                { id: 'search', icon: '🔍', label: (lang === 'EN' ? 'Search' : labels.search || 'Search'), onclick: "openAirbnbSearchModal()" },
                 { id: 'explore', url: 'index.html', icon: '🧭', label: labels.explore },
-                { id: 'map', url: 'map.html', icon: '📍', label: labels.map },
-                { id: 'booking', url: 'my-bookings.html', icon: '🗓️', label: (lang === 'EN' ? 'Bookings' : labels.booking) },
-                { id: 'highlights', url: 'highlights.html', icon: '✨', label: labels.highlights }
+                { id: 'map', url: 'map.html', icon: '📍', label: labels.map }
             ];
             const html = `
                 <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0));color:#fff;border:0;border-radius:0;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 8px);display:flex;justify-content:space-between;align-items:center">
                     <div style="display:flex;gap:14px;flex:1;min-width:0;justify-content:space-around">
-                        ${items.map(t => `
+                        ${items.map(t => t.onclick ? `
+                            <button type="button" onclick="${t.onclick}" style="background:none;border:0;padding:0;text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:0.9;flex:0 0 auto;text-shadow:0 1px 3px rgba(0,0,0,.9);cursor:pointer">
+                                <span style="display:block;font-size:17px;line-height:1.2">${t.icon}</span>
+                                <span class="notranslate">${t.label}</span>
+                            </button>` : `
                             <a href="${t.url}" style="text-decoration:none;color:inherit;text-align:center;font-size:8px;font-weight:800;opacity:${t.id === activeTab ? 1 : 0.65};flex:0 0 auto;text-shadow:0 1px 3px rgba(0,0,0,.9)">
                                 <span style="display:block;font-size:17px;line-height:1.2">${t.icon}</span>
                                 <span class="notranslate">${t.label}</span>

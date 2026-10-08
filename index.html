@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
     <title>Like Stays | Explore Luxury Stays & Villas</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -147,8 +148,8 @@
   #explore-real-header #general-search-pill-row{margin-top:2px}
 
   /* ---- full-screen feed layout (header floats over it, nav floats under it) ---- */
-  .price-stack{top:calc(var(--hdr,110px) - 4px)!important}
-  .feed-dots{top:calc(var(--hdr,110px) + 12px)!important}
+  .price-stack{top:calc(env(safe-area-inset-top,0px) + 14px)!important}
+  .feed-dots{top:calc(env(safe-area-inset-top,0px) + 14px)!important}
   .feed-info{bottom:calc(env(safe-area-inset-bottom,0px) + 68px)!important}
   .side-circles{bottom:calc(env(safe-area-inset-bottom,0px) + 68px)!important}
   #explore-real-header .neu-flat{padding:3px 7px!important;font-size:9px!important;border-radius:10px!important;flex-shrink:0}
@@ -160,7 +161,32 @@
   .feed-item img.fi-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(26px) brightness(.55);transform:scale(1.2)}
   .feed-item img.fi-main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 
-  .price-stack.no-offer{top:var(--offer-top,60px)!important}
+  .offer-badge-inline{display:flex;align-items:center;background:#F5A524;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden;margin-bottom:3px;max-width:230px}
+
+  /* ================= 🟠 POPUP THEME: search / filter / currency / language / more-menu ================= */
+  /* search bar inside the Search popup: less rounded (not a full capsule) */
+  #airbnb-search-modal .airbnb-search-pill{border-radius:14px!important}
+  /* green → orange accents everywhere inside these popups */
+  #airbnb-search-modal .bg-luxuryGreen,
+  #filter-modal-overlay .bg-luxuryGreen,
+  #global-currency-modal .bg-luxuryGreen,
+  #ls-more-sheet .bg-luxuryGreen{background:#E95420!important}
+  #airbnb-search-modal .text-luxuryGreen,
+  #filter-modal-overlay .text-luxuryGreen,
+  #global-currency-modal .text-luxuryGreen,
+  #ls-more-sheet .text-luxuryGreen{color:#E95420!important}
+  #airbnb-search-modal .neu-btn-green,
+  #filter-modal-overlay .neu-btn-green,
+  #global-currency-modal .neu-btn-green{background:#E95420!important;box-shadow:none!important}
+  #airbnb-search-modal .border-luxuryGreen,
+  #filter-modal-overlay .border-luxuryGreen,
+  #global-currency-modal .border-luxuryGreen{border-color:#E95420!important}
+  /* chips/pills (e.g. filter "Any", "Budget <5K", quick date buttons): orange when active, softer corners */
+  #airbnb-search-modal button.rounded-full:not(.w-9):not(.w-10):not(.h-9):not(.h-10),
+  #filter-modal-overlay button.rounded-full:not(.w-9):not(.w-10):not(.h-9):not(.h-10){border-radius:12px!important}
+  #airbnb-search-modal .bg-emerald-50, #filter-modal-overlay .bg-emerald-50, #global-currency-modal .bg-emerald-50{background:#FFF1EA!important}
+  #airbnb-search-modal .text-emerald-700, #filter-modal-overlay .text-emerald-700, #global-currency-modal .text-emerald-700{color:#E95420!important}
+  #airbnb-search-modal, #filter-modal-overlay, #global-currency-modal, #ls-more-sheet{font-family:'Plus Jakarta Sans',sans-serif}
 
   /* ---- Instagram-style vertical right rail: sound, like, reviews, share, currency, language ---- */
   .side-circles{gap:16px}
@@ -172,9 +198,18 @@
   .center-play-btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:7;cursor:pointer}
   .center-play-btn.show{display:flex}
   .center-play-btn svg{width:30px;height:30px;fill:#fff;margin-left:4px}
+
+  #ls-more-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:195;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.4);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+  #ls-more-sheet{position:fixed;top:calc(env(safe-area-inset-top,0px) + 54px);right:12px;z-index:196;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);min-width:200px;padding:6px;display:none;max-height:70vh;overflow-y:auto}
+  #ls-more-sheet.open{display:block}
+  #ls-more-sheet a{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;text-decoration:none;color:#12331F;font-size:12px;font-weight:700}
+  #ls-more-sheet a:hover{background:#f2f5f3}
+  #ls-more-sheet .sep{height:1px;background:#eee;margin:5px 2px}
+  #ls-more-backdrop{position:fixed;inset:0;z-index:194;display:none}
+  #ls-more-backdrop.open{display:block}
 </style>
 <style>
-  html,body{height:100%;overflow:hidden!important}
+  html,body{height:100%;overflow:hidden!important;background:#000}
   body{padding-bottom:0!important}
   #feed-wrap{position:fixed;left:0;right:0;bottom:0;top:0;z-index:1}
   #explore-property-list{display:block!important;height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;background:#000}
@@ -200,41 +235,10 @@
   #host-sheet.open{transform:none}
 </style>
 </head>
-<body class="no-scrollbar bg-softMint text-gray-800 pb-28">
+<body class="no-scrollbar text-gray-800 pb-28" style="background:#000">
 
     <!-- 🌟 TOP HEADER -->
-    <header id="explore-real-header" class="fixed top-0 left-0 right-0 z-[190] bg-transparent border-0 pt-2.5 pb-3 px-3 sm:px-6" style="padding-top:calc(env(safe-area-inset-top,0px) + 10px)">
-        <div class="max-w-7xl mx-auto flex flex-col space-y-1.5">
-<!-- ROW 2: 🔍 PROMINENT AIRBNB-STYLE SINGLE SEARCH PILL BUTTON -->
-            <div id="general-search-pill-row" class="w-full max-w-xl mx-auto">
-                <button type="button" onclick="openAirbnbSearchModal()" class="w-full airbnb-search-pill rounded-2xl py-2 px-3 sm:py-2.5 sm:px-4 flex items-center justify-between cursor-pointer text-left group">
-                    
-                    <!-- LEFT TEXT -->
-                    <div class="flex flex-col min-w-0 pr-2 pl-2">
-                        <span id="main-search-bar-title" class="text-xs sm:text-sm font-black text-luxuryGreen truncate">Find your next stay</span>
-                        <span id="main-search-bar-subtitle" class="text-[9px] sm:text-[10px] font-bold text-gray-400 truncate">Where • When • Guests</span>
-                    </div>
-
-                    <!-- RIGHT SEARCH ICON CIRCLE -->
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full neu-btn-green flex items-center justify-center text-white shrink-0 shadow-md group-hover:scale-105 transition-transform">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </div>
-                </button>
-            </div>
-
-            <!-- ROW 2: offer of the on-screen property (left, long) + currency + language (right, small) -->
-            <div class="w-full max-w-xl mx-auto flex items-center gap-2">
-                <div id="g-offer-badge" style="flex:1;min-width:0;visibility:hidden;display:flex;align-items:center;background:#F5A524;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden">
-                    <div class="offer-cycle" style="flex:1">
-                        <span class="s1" style="font-weight:900;letter-spacing:.3px">✨ SPECIAL OFFER</span>
-                        <span class="s2" id="g-offer-text">&nbsp;</span>
-                    </div>
-                </div>
     
-            </div>
-
-        </div>
-    </header>
 
     <!-- 🌟 DYNAMIC EXCLUSIVE SUBDOMAIN / HOTEL BANNER -->
     <div id="exclusive-hotel-banner" class="hidden max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3">
@@ -253,6 +257,21 @@
     </div>
 
     <!-- MAIN WORKSPACE -->
+    <div id="ls-more-backdrop" onclick="toggleMoreMenu(false)"></div>
+    <button type="button" id="ls-more-btn" onclick="toggleMoreMenu()" aria-label="More">⋮</button>
+    <div id="ls-more-sheet">
+        <a href="my-bookings.html">🗓️ My Bookings</a>
+        <a href="my-reviews.html">⭐ My Reviews</a>
+        <a href="pending-reviews.html">📝 Pending Reviews</a>
+        <a href="favorites.html">🤍 Favorite Properties</a>
+        <div class="sep"></div>
+        <a href="host-dashboard.html">🏡 Hosting & Listings</a>
+        <a href="my-listings.html">📋 My Listings</a>
+        <div class="sep"></div>
+        <a href="highlights.html">✨ Highlights</a>
+        <a href="https://wa.me/" target="_blank" rel="noopener">💬 Contact Support</a>
+        <a href="about.html">ℹ️ About Like Stays</a>
+    </div>
     <main id="feed-wrap">
         <div id="feed-title-row" class="hidden">
             <h2 id="search-title-label"></h2><p id="search-subtitle-label"></p>
@@ -969,7 +988,8 @@
                 if (!stack) return;
                 const daily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR');
                 const hourly = (prop.hourlyPrice && prop.hourlyPrice > 0) ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : '';
-                stack.innerHTML = `<span class="price-chip" style="font-size:10px"><span style="color:#34d399">●</span> ${daily}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Daily</small></span>${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}`;
+                const offerEl = stack.querySelector('.offer-badge-inline');
+                stack.innerHTML = `${offerEl ? offerEl.outerHTML : ''}<span class="price-chip" style="font-size:10px"><span style="color:#34d399">●</span> ${daily}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Daily</small></span>${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}`;
             });
             const activeSlide = document.querySelector(`.feed-slide[data-id="${window._activeFeedId}"]`);
             if (activeSlide) updateGlobalOverlayForSlide(activeSlide);
@@ -979,6 +999,14 @@
             const sl = document.querySelector(`.feed-slide[data-id="${window._activeFeedId}"]`);
             if (sl) updateGlobalOverlayForSlide(sl);
         }, 30000);
+        function toggleMoreMenu(force) {
+            const sheet = document.getElementById('ls-more-sheet');
+            const backdrop = document.getElementById('ls-more-backdrop');
+            const open = typeof force === 'boolean' ? force : !sheet.classList.contains('open');
+            sheet.classList.toggle('open', open);
+            backdrop.classList.toggle('open', open);
+        }
+
         function setFeedTop() {
             const h = document.querySelector('header');
             if (h) document.documentElement.style.setProperty('--hdr', h.offsetHeight + 'px');
@@ -1008,13 +1036,15 @@
             const dots = items.length > 1 ? `<div class="feed-dots" data-video-first="${hasVideo ? '1' : '0'}" style="visibility:${hasVideo ? 'hidden' : 'visible'}">${items.map((_, d) => `<span id="dot-${id}-${d}" class="w-1.5 h-1.5 rounded-full transition-all ${d === 0 ? 'bg-white scale-125 shadow-xs' : 'bg-white/50'}"></span>`).join('')}</div>` : '';
 
             const activeDeal = getActiveDeal(prop);
+            const offerText = activeDeal ? buildOfferText(prop, activeDeal) : '';
 
             return `
             <section class="feed-slide" data-id="${id}">
                 <div id="carousel-track-${id}" class="feed-media" onscroll="handleCardCarouselScroll('${id}', event)">${items.join('')}</div>
                 <div class="feed-shade"></div>
                 ${dots}
-                <div class="price-stack${activeDeal ? '' : ' no-offer'}">
+                <div class="price-stack${offerText ? '' : ' no-offer'}">
+                    ${offerText ? `<div class="offer-badge-inline"><div class="offer-cycle" style="flex:1"><span class="s1" style="font-weight:900;letter-spacing:.3px">✨ SPECIAL OFFER</span><span class="s2">${escF(offerText)}</span></div></div>` : ''}
                     <span class="price-chip" style="font-size:10px"><span style="color:#34d399">●</span> ${daily}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Daily</small></span>
                     ${hourly ? `<span class="price-chip" style="font-size:9.5px">${hourly}<small style="font-weight:600;color:#d1d5db;font-size:8.5px"> Hourly</small></span>` : ''}
                 </div>
@@ -1103,16 +1133,14 @@
         function updateGlobalOverlayForSlide(slide) {
             if (!slide) return;
             window._activeFeedId = slide.dataset.id;
+            // آفر اب خود کارڈ کے اندر ہی ہے (ہیڈر میں نہیں)، صرف اس کارڈ کی اپنی آفر گھڑی دوبارہ چیک کر لیں کہ ختم تو نہیں ہوئی
             const prop = (typeof masterPropertiesList !== 'undefined' ? masterPropertiesList : []).find(p => String(p.id) === String(slide.dataset.id));
             const deal = prop ? getActiveDeal(prop) : null;
             const offerText = deal ? buildOfferText(prop, deal) : '';
-            const badge = document.getElementById('g-offer-badge');
-            const textEl = document.getElementById('g-offer-text');
-            if (badge) badge.style.visibility = offerText ? 'visible' : 'hidden';
-            if (textEl) textEl.textContent = offerText;
             const stack = slide.querySelector('.price-stack');
+            const badge = slide.querySelector('.offer-badge-inline');
             if (stack) stack.classList.toggle('no-offer', !offerText);
-            setFeedTop();
+            if (badge) { const t = badge.querySelector('.s2'); if (t) t.textContent = offerText; badge.style.display = offerText ? 'flex' : 'none'; }
         }
         const playIO = new IntersectionObserver(entries => {
             entries.forEach(e => {
