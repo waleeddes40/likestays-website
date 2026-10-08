@@ -49,6 +49,7 @@ const LikeStaysFilter = (function() {
         petsOnly: false,
         smokingOnly: false,
         bedrooms: 0,
+        minRating: 0,
         categories: [],
         amenities: [],
         addons: []
@@ -65,6 +66,7 @@ const LikeStaysFilter = (function() {
         state.petsOnly = false;
         state.smokingOnly = false;
         state.bedrooms = 0;
+        state.minRating = 0;
         state.categories = [];
         state.amenities = [];
         state.addons = [];
@@ -79,11 +81,11 @@ const LikeStaysFilter = (function() {
 
             // 1. Search Destination
             if (cleanDest) {
-                const matchCity = (prop.city || '').toLowerCase().includes(cleanDest);
-                const matchLoc = (prop.location || '').toLowerCase().includes(cleanDest);
-                const matchAddress = (prop.address || '').toLowerCase().includes(cleanDest);
-                const matchName = (prop.name || '').toLowerCase().includes(cleanDest);
-                if (!matchCity && !matchLoc && !matchAddress && !matchName) return false;
+                // every typed word must appear somewhere in the stay's place info (so "Bahria Town, Islamabad" works)
+                const hay = [prop.city, prop.location, prop.address, prop.name, prop.country, prop.area, prop.state, prop.province]
+                    .filter(Boolean).join(' ').toLowerCase();
+                const words = cleanDest.split(/[,\s]+/).filter(w => w.length > 1);
+                if (!hay.includes(cleanDest) && !words.every(w => hay.includes(w))) return false;
             }
 
             // 2. Special Offers Only
@@ -136,6 +138,11 @@ const LikeStaysFilter = (function() {
                 } else {
                     if (beds !== state.bedrooms) return false;
                 }
+            }
+
+            // 6b. Minimum star rating
+            if (state.minRating > 0) {
+                if (Number(prop.rating || 0) < state.minRating) return false;
             }
 
             // 7. Categories Filter
