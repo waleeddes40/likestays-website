@@ -229,6 +229,10 @@
         } catch (e) {}
     }
 
+    function getSearchSession() {
+        try { return JSON.parse(localStorage.getItem('likestays_last_search_session') || '{}') || {}; } catch (e) { return {}; }
+    }
+
     // 🎯 4-BUTTON GUEST BOTTOM NAV (MESSAGES PERMANENTLY REMOVED)
     function renderBottomNav(activeTab = 'explore', opts) {
         const existing = document.getElementById('likestays-global-bottom-nav');
@@ -400,6 +404,7 @@
         formatPrice: formatPrice,
         formatCompactPrice: formatCompactPrice,
         saveSearchSession: saveSearchSession,
+        getSearchSession: getSearchSession,
         renderBottomNav: renderBottomNav,
         openCurrencyModal: openCurrencyModal,
         closeCurrencyModal: closeCurrencyModal,
@@ -426,3 +431,193 @@
     });
 
 })();
+
+
+/**
+ * =========================================================================
+ * 🧭 LIKESTAYS GEO HELPER (free – no API key, no paid service, no permission popup)
+ *  • country()  : user's country code, instantly (cached → timezone → browser language)
+ *  • detect()   : same, but first asks a FREE IP→country service (api.country.is, ipwho.is, geojs) and caches it for 7 days
+ *  • popular()  : 4-5 popular cities of that country (world list if the country is unknown)
+ *  • geocode()  : place name → coordinates (built-in city list first, then free OpenStreetMap Nominatim)
+ * =========================================================================
+ */
+(function () {
+    // code : [country name, centre lat, centre lng, map zoom, [[city, lat, lng], ...]]
+    const C = {
+        PK: ['Pakistan', 30.4, 69.3, 5, [['Lahore', 31.5204, 74.3587], ['Islamabad', 33.6844, 73.0479], ['Karachi', 24.8607, 67.0011], ['Murree', 33.9070, 73.3943], ['Swat', 35.2227, 72.4258]]],
+        IN: ['India', 22.5, 79, 5, [['Delhi', 28.6139, 77.2090], ['Mumbai', 19.0760, 72.8777], ['Goa', 15.2993, 74.1240], ['Jaipur', 26.9124, 75.7873], ['Bengaluru', 12.9716, 77.5946]]],
+        BD: ['Bangladesh', 23.7, 90.3, 7, [['Dhaka', 23.8103, 90.4125], ["Cox's Bazar", 21.4272, 92.0058], ['Chittagong', 22.3569, 91.7832], ['Sylhet', 24.8949, 91.8687], ['Khulna', 22.8456, 89.5403]]],
+        LK: ['Sri Lanka', 7.8, 80.7, 7, [['Colombo', 6.9271, 79.8612], ['Kandy', 7.2906, 80.6337], ['Galle', 6.0535, 80.2210], ['Ella', 6.8667, 81.0466], ['Negombo', 7.2083, 79.8358]]],
+        NP: ['Nepal', 28.2, 84.1, 7, [['Kathmandu', 27.7172, 85.3240], ['Pokhara', 28.2096, 83.9856], ['Chitwan', 27.5291, 84.3542], ['Lumbini', 27.4833, 83.2767], ['Nagarkot', 27.7172, 85.5200]]],
+        AE: ['United Arab Emirates', 24.5, 54.6, 7, [['Dubai', 25.2048, 55.2708], ['Abu Dhabi', 24.4539, 54.3773], ['Sharjah', 25.3463, 55.4209], ['Ras Al Khaimah', 25.6741, 55.9804], ['Fujairah', 25.1288, 56.3265]]],
+        SA: ['Saudi Arabia', 24, 45, 5, [['Riyadh', 24.7136, 46.6753], ['Jeddah', 21.4858, 39.1925], ['Makkah', 21.3891, 39.8579], ['Madinah', 24.5247, 39.5692], ['Dammam', 26.4207, 50.0888]]],
+        QA: ['Qatar', 25.3, 51.2, 9, [['Doha', 25.2854, 51.5310], ['Lusail', 25.4200, 51.4900], ['Al Wakrah', 25.1715, 51.6034], ['Al Khor', 25.6804, 51.4968]]],
+        KW: ['Kuwait', 29.3, 47.7, 9, [['Kuwait City', 29.3759, 47.9774], ['Salmiya', 29.3340, 48.0760], ['Hawalli', 29.3328, 48.0286], ['Jahra', 29.3375, 47.6581]]],
+        OM: ['Oman', 21.5, 56, 6, [['Muscat', 23.5880, 58.3829], ['Salalah', 17.0151, 54.0924], ['Nizwa', 22.9333, 57.5333], ['Sohar', 24.3464, 56.7075], ['Sur', 22.5667, 59.5289]]],
+        BH: ['Bahrain', 26.1, 50.55, 10, [['Manama', 26.2285, 50.5860], ['Muharraq', 26.2572, 50.6119], ['Riffa', 26.1300, 50.5550]]],
+        TR: ['Türkiye', 39, 35, 6, [['Istanbul', 41.0082, 28.9784], ['Antalya', 36.8969, 30.7133], ['Ankara', 39.9334, 32.8597], ['Izmir', 38.4237, 27.1428], ['Bodrum', 37.0344, 27.4305]]],
+        EG: ['Egypt', 26.8, 30.8, 6, [['Cairo', 30.0444, 31.2357], ['Sharm El Sheikh', 27.9158, 34.3300], ['Hurghada', 27.2579, 33.8116], ['Alexandria', 31.2001, 29.9187], ['Luxor', 25.6872, 32.6396]]],
+        MA: ['Morocco', 31.8, -6.5, 6, [['Marrakech', 31.6295, -7.9811], ['Casablanca', 33.5731, -7.5898], ['Rabat', 34.0209, -6.8416], ['Tangier', 35.7595, -5.8340], ['Fes', 34.0181, -5.0078]]],
+        JO: ['Jordan', 31.2, 36.5, 7, [['Amman', 31.9454, 35.9284], ['Aqaba', 29.5320, 35.0063], ['Petra', 30.3285, 35.4444], ['Dead Sea', 31.5590, 35.4732]]],
+        GB: ['United Kingdom', 54, -2.5, 5, [['London', 51.5072, -0.1276], ['Manchester', 53.4808, -2.2426], ['Edinburgh', 55.9533, -3.1883], ['Birmingham', 52.4862, -1.8904], ['Liverpool', 53.4084, -2.9916]]],
+        IE: ['Ireland', 53.2, -8, 7, [['Dublin', 53.3498, -6.2603], ['Galway', 53.2707, -9.0568], ['Cork', 51.8985, -8.4756], ['Killarney', 52.0599, -9.5044]]],
+        FR: ['France', 46.6, 2.4, 5, [['Paris', 48.8566, 2.3522], ['Nice', 43.7102, 7.2620], ['Lyon', 45.7640, 4.8357], ['Marseille', 43.2965, 5.3698], ['Bordeaux', 44.8378, -0.5792]]],
+        DE: ['Germany', 51.1, 10.4, 6, [['Berlin', 52.5200, 13.4050], ['Munich', 48.1351, 11.5820], ['Hamburg', 53.5511, 9.9937], ['Frankfurt', 50.1109, 8.6821], ['Cologne', 50.9375, 6.9603]]],
+        ES: ['Spain', 40.2, -3.7, 6, [['Madrid', 40.4168, -3.7038], ['Barcelona', 41.3874, 2.1686], ['Valencia', 39.4699, -0.3763], ['Seville', 37.3891, -5.9845], ['Malaga', 36.7213, -4.4214]]],
+        IT: ['Italy', 42.5, 12.5, 6, [['Rome', 41.9028, 12.4964], ['Milan', 45.4642, 9.1900], ['Venice', 45.4408, 12.3155], ['Florence', 43.7696, 11.2558], ['Naples', 40.8518, 14.2681]]],
+        PT: ['Portugal', 39.5, -8, 6, [['Lisbon', 38.7223, -9.1393], ['Porto', 41.1579, -8.6291], ['Faro', 37.0194, -7.9304], ['Funchal', 32.6669, -16.9241]]],
+        NL: ['Netherlands', 52.2, 5.3, 7, [['Amsterdam', 52.3676, 4.9041], ['Rotterdam', 51.9244, 4.4777], ['The Hague', 52.0705, 4.3007], ['Utrecht', 52.0907, 5.1214]]],
+        CH: ['Switzerland', 46.8, 8.2, 7, [['Zurich', 47.3769, 8.5417], ['Geneva', 46.2044, 6.1432], ['Lucerne', 47.0502, 8.3093], ['Interlaken', 46.6863, 7.8632]]],
+        AT: ['Austria', 47.5, 14.5, 7, [['Vienna', 48.2082, 16.3738], ['Salzburg', 47.8095, 13.0550], ['Innsbruck', 47.2692, 11.4041], ['Graz', 47.0707, 15.4395]]],
+        GR: ['Greece', 38.5, 23.5, 6, [['Athens', 37.9838, 23.7275], ['Santorini', 36.3932, 25.4615], ['Mykonos', 37.4467, 25.3289], ['Crete', 35.2401, 24.8093], ['Thessaloniki', 40.6401, 22.9444]]],
+        US: ['United States', 39.5, -98.5, 4, [['New York', 40.7128, -74.0060], ['Los Angeles', 34.0522, -118.2437], ['Miami', 25.7617, -80.1918], ['Las Vegas', 36.1699, -115.1398], ['San Francisco', 37.7749, -122.4194]]],
+        CA: ['Canada', 52, -95, 4, [['Toronto', 43.6532, -79.3832], ['Vancouver', 49.2827, -123.1207], ['Montreal', 45.5017, -73.5673], ['Calgary', 51.0447, -114.0719], ['Banff', 51.1784, -115.5708]]],
+        MX: ['Mexico', 23.6, -102.5, 5, [['Mexico City', 19.4326, -99.1332], ['Cancun', 21.1619, -86.8515], ['Tulum', 20.2114, -87.4654], ['Playa del Carmen', 20.6296, -87.0739], ['Guadalajara', 20.6597, -103.3496]]],
+        BR: ['Brazil', -14.2, -51.9, 4, [['Rio de Janeiro', -22.9068, -43.1729], ['São Paulo', -23.5505, -46.6333], ['Salvador', -12.9777, -38.5016], ['Florianópolis', -27.5954, -48.5480], ['Brasília', -15.7939, -47.8828]]],
+        AR: ['Argentina', -38.4, -63.6, 4, [['Buenos Aires', -34.6037, -58.3816], ['Mendoza', -32.8895, -68.8458], ['Bariloche', -41.1335, -71.3103], ['Córdoba', -31.4201, -64.1888], ['Salta', -24.7821, -65.4232]]],
+        AU: ['Australia', -25.3, 134, 4, [['Sydney', -33.8688, 151.2093], ['Melbourne', -37.8136, 144.9631], ['Gold Coast', -28.0167, 153.4000], ['Brisbane', -27.4698, 153.0251], ['Perth', -31.9505, 115.8605]]],
+        NZ: ['New Zealand', -41, 174, 5, [['Auckland', -36.8485, 174.7633], ['Queenstown', -45.0312, 168.6626], ['Wellington', -41.2866, 174.7756], ['Rotorua', -38.1368, 176.2497], ['Christchurch', -43.5321, 172.6362]]],
+        ZA: ['South Africa', -29, 24.5, 5, [['Cape Town', -33.9249, 18.4241], ['Johannesburg', -26.2041, 28.0473], ['Durban', -29.8587, 31.0218], ['Pretoria', -25.7479, 28.2293], ['Stellenbosch', -33.9321, 18.8602]]],
+        NG: ['Nigeria', 9.1, 8.7, 6, [['Lagos', 6.5244, 3.3792], ['Abuja', 9.0765, 7.3986], ['Port Harcourt', 4.8156, 7.0498], ['Ibadan', 7.3775, 3.9470], ['Kano', 12.0022, 8.5919]]],
+        KE: ['Kenya', 0.2, 37.9, 6, [['Nairobi', -1.2921, 36.8219], ['Mombasa', -4.0435, 39.6682], ['Diani Beach', -4.2796, 39.5946], ['Nakuru', -0.3031, 36.0800], ['Naivasha', -0.7172, 36.4310]]],
+        MY: ['Malaysia', 4.2, 109, 5, [['Kuala Lumpur', 3.1390, 101.6869], ['Penang', 5.4164, 100.3327], ['Langkawi', 6.3500, 99.8000], ['Johor Bahru', 1.4927, 103.7414], ['Kota Kinabalu', 5.9804, 116.0735]]],
+        SG: ['Singapore', 1.35, 103.82, 11, [['Singapore', 1.3521, 103.8198], ['Sentosa', 1.2494, 103.8303], ['Marina Bay', 1.2816, 103.8636], ['Orchard', 1.3048, 103.8318]]],
+        TH: ['Thailand', 15.2, 101, 6, [['Bangkok', 13.7563, 100.5018], ['Phuket', 7.8804, 98.3923], ['Chiang Mai', 18.7883, 98.9853], ['Pattaya', 12.9236, 100.8825], ['Krabi', 8.0863, 98.9063]]],
+        ID: ['Indonesia', -2.5, 118, 4, [['Bali', -8.4095, 115.1889], ['Jakarta', -6.2088, 106.8456], ['Yogyakarta', -7.7956, 110.3695], ['Bandung', -6.9175, 107.6191], ['Lombok', -8.6500, 116.3249]]],
+        PH: ['Philippines', 12.9, 122.8, 6, [['Manila', 14.5995, 120.9842], ['Cebu', 10.3157, 123.8854], ['Boracay', 11.9674, 121.9248], ['Palawan', 9.8349, 118.7384], ['Davao', 7.1907, 125.4553]]],
+        VN: ['Vietnam', 16, 106.5, 5, [['Hanoi', 21.0285, 105.8542], ['Ho Chi Minh City', 10.8231, 106.6297], ['Da Nang', 16.0544, 108.2022], ['Nha Trang', 12.2388, 109.1967], ['Phu Quoc', 10.2899, 103.9840]]],
+        JP: ['Japan', 36.2, 138.2, 5, [['Tokyo', 35.6762, 139.6503], ['Osaka', 34.6937, 135.5023], ['Kyoto', 35.0116, 135.7681], ['Sapporo', 43.0618, 141.3545], ['Okinawa', 26.2124, 127.6809]]],
+        KR: ['South Korea', 36.4, 127.9, 7, [['Seoul', 37.5665, 126.9780], ['Busan', 35.1796, 129.0756], ['Jeju', 33.4996, 126.5312], ['Incheon', 37.4563, 126.7052], ['Gyeongju', 35.8562, 129.2247]]],
+        CN: ['China', 35.9, 104.2, 4, [['Beijing', 39.9042, 116.4074], ['Shanghai', 31.2304, 121.4737], ['Guangzhou', 23.1291, 113.2644], ['Shenzhen', 22.5431, 114.0579], ['Chengdu', 30.5728, 104.0668]]],
+        HK: ['Hong Kong', 22.35, 114.15, 11, [['Hong Kong', 22.3193, 114.1694], ['Kowloon', 22.3167, 114.1833], ['Tsim Sha Tsui', 22.2988, 114.1722], ['Central', 22.2820, 114.1580]]],
+        MV: ['Maldives', 3.2, 73.2, 7, [['Malé', 4.1755, 73.5093], ['Maafushi', 3.9420, 73.4900], ['Hulhumalé', 4.2167, 73.5400], ['Ari Atoll', 3.8, 72.8]]],
+        RU: ['Russia', 61.5, 95, 3, [['Moscow', 55.7558, 37.6173], ['Saint Petersburg', 59.9311, 30.3609], ['Sochi', 43.5855, 39.7231], ['Kazan', 55.7887, 49.1221]]],
+        AZ: ['Azerbaijan', 40.3, 47.7, 7, [['Baku', 40.4093, 49.8671], ['Gabala', 40.9814, 47.8458], ['Sheki', 41.1919, 47.1706], ['Ganja', 40.6828, 46.3606]]],
+        UZ: ['Uzbekistan', 41.4, 64.6, 6, [['Tashkent', 41.2995, 69.2401], ['Samarkand', 39.6270, 66.9750], ['Bukhara', 39.7747, 64.4286], ['Khiva', 41.3784, 60.3600]]],
+        GE: ['Georgia', 42.2, 43.5, 7, [['Tbilisi', 41.7151, 44.8271], ['Batumi', 41.6168, 41.6367], ['Kutaisi', 42.2679, 42.6946], ['Kazbegi', 42.6586, 44.6436]]]
+    };
+    const GLOBAL = [['Dubai', 25.2048, 55.2708], ['Istanbul', 41.0082, 28.9784], ['London', 51.5072, -0.1276], ['Paris', 48.8566, 2.3522], ['New York', 40.7128, -74.0060]];
+
+    // browser time-zone → country (only needs the zones of the countries above)
+    const TZ = {
+        'Asia/Karachi': 'PK', 'Asia/Kolkata': 'IN', 'Asia/Calcutta': 'IN', 'Asia/Dhaka': 'BD', 'Asia/Colombo': 'LK', 'Asia/Kathmandu': 'NP', 'Asia/Katmandu': 'NP',
+        'Asia/Dubai': 'AE', 'Asia/Riyadh': 'SA', 'Asia/Qatar': 'QA', 'Asia/Kuwait': 'KW', 'Asia/Muscat': 'OM', 'Asia/Bahrain': 'BH', 'Europe/Istanbul': 'TR', 'Asia/Istanbul': 'TR',
+        'Africa/Cairo': 'EG', 'Africa/Casablanca': 'MA', 'Asia/Amman': 'JO', 'Europe/London': 'GB', 'Europe/Dublin': 'IE', 'Europe/Paris': 'FR', 'Europe/Berlin': 'DE', 'Europe/Busingen': 'DE',
+        'Europe/Madrid': 'ES', 'Atlantic/Canary': 'ES', 'Europe/Rome': 'IT', 'Europe/Lisbon': 'PT', 'Atlantic/Madeira': 'PT', 'Atlantic/Azores': 'PT', 'Europe/Amsterdam': 'NL',
+        'Europe/Zurich': 'CH', 'Europe/Vienna': 'AT', 'Europe/Athens': 'GR',
+        'America/New_York': 'US', 'America/Chicago': 'US', 'America/Denver': 'US', 'America/Los_Angeles': 'US', 'America/Phoenix': 'US', 'America/Anchorage': 'US', 'America/Detroit': 'US',
+        'America/Indiana/Indianapolis': 'US', 'America/Boise': 'US', 'Pacific/Honolulu': 'US',
+        'America/Toronto': 'CA', 'America/Vancouver': 'CA', 'America/Edmonton': 'CA', 'America/Winnipeg': 'CA', 'America/Halifax': 'CA', 'America/Montreal': 'CA', 'America/Regina': 'CA', 'America/St_Johns': 'CA',
+        'America/Mexico_City': 'MX', 'America/Cancun': 'MX', 'America/Tijuana': 'MX', 'America/Monterrey': 'MX',
+        'America/Sao_Paulo': 'BR', 'America/Fortaleza': 'BR', 'America/Manaus': 'BR', 'America/Bahia': 'BR', 'America/Recife': 'BR',
+        'America/Argentina/Buenos_Aires': 'AR', 'America/Buenos_Aires': 'AR',
+        'Australia/Sydney': 'AU', 'Australia/Melbourne': 'AU', 'Australia/Brisbane': 'AU', 'Australia/Perth': 'AU', 'Australia/Adelaide': 'AU', 'Australia/Darwin': 'AU', 'Australia/Hobart': 'AU',
+        'Pacific/Auckland': 'NZ', 'Africa/Johannesburg': 'ZA', 'Africa/Lagos': 'NG', 'Africa/Nairobi': 'KE',
+        'Asia/Kuala_Lumpur': 'MY', 'Asia/Kuching': 'MY', 'Asia/Singapore': 'SG', 'Asia/Bangkok': 'TH', 'Asia/Jakarta': 'ID', 'Asia/Makassar': 'ID', 'Asia/Jayapura': 'ID',
+        'Asia/Manila': 'PH', 'Asia/Ho_Chi_Minh': 'VN', 'Asia/Saigon': 'VN', 'Asia/Tokyo': 'JP', 'Asia/Seoul': 'KR', 'Asia/Shanghai': 'CN', 'Asia/Urumqi': 'CN', 'Asia/Chongqing': 'CN',
+        'Asia/Hong_Kong': 'HK', 'Indian/Maldives': 'MV', 'Europe/Moscow': 'RU', 'Asia/Yekaterinburg': 'RU', 'Asia/Novosibirsk': 'RU', 'Asia/Vladivostok': 'RU',
+        'Asia/Baku': 'AZ', 'Asia/Tashkent': 'UZ', 'Asia/Samarkand': 'UZ', 'Asia/Tbilisi': 'GE'
+    };
+
+    const KEY = 'likestays_geo_v1', TTL = 7 * 24 * 3600 * 1000, GCKEY = 'likestays_geo_cache_v1';
+    const ok = c => typeof c === 'string' && /^[A-Z]{2}$/.test(c);
+
+    function cached() {
+        try { const o = JSON.parse(localStorage.getItem(KEY) || 'null'); if (o && ok(o.c) && Date.now() - o.t < TTL) return o.c; } catch (e) {}
+        return null;
+    }
+    function fromTimezone() {
+        try { return TZ[Intl.DateTimeFormat().resolvedOptions().timeZone] || null; } catch (e) { return null; }
+    }
+    function fromLanguage() {
+        try {
+            const ls = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+            for (const l of ls) { const p = String(l || '').split('-'); const r = (p[p.length - 1] || '').toUpperCase(); if (p.length > 1 && C[r]) return r; }
+        } catch (e) {}
+        return null;
+    }
+    function country() { return cached() || fromTimezone() || fromLanguage() || null; }
+
+    function fetchJSON(url, ms) {
+        const ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+        const timer = setTimeout(() => ctl && ctl.abort(), ms);
+        return fetch(url, { signal: ctl ? ctl.signal : undefined, cache: 'no-store' })
+            .then(r => { clearTimeout(timer); if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+            .catch(e => { clearTimeout(timer); throw e; });
+    }
+    const IP_SOURCES = [
+        () => fetchJSON('https://api.country.is/', 3500).then(d => d && d.country),
+        () => fetchJSON('https://ipwho.is/', 3500).then(d => d && d.success !== false && d.country_code),
+        () => fetchJSON('https://get.geojs.io/v1/ip/country.json', 3500).then(d => (Array.isArray(d) ? d[0] : d) && (Array.isArray(d) ? d[0] : d).country)
+    ];
+    let pending = null;
+    function detect() {
+        const c = cached();
+        if (c) return Promise.resolve(c);
+        if (pending) return pending;
+        pending = (async () => {
+            for (const src of IP_SOURCES) {
+                try {
+                    const code = String(await src() || '').toUpperCase();
+                    if (ok(code)) { try { localStorage.setItem(KEY, JSON.stringify({ c: code, t: Date.now() })); } catch (e) {} return code; }
+                } catch (e) { /* try next service */ }
+            }
+            return fromTimezone() || fromLanguage() || null;
+        })();
+        pending.then(() => { setTimeout(() => { pending = null; }, 60000); });
+        return pending;
+    }
+
+    function data(code) {
+        const d = C[code];
+        return d ? { code, name: d[0], lat: d[1], lng: d[2], zoom: d[3], cities: d[4].map(x => ({ name: x[0], lat: x[1], lng: x[2] })) } : null;
+    }
+    function popular(code) {
+        const d = data(code);
+        return d ? d.cities.slice(0, 5) : GLOBAL.map(x => ({ name: x[0], lat: x[1], lng: x[2] }));
+    }
+
+    function findCity(text) {
+        const q = String(text || '').toLowerCase().replace(/\s+/g, ' ').trim();
+        if (q.length < 2) return null;
+        let best = null, bestScore = 0;
+        Object.keys(C).forEach(code => {
+            const d = C[code];
+            const cn = d[0].toLowerCase();
+            if (q === cn || (cn.length > 4 && q.includes(cn))) { if (4 + cn.length > bestScore) { bestScore = 4 + cn.length; best = { lat: d[1], lng: d[2], zoom: d[3], name: d[0] }; } }
+            d[4].forEach(c => {
+                const n = c[0].toLowerCase();
+                let s = 0;
+                if (q === n) s = 100 + n.length;
+                else if (n.length >= 3 && q.includes(n)) s = 50 + n.length;
+                else if (q.length >= 3 && n.startsWith(q)) s = 10 + q.length;
+                if (s > bestScore) { bestScore = s; best = { lat: c[1], lng: c[2], zoom: 12, name: c[0] }; }
+            });
+        });
+        return best;
+    }
+
+    function geocode(text) {
+        const q = String(text || '').trim();
+        if (!q) return Promise.resolve(null);
+        const hit = findCity(q);
+        if (hit) return Promise.resolve(hit);
+        let store = {};
+        try { store = JSON.parse(localStorage.getItem(GCKEY) || '{}') || {}; } catch (e) {}
+        const k = q.toLowerCase();
+        if (store[k]) return Promise.resolve(store[k]);
+        return fetchJSON('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=' + encodeURIComponent(q), 6000)
+            .then(a => {
+                if (!a || !a[0]) return null;
+                const g = { lat: +a[0].lat, lng: +a[0].lon, zoom: 12, bbox: a[0].boundingbox ? a[0].boundingbox.map(Number) : null, name: q };
+                try { store[k] = g; const ks = Object.keys(store); if (ks.length > 60) delete store[ks[0]]; localStorage.setItem(GCKEY, JSON.stringify(store)); } catch (e) {}
+                return g;
+            })
+            .catch(() => null);
+    }
+
+    window.LikeStaysGeo = { country: country, detect: detect, data: data, popular: popular, findCity: findCity, geocode: geocode };
+    window.addEventListener('DOMContentLoaded', () => { detect(); });   // warm the cache in the background
+})();
+

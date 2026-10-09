@@ -338,10 +338,14 @@
   #sd-cal [class*="bg-luxuryGreen/20"]{background:#FBEAE3!important;color:#D97757!important;border-radius:0!important}
   .sd-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font:600 10.5px Inter,sans-serif;color:#111827}
   .sd-foot button{border:0;background:none;color:#ef4444;font:700 10.5px Inter,sans-serif;cursor:pointer}
-  .sd-stepper{display:flex;align-items:center;justify-content:center;gap:22px}
-  .sd-step{width:40px;height:40px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:600 22px Inter,sans-serif;line-height:1;cursor:pointer}
+  .sd-stepper{display:flex;align-items:center;justify-content:center;gap:18px}
+  .sd-pop{font:700 10px Inter,sans-serif;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 6px}
+  .sd-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .sd-city{border:1px solid #e5e7eb;background:#fff;color:#111827;border-radius:999px;padding:6px 12px;font:600 12px Inter,sans-serif;cursor:pointer}
+  .sd-city:active{background:#FBEAE3;border-color:#D97757}
+  .sd-step{width:34px;height:34px;border-radius:9px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:600 19px Inter,sans-serif;line-height:1;cursor:pointer}
   .sd-step:active{background:#D97757;color:#fff;border-color:#D97757}
-  #modal-guests-num{font:800 20px Inter,sans-serif;color:#111827;min-width:34px;text-align:center}
+  #modal-guests-num{font:800 17px Inter,sans-serif;color:#111827;min-width:28px;text-align:center}
   /* ===== colour + corner overrides (Claude terracotta, smaller radius) ===== */
   .bg-emerald-50,.hover\:bg-emerald-50:hover{background:#F6F6F7!important}
   .text-emerald-700,.text-emerald-800{color:#111827!important}
@@ -469,6 +473,7 @@
                     <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen">Where are you going?</span>
                 </div>
                 <input type="text" id="home-search-dest" placeholder="Search any destination, city or country..." class="w-full text-xs font-extrabold p-3 bg-white rounded-xl border border-gray-200 outline-none text-luxuryGreen placeholder-gray-400">
+                <div id="sd-cities"></div>
             </div>
 
             <!-- WHEN: the calendar sits right here (no separate popup) -->
@@ -1131,8 +1136,51 @@
         }
 
 
+        function renderCityChips() {
+            const box = document.getElementById('sd-cities');
+            if (!box || !window.LikeStaysGeo) return;
+            let list = [];
+            try { list = LikeStaysGeo.popular(LikeStaysGeo.country()) || []; } catch (e) {}
+            const names = list.map(c => typeof c === 'string' ? c : c.name).slice(0, 5);
+            box.innerHTML = names.length ? '<div class="sd-pop">Popular cities</div><div class="sd-chips">' +
+                names.map(n => `<button type="button" class="sd-city" data-c="${escF(n)}" onclick="pickCity(this.dataset.c)">${escF(n)}</button>`).join('') + '</div>' : '';
+        }
+
+
+        function pickCity(name) {
+            const i = document.getElementById('home-search-dest');
+            if (i) i.value = name;
+            updateMainSearchPillDisplay();
+        }
+
+
+        function restoreSessionDates(ci, co) {
+            const mk = str => {
+                const m = String(str || '').match(/^([A-Za-z]{3})\w*\s+(\d{1,2})$/);
+                if (!m) return null;
+                const mi = MONTH_NAMES.findIndex(n => n.slice(0, 3).toLowerCase() === m[1].toLowerCase());
+                if (mi < 0) return null;
+                const now = new Date(); now.setHours(0, 0, 0, 0);
+                let d = new Date(now.getFullYear(), mi, +m[2]);
+                return d;
+            };
+            const a = mk(ci), b = mk(co);
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            if (!a || !b || a < today) return;
+            if (b < a) b.setFullYear(b.getFullYear() + 1);
+            homeStartDate = a; homeEndDate = b;
+            calCurrentMonth = a.getMonth(); try { calCurrentYear = a.getFullYear(); } catch (e) {}
+            const nights = Math.round((b - a) / 86400000);
+            const el = document.getElementById('home-dates-display');
+            if (el) el.innerText = `${MONTH_NAMES[a.getMonth()].slice(0,3)} ${a.getDate()} - ${MONTH_NAMES[b.getMonth()].slice(0,3)} ${b.getDate()} (${nights}N)`;
+            try { renderHomeCalendar(); } catch (e) {}
+        }
+
+
         function openAirbnbSearchModal() {
             document.getElementById('airbnb-search-modal').classList.remove('hidden');
+            renderCityChips();
+            try { if (window.LikeStaysGeo) LikeStaysGeo.detect().then(renderCityChips).catch(() => {}); } catch (e) {}
         }
 
 
@@ -1327,9 +1375,46 @@
             renderMapPins(false);
         });
 
-        // ---- map: no fixed city. Starts on an overview of Pakistan, then fits to the user's searched city / the stays shown ----
+        // ---- map: no fixed city. Starts on the visitor's own country (auto-detected), then moves to the searched city / the stays shown ----
+        let mapTouched = false;
+        function currentDest() { const i = document.getElementById('home-search-dest'); return i ? i.value.trim() : ''; }
+        function setCountryView(animate) {
+            let d = null;
+            try { d = window.LikeStaysGeo && LikeStaysGeo.data(LikeStaysGeo.country()); } catch (e) {}
+            if (d && d.lat != null) mapInstance.setView([d.lat, d.lng], d.zoom || 5, { animate: !!animate });
+            else mapInstance.setView([20, 10], 2, { animate: !!animate });
+        }
+        function focusMap(pts) {
+            const dest = currentDest();
+            const targetId = new URLSearchParams(window.location.search).get('id');
+            const opts = { paddingTopLeft: [30, 150], paddingBottomRight: [30, 100], maxZoom: 15 };
+            if (targetId && pts.length === 1) { mapInstance.setView(pts[0], 14); return; }
+            if (dest) {
+                if (pts.length) {
+                    if (pts.length === 1) mapInstance.setView(pts[0], 14);
+                    else mapInstance.fitBounds(L.latLngBounds(pts), opts);
+                } else if (window.LikeStaysGeo) {
+                    const asked = dest;
+                    LikeStaysGeo.geocode(dest).then(g => {
+                        if (!g || currentDest() !== asked || mapTouched) return;
+                        if (g.bbox) mapInstance.fitBounds([[g.bbox[0], g.bbox[2]], [g.bbox[1], g.bbox[3]]], opts);
+                        else mapInstance.setView([g.lat, g.lng], g.zoom || 11);
+                    }).catch(() => {});
+                }
+                return;
+            }
+            if (pts.length && targetId) { mapInstance.setView(pts[0], 14); return; }
+            setCountryView(false);
+        }
         function initLeafletMap() {
-            mapInstance = L.map('main-interactive-map', { zoomControl: false }).setView([30.3753, 69.3451], 5);
+            mapInstance = L.map('main-interactive-map', { zoomControl: false });
+            setCountryView(false);
+            ['mousedown', 'touchstart', 'wheel'].forEach(ev => document.getElementById('main-interactive-map').addEventListener(ev, () => { mapTouched = true; }, { passive: true }));
+            try {
+                if (window.LikeStaysGeo) LikeStaysGeo.detect().then(() => {
+                    if (!mapTouched && !currentDest() && !new URLSearchParams(window.location.search).get('id')) setCountryView(true);
+                }).catch(() => {});
+            } catch (e) {}
             L.control.zoom({ position: 'topright' }).addTo(mapInstance);
             L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=MOxpRpKBHrWYcJ4BVchk', {
                 attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -1364,6 +1449,7 @@
             const dest = q.get('destination') || q.get('city') || q.get('q') || session.destination || '';
             const guests = parseInt(q.get('guests')) || session.guests || 2;
             if (dest) document.getElementById('home-search-dest').value = dest;
+            if (session.checkin && session.checkout) restoreSessionDates(session.checkin, session.checkout);
             homeGuestsCount = guests;
             document.getElementById('home-guests-display-btn').innerText = `${guests} Guests`;
             document.getElementById('modal-guests-num').innerText = guests;
@@ -1475,10 +1561,7 @@
 
             document.getElementById('map-empty').style.display = shownStays.length ? 'none' : 'block';
 
-            if (fit && pts.length) {
-                if (pts.length === 1) mapInstance.setView(pts[0], 14);
-                else mapInstance.fitBounds(L.latLngBounds(pts), { paddingTopLeft: [30, 150], paddingBottomRight: [30, 100], maxZoom: 15 });
-            }
+            if (fit) { mapTouched = false; focusMap(pts); }
             if (reopen) reopen.openPopup(); else selectedStayId = null;
         }
 
