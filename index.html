@@ -312,6 +312,34 @@
   .reel-x{width:46px;height:46px;border-radius:12px;border:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
   .cd-vtag{position:absolute;bottom:10px;right:12px;z-index:6;display:flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;letter-spacing:.2px;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
   .cd-vtag i{width:6px;height:6px;border-radius:50%;background:#D97757;display:block}
+    /* ===== v9: filter options = tap the whole card (no tick boxes) ===== */
+  #filter-modal-overlay input[type=checkbox]{position:absolute!important;opacity:0!important;pointer-events:none!important;width:0!important;height:0!important;margin:0!important}
+  #filter-modal-overlay label{position:relative;justify-content:center!important;text-align:center;flex-direction:column!important;gap:1px;user-select:none;-webkit-user-select:none;transition:background .12s,color .12s,border-color .12s}
+  #filter-modal-overlay label .truncate{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+  #filter-modal-overlay label:active{transform:scale(.98)}
+  #filter-modal-overlay label:has(input:checked){background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+  #filter-modal-overlay label:has(input:checked) span,#filter-modal-overlay label:has(input:checked) small,#filter-modal-overlay label:has(input:checked) p{color:#fff!important}
+  #modal-services-list label small{display:block;font-size:9px;font-weight:600;color:#8b93a1;line-height:1.1}
+    /* ===== v10: calendar + guests live inside the Search drawer ===== */
+  .sd-box{border:1px solid #e5e7eb;border-radius:10px;padding:10px;background:#fff}
+  .sd-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .sd-label{font:700 10px Inter,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#6b7280}
+  .sd-val{font:700 11.5px Inter,sans-serif;color:#111827;text-align:right;max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sd-month{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .sd-arrow{width:28px;height:28px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#111827;font-size:11px;font-weight:700;cursor:pointer}
+  .sd-mid{display:flex;flex-direction:column;align-items:center;line-height:1.25}
+  .sd-mid #home-calendar-month-label{font:800 12px Inter,sans-serif;color:#111827;text-transform:uppercase;letter-spacing:.5px}
+  .sd-mid #home-cal-subtext{font:600 9.5px Inter,sans-serif;color:#8b93a1}
+  .sd-dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font:700 9px Inter,sans-serif;color:#9ca3af;margin-bottom:2px}
+  #sd-cal #home-calendar-days-container button{padding:7px 0!important;font-size:12px!important;border-radius:8px!important;color:#111827}
+  #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
+  #sd-cal [class*="bg-luxuryGreen/20"]{background:#FBEAE3!important;color:#D97757!important;border-radius:0!important}
+  .sd-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font:600 10.5px Inter,sans-serif;color:#111827}
+  .sd-foot button{border:0;background:none;color:#ef4444;font:700 10.5px Inter,sans-serif;cursor:pointer}
+  .sd-stepper{display:flex;align-items:center;justify-content:center;gap:22px}
+  .sd-step{width:40px;height:40px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:600 22px Inter,sans-serif;line-height:1;cursor:pointer}
+  .sd-step:active{background:#D97757;color:#fff;border-color:#D97757}
+  #modal-guests-num{font:800 20px Inter,sans-serif;color:#111827;min-width:34px;text-align:center}
   /* ===== colour + corner overrides (Claude terracotta, smaller radius) ===== */
   .bg-emerald-50,.hover\:bg-emerald-50:hover{background:#F6F6F7!important}
   .text-emerald-700,.text-emerald-800{color:#111827!important}
@@ -452,23 +480,27 @@
                 <input type="text" id="home-search-dest" placeholder="Search any destination, city or country..." class="w-full text-xs font-extrabold p-3 bg-white rounded-xl border border-gray-200 outline-none text-luxuryGreen placeholder-gray-400">
             </div>
 
-            <!-- STEP 2 & 3: DATES & GUESTS -->
-            <div class="grid grid-cols-1 gap-3">
-                <button type="button" onclick="toggleHomeCalendarModal(true)" class="neu-flat bg-softMint/50 p-3 rounded-2xl border border-gray-200 text-left cursor-pointer hover:border-luxuryGreen space-y-1 group">
-                    <div class="flex items-center space-x-1.5">
-                        <span class="text-xs">📅</span>
-                        <span class="text-[9px] font-black uppercase text-gray-400 tracking-wider">When</span>
-                    </div>
-                    <span id="home-dates-display" class="block text-xs font-black text-luxuryGreen truncate group-hover:text-luxuryLightGreen">Add Dates</span>
-                </button>
+            <!-- WHEN: the calendar sits right here (no separate popup) -->
+            <div class="sd-box" id="sd-cal">
+                <div class="sd-head"><span class="sd-label">When</span><span id="home-dates-display" class="sd-val">Add Dates</span></div>
+                <div class="sd-month">
+                    <button type="button" onclick="changeHomeCalendarMonth(-1)" class="sd-arrow" aria-label="Previous month">❮</button>
+                    <div class="sd-mid"><span id="home-calendar-month-label">Month</span><span id="home-cal-subtext">Select Check-in Date</span></div>
+                    <button type="button" onclick="changeHomeCalendarMonth(1)" class="sd-arrow" aria-label="Next month">❯</button>
+                </div>
+                <div class="sd-dow"><span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span></div>
+                <div id="home-calendar-days-container" class="grid grid-cols-7 gap-1 text-center text-xs font-bold"></div>
+                <div class="sd-foot"><span id="home-cal-summary">Tap check-in then check-out</span><button type="button" onclick="resetHomeDates()">✕ Reset</button></div>
+            </div>
 
-                <button type="button" onclick="toggleGuestsModal(true)" class="neu-flat bg-softMint/50 p-3 rounded-2xl border border-gray-200 text-left cursor-pointer hover:border-luxuryGreen space-y-1 group">
-                    <div class="flex items-center space-x-1.5">
-                        <span class="text-xs">👥</span>
-                        <span class="text-[9px] font-black uppercase text-gray-400 tracking-wider">Who</span>
-                    </div>
-                    <span id="home-guests-display-btn" class="block text-xs font-black text-luxuryGreen truncate group-hover:text-luxuryLightGreen">2 Guests</span>
-                </button>
+            <!-- WHO: guests stepper, also inline -->
+            <div class="sd-box">
+                <div class="sd-head"><span class="sd-label">Total Guests</span><span id="home-guests-display-btn" class="sd-val">2 Guests</span></div>
+                <div class="sd-stepper">
+                    <button type="button" onclick="updateModalGuestsCount(-1)" class="sd-step" aria-label="Fewer guests">−</button>
+                    <span id="modal-guests-num">2</span>
+                    <button type="button" onclick="updateModalGuestsCount(1)" class="sd-step" aria-label="More guests">+</button>
+                </div>
             </div>
 
             <!-- Filters ab teen dots ke saath wale filter button mein hain -->
@@ -481,59 +513,6 @@
             <button type="button" onclick="submitAirbnbSearch()" class="w-full neu-btn-green text-white text-xs font-black py-3.5 rounded-2xl uppercase tracking-wider cursor-pointer shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-2">
                 <span>🔍</span>
                 <span>Search Stays</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- ========================================== 📅 2-DATES RANGE CALENDAR ========================================== -->
-    <div id="home-calendar-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
-        <div class="bg-[#F7F7F8] w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-white space-y-3.5 animate-pop-in text-left">
-            <div class="flex justify-between items-center pb-2 border-b border-gray-200/70">
-                <button type="button" onclick="changeHomeCalendarMonth(-1)" class="w-7 h-7 rounded-lg neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❮</button>
-                <div class="text-center">
-                    <span id="home-calendar-month-label" class="text-xs font-black text-luxuryGreen uppercase tracking-wider block">August 2026</span>
-                    <span id="home-cal-subtext" class="text-[8.5px] font-bold text-gray-400">Select Check-in Date</span>
-                </div>
-                <button type="button" onclick="changeHomeCalendarMonth(1)" class="w-7 h-7 rounded-lg neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❯</button>
-            </div>
-
-            <div class="grid grid-cols-7 text-center text-[9px] font-black text-gray-400 uppercase">
-                <span>SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
-            </div>
-
-            <div id="home-calendar-days-container" class="grid grid-cols-7 gap-1 text-center text-xs font-bold pt-1"></div>
-
-            <div class="flex justify-between items-center text-[8.5px] font-bold text-gray-400 border-t border-gray-200/70 pt-2.5 px-1">
-                <span id="home-cal-summary" class="text-luxuryGreen font-black">Tap check-in then check-out</span>
-                <button type="button" onclick="resetHomeDates()" class="text-red-500 hover:underline cursor-pointer font-bold">✕ Reset</button>
-            </div>
-
-            <button type="button" onclick="toggleHomeCalendarModal(false)" class="w-full neu-flat bg-white text-luxuryGreen text-xs font-black py-2.5 rounded-xl uppercase tracking-wider cursor-pointer border border-gray-200">
-                Done & Close
-            </button>
-        </div>
-    </div>
-
-    <!-- ========================================== 👥 GUESTS SELECTOR MODAL ========================================== -->
-    <div id="home-guests-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
-        <div class="bg-[#F7F7F8] w-full max-w-xs rounded-3xl p-5 shadow-2xl neu-flat border border-white space-y-4 animate-pop-in text-left">
-            <div class="flex justify-between items-center pb-2 border-b border-gray-200">
-                <span class="text-xs font-black text-luxuryGreen uppercase tracking-wider">Select Guests</span>
-                <button type="button" onclick="toggleGuestsModal(false)" class="text-xs font-bold text-gray-400 hover:text-luxuryGreen">✕</button>
-            </div>
-            <div class="flex justify-between items-center py-2">
-                <div>
-                    <span class="text-xs font-bold text-luxuryGreen block">Total Guests</span>
-                    <span class="text-[9px] text-gray-400">Adults and children</span>
-                </div>
-                <div class="flex items-center space-x-2.5">
-                    <button type="button" onclick="updateModalGuestsCount(-1)" class="w-7 h-7 rounded-full neu-circle-btn flex items-center justify-center text-sm font-black text-luxuryGreen cursor-pointer">-</button>
-                    <span id="modal-guests-num" class="w-5 text-center font-black text-xs text-luxuryGreen">2</span>
-                    <button type="button" onclick="updateModalGuestsCount(1)" class="w-7 h-7 rounded-full neu-circle-btn flex items-center justify-center text-sm font-black text-luxuryGreen cursor-pointer">+</button>
-                </div>
-            </div>
-            <button type="button" onclick="confirmModalGuestsSelection()" class="w-full neu-btn-green text-white text-xs font-bold py-3 rounded-xl uppercase tracking-wider cursor-pointer shadow-md active:scale-95 transition-transform">
-                Confirm Guests
             </button>
         </div>
     </div>
@@ -557,15 +536,15 @@
             <div class="p-5 overflow-y-auto no-scrollbar space-y-4 text-left flex-grow">
                 
                 <!-- 1. SPECIAL OFFERS ONLY -->
-                <div class="bg-gradient-to-r from-amber-50 to-amber-100/70 p-3 rounded-2xl border border-amber-300 flex items-center justify-between shadow-xs">
+                <label class="bg-white p-3 rounded-2xl border border-gray-200 flex items-center justify-between shadow-xs cursor-pointer">
                     <div class="space-y-0.5">
-                        <span class="text-xs font-black text-amber-950 uppercase flex items-center space-x-1">
-                            <span class="spark-icon text-amber-500">⚡</span> <span>Show Only Special Offers</span>
+                        <span class="text-xs font-black text-gray-900 uppercase flex items-center space-x-1">
+                            <span>Show Only Special Offers</span>
                         </span>
-                        <p class="text-[8.5px] text-amber-900 font-semibold">Active flash deals and packages</p>
+                        <p class="text-[8.5px] text-gray-500 font-semibold">Active flash deals and packages</p>
                     </div>
-                    <input type="checkbox" id="filter-only-offers" onchange="handleOfferToggle(this.checked)" class="w-4 h-4 accent-luxuryGreen cursor-pointer">
-                </div>
+                    <input type="checkbox" id="filter-only-offers" onchange="handleOfferToggle(this.checked)">
+                </label>
 
                 <!-- 2. DAILY VS HOURLY RATE SWITCHER CARDS -->
                 <div class="space-y-1.5">
@@ -602,17 +581,17 @@
                 <div class="grid grid-cols-3 gap-1.5">
                     <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-row-reverse items-center justify-between text-left hover:border-luxuryGreen">
                         <input type="checkbox" id="filter-self-checkin" onchange="LikeStaysFilter.state.selfCheckinOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
-                        <span class="text-[9px] font-bold text-gray-700 leading-tight">🔑 Self Check-in</span>
+                        <span class="text-[9px] font-bold text-gray-700 leading-tight">Self Check-in</span>
                     </label>
 
                     <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-row-reverse items-center justify-between text-left hover:border-luxuryGreen">
                         <input type="checkbox" id="filter-pets" onchange="LikeStaysFilter.state.petsOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
-                        <span class="text-[9px] font-bold text-gray-700 leading-tight">🐾 Pets Allowed</span>
+                        <span class="text-[9px] font-bold text-gray-700 leading-tight">Pets Allowed</span>
                     </label>
 
                     <label class="p-2 bg-white rounded-xl border border-gray-200 cursor-pointer flex flex-row-reverse items-center justify-between text-left hover:border-luxuryGreen">
                         <input type="checkbox" id="filter-smoking" onchange="LikeStaysFilter.state.smokingOnly = this.checked; updateLiveFilterMatchesCount();" class="accent-luxuryGreen">
-                        <span class="text-[9px] font-bold text-gray-700 leading-tight">🚭 Smoking</span>
+                        <span class="text-[9px] font-bold text-gray-700 leading-tight">Smoking</span>
                     </label>
                 </div>
 
@@ -646,7 +625,7 @@
 
                 <!-- 8. EXTRA SERVICES -->
                 <div class="space-y-2">
-                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Extra Services Add-ons</span>
+                    <span class="text-[10px] font-black uppercase text-luxuryGreen block">Extra Services (Extra Pay)</span>
                     <div id="modal-services-list" class="grid grid-cols-2 gap-1.5"></div>
                 </div>
 
@@ -1342,16 +1321,28 @@
         function openReel(id) {
             const list = (currentlyRenderedList && currentlyRenderedList.length ? currentlyRenderedList : masterPropertiesList).filter(p => p.videoUrl);
             if (!list.length) return;
-            let favs = [];
-            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch (e) {}
             const feed = document.getElementById('reel-feed');
+            feedMuted = false;                       // sound on from the first tap
             feed.innerHTML = list.map(p => reelSlide(p)).join('');
-            feedMuted = false;
             document.getElementById('reel-view').style.display = 'block';
             document.body.style.overflow = 'hidden';
             if (!window.__reelOpen) { history.pushState({ reel: 1 }, ''); window.__reelOpen = true; }
             const idx = Math.max(0, list.findIndex(p => String(p.id) === String(id)));
             feed.scrollTop = idx * feed.clientHeight;
+
+            // start the tapped video RIGHT NOW, inside the tap (browsers only allow sound-autoplay inside a tap)
+            const first = feed.children[idx] && feed.children[idx].querySelector('video');
+            if (first) {
+                if (first.dataset.src) { first.src = first.dataset.src; first.preload = 'auto'; delete first.dataset.src; }
+                first.muted = false;
+                const p = first.play();
+                if (p && p.catch) p.catch(() => { first.muted = true; first.play().catch(() => {}); });   // if the browser still refuses sound, at least play
+                // slow network: start as soon as enough data has arrived
+                first.addEventListener('canplay', () => { if (window.__reelOpen && first.paused && first.isConnected) first.play().catch(() => {}); }, { once: true });
+                reelShowCtl(first.closest('.reel-slide'));
+                setTimeout(() => { if (!first.paused) first.closest('.reel-slide').classList.remove('show-ctl'); }, 600);
+            }
+            // the other videos load lazily and play only while they are in front
             feed.querySelectorAll('video').forEach(v => { loadIO.observe(v); reelIO.observe(v); });
         }
 
@@ -1548,11 +1539,25 @@ function buildSearchPromptSlide() {
             });
         }
 
+        function initCalendarSwipe() {
+            const el = document.getElementById('sd-cal');
+            if (!el || el.dataset.sw) return;
+            el.dataset.sw = '1';
+            let x0 = null, y0 = null;
+            el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+            el.addEventListener('touchend', e => {
+                if (x0 == null) return;
+                const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+                x0 = null;
+                if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) changeHomeCalendarMonth(dx < 0 ? 1 : -1);   // swipe left = next month
+            }, { passive: true });
+        }
+        document.addEventListener('DOMContentLoaded', initCalendarSwipe);
+
         function toggleHomeCalendarModal(open) {
-            document.getElementById('home-calendar-modal').classList.toggle('hidden', !open);
+            // calendar is part of the Search drawer now – just make sure it is drawn
             if (open) renderHomeCalendar();
         }
-
         function changeHomeCalendarMonth(delta) {
             calCurrentMonth += delta;
             if (calCurrentMonth < 0) { calCurrentMonth = 11; calCurrentYear--; }
@@ -1639,10 +1644,7 @@ function buildSearchPromptSlide() {
                 saveSearchState();
                 renderHomeCalendar();
 
-                setTimeout(() => {
-                    toggleHomeCalendarModal(false);
-                    updateMainSearchPillDisplay();
-                }, 2000);
+                updateMainSearchPillDisplay();
             }
         }
 
@@ -1656,18 +1658,17 @@ function buildSearchPromptSlide() {
         }
 
         function toggleGuestsModal(open) {
-            document.getElementById('home-guests-modal').classList.toggle('hidden', !open);
-            if (open) {
-                tempModalGuests = homeGuestsCount;
-                document.getElementById('modal-guests-num').innerText = tempModalGuests;
-            }
+            // guests stepper is part of the Search drawer now
+            if (open) { tempModalGuests = homeGuestsCount; const n = document.getElementById('modal-guests-num'); if (n) n.innerText = homeGuestsCount; }
         }
-
         function updateModalGuestsCount(delta) {
-            tempModalGuests = Math.max(1, tempModalGuests + delta);
-            document.getElementById('modal-guests-num').innerText = tempModalGuests;
+            homeGuestsCount = Math.max(1, Math.min(99, homeGuestsCount + delta));
+            tempModalGuests = homeGuestsCount;
+            const n = document.getElementById('modal-guests-num'); if (n) n.innerText = homeGuestsCount;
+            const d = document.getElementById('home-guests-display-btn'); if (d) d.innerText = `${homeGuestsCount} Guests`;
+            saveSearchState();
+            updateMainSearchPillDisplay();
         }
-
         function confirmModalGuestsSelection() {
             homeGuestsCount = tempModalGuests;
             document.getElementById('home-guests-display-btn').innerText = `${homeGuestsCount} Guests`;
@@ -1816,19 +1817,19 @@ function buildSearchPromptSlide() {
         function renderFilterChecklists() {
             filterCategoriesInModal();
 
+            const st = LikeStaysFilter.state;
             document.getElementById('modal-amenities-list').innerHTML = LikeStaysFilter.amenities.map(a => `
-                <label class="flex items-center space-x-1.5 text-[9.5px] p-1.5 bg-white rounded-lg border border-gray-150 cursor-pointer font-bold text-gray-700">
-                    <input type="checkbox" value="${a.name}" onchange="toggleFilterItem('amenities', this.value, this.checked)" class="accent-luxuryGreen">
-                    <span class="truncate">${a.icon} ${a.name}</span>
+                <label class="flex items-center justify-center text-[9.5px] p-1.5 bg-white rounded-lg border border-gray-150 cursor-pointer font-bold text-gray-700">
+                    <input type="checkbox" value="${a.name}" ${st.amenities.includes(a.name) ? 'checked' : ''} onchange="toggleFilterItem('amenities', this.value, this.checked)">
+                    <span>${a.name}</span>
                 </label>
             `).join('');
 
-            document.getElementById('modal-services-list').innerHTML = LikeStaysFilter.addons.map(s => `
-                <label class="flex items-center justify-between p-2 bg-white rounded-xl border border-gray-150 cursor-pointer text-[9.5px] font-bold text-gray-700">
-                    <div class="flex items-center space-x-1.5 min-w-0">
-                        <input type="checkbox" value="${s.name}" onchange="toggleFilterItem('addons', this.value, this.checked)" class="accent-luxuryGreen">
-                        <span class="truncate">${s.name}</span>
-                    </div>
+            document.getElementById('modal-services-list').innerHTML = LikeStaysFilter.addons.map(s2 => `
+                <label class="flex items-center justify-center p-2 bg-white rounded-xl border border-gray-150 cursor-pointer text-[9.5px] font-bold text-gray-700">
+                    <input type="checkbox" value="${s2.name}" ${st.addons.includes(s2.name) ? 'checked' : ''} onchange="toggleFilterItem('addons', this.value, this.checked)">
+                    <span>${s2.name}</span>
+                    <small>Extra Pay</small>
                 </label>
             `).join('');
         }
@@ -1839,9 +1840,9 @@ function buildSearchPromptSlide() {
             if (!container) return;
             const filtered = LikeStaysFilter.categories.filter(c => c.toLowerCase().includes(q));
             container.innerHTML = filtered.map(cat => `
-                <label class="flex items-center space-x-1.5 text-[9.5px] p-1 rounded-md hover:bg-white cursor-pointer font-bold text-gray-700">
-                    <input type="checkbox" value="${cat}" onchange="toggleFilterItem('categories', this.value, this.checked)" class="accent-luxuryGreen">
-                    <span class="truncate">${cat}</span>
+                <label class="flex items-center justify-center text-[9.5px] p-1 rounded-md cursor-pointer font-bold text-gray-700">
+                    <input type="checkbox" value="${cat}" ${(LikeStaysFilter.state.categories || []).includes(cat) ? 'checked' : ''} onchange="toggleFilterItem('categories', this.value, this.checked)">
+                    <span>${cat}</span>
                 </label>
             `).join('');
         }
