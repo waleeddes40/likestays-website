@@ -133,6 +133,13 @@
     #luxury-toast{border-radius:12px!important}
     #details-multi-deals-section{background:#FBEAE3!important;background-image:none!important;border-color:#F3CDBF!important}
     .theme-emerald{background:linear-gradient(110deg,#D97757 15%,#E8A58C 40%,#D97757 60%,#C2613F 85%);background-size:200% 100%;border:0;color:#fff}
+    [class*="bg-emerald-"],[class*="from-emerald-"]{background-color:#FBEAE3!important;background-image:none!important}
+    .bg-emerald-700,.bg-emerald-800{background-color:#D97757!important;color:#fff!important}
+    .hover\:bg-emerald-800:hover{background-color:#C2613F!important}
+    [class*="text-emerald-"]{color:#B4532F!important}
+    .bg-emerald-700 *,.bg-emerald-800 *{color:#fff!important}
+    [class*="border-emerald-"]{border-color:#F3CDBF!important}
+    .text-emerald-400{color:#D97757!important}
     #sum-prop-img{object-position:center}
     .ls-lang-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;color:#111827;cursor:pointer}
     .ls-lang-btn svg{width:18px;height:18px}
@@ -292,7 +299,7 @@
             </div>
 
             <!-- 🗺️ چھوٹا سا LOCATION PREVIEW کارڈ — یہ دکھاتا ہے کہ پراپرٹی کس ایریا میں ہے، مکمل نقشے کے لیے tap کریں -->
-            <div onclick="redirectToMapPage()" class="relative w-full h-28 rounded-2xl overflow-hidden border border-gray-200 shadow-xs cursor-pointer active:scale-[0.98] transition-transform">
+            <div id="location-preview-card" onclick="redirectToMapPage()" class="relative w-full h-28 rounded-2xl overflow-hidden border border-gray-200 shadow-xs cursor-pointer active:scale-[0.98] transition-transform">
                 <div id="details-location-preview-map" class="w-full h-full pointer-events-none"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-2.5">
                     <span class="text-white text-[10px] font-black bg-black/50 px-2.5 py-1 rounded-full flex items-center space-x-1">
@@ -303,8 +310,8 @@
         </div>
 
         <!-- 3. COMPACT 5-IN-ONE LIVING SPACES MICRO-BAR -->
-        <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
-            <div class="grid grid-cols-5 gap-1 text-center">
+        <div id="livingbar-card" class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
+            <div id="livingbar-grid" class="grid grid-cols-5 gap-1 text-center">
                 <div class="p-1 space-y-0.5 border-r border-gray-100">
                     <span class="text-sm block">🛏️</span>
                     <span class="text-[8px] text-gray-400 font-bold uppercase block">Beds</span>
@@ -334,12 +341,12 @@
         </div>
 
         <!-- 4. TIMINGS & DISCOUNTS ROW -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-bold text-gray-600">
-            <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
+        <div id="timings-row" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-bold text-gray-600">
+            <div id="box-checkin" class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
                 <span class="text-[7.5px] text-gray-400 font-black uppercase block">Check-in (24h)</span>
                 <span id="det-checkin-time" class="text-luxuryGreen font-black text-xs">14:00</span>
             </div>
-            <div class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
+            <div id="box-checkout" class="neu-flat-white bg-white p-2.5 rounded-2xl border border-gray-150">
                 <span class="text-[7.5px] text-gray-400 font-black uppercase block">Check-out (24h)</span>
                 <span id="det-checkout-time" class="text-luxuryGreen font-black text-xs">11:00</span>
             </div>
@@ -366,7 +373,7 @@
         </div>
 
         <!-- 5. ABOUT SPACE -->
-        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
+        <div id="about-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
             <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">About this space</h3>
             <p id="det-description" class="text-xs text-gray-600 leading-relaxed font-medium"></p>
         </div>
@@ -405,13 +412,13 @@
         </div>
 
         <!-- 7. AMENITIES -->
-        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+        <div id="amenities-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
             <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">What this place offers</h3>
             <div id="det-amenities-list" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2"></div>
         </div>
 
         <!-- 8. EXTRA SERVICES -->
-        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+        <div id="extras-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
             <div class="flex justify-between items-center">
                 <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
                 <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
@@ -419,14 +426,8 @@
             <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
         </div>
 
-        <!-- 9. CANCELLATION POLICY -->
-        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
-            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Cancellation & Refund Policy</h3>
-            <div id="det-cancellation-card" class="rounded-2xl p-3 bg-softMint/50 border border-gray-200 text-[10.5px] font-medium text-gray-600"></div>
-        </div>
-
         <!-- 10. HOUSE RULES -->
-        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
+        <div id="house-rules-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
             <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">House Rules</h3>
             <div id="det-house-rules-list" class="space-y-1 text-xs text-gray-600 font-medium"></div>
         </div>
@@ -564,10 +565,19 @@
                 <span>➔</span>
             </button>
             <p class="text-[8px] text-gray-400 text-center font-semibold">🔒 No Extra Charges • 100% Free Service Fee Included</p>
+
+            <!-- ❌ CANCELLATION POLICY — follows what the guest is booking (daily / hourly / offer) -->
+            <div id="cancel-policy-box" class="hidden rounded-2xl p-3 bg-softMint border border-gray-200 space-y-1.5">
+                <div class="flex justify-between items-center gap-2">
+                    <span id="cancel-policy-title" class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen">Cancellation policy</span>
+                    <span id="cancel-policy-badge" class="bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded text-[8.5px] font-black whitespace-nowrap"></span>
+                </div>
+                <p id="cancel-policy-text" class="text-[10.5px] text-gray-600 font-medium leading-relaxed"></p>
+            </div>
         </div>
 
         <!-- 12. GUEST REVIEWS (DISPLAY ONLY VERIFIED GUEST REVIEWS) -->
-        <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
+        <div id="reviews-card" class="hidden neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
             <div class="flex items-center justify-between">
                 <div>
                     <h3 class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Verified Guest Reviews</h3>
@@ -1131,8 +1141,8 @@
 
             document.getElementById('det-title').innerText = activeProperty.name || 'Luxury Stay';
             document.getElementById('det-category').innerText = `🏡 ${activeProperty.category || 'Stay'}`;
-            document.getElementById('det-max-guests').innerText = `👥 Max ${activeProperty.maxGuests || 8} Guests`;
-            document.getElementById('det-rating').innerText = activeProperty.rating || '⭐ New';
+            { const mg = document.getElementById('det-max-guests'); mg.innerText = `👥 Max ${activeProperty.maxGuests} Guests`; mg.classList.toggle('hidden', !activeProperty.maxGuests); }
+            { const rt = document.getElementById('det-rating'); const rv = activeProperty.rating; rt.innerText = /^\d/.test(String(rv)) ? `⭐ ${rv}` : (rv || ''); rt.classList.toggle('hidden', !rv); }
 
             const locText = activeProperty.address
                 ? `📍 ${activeProperty.address}${activeProperty.locality ? ', ' + activeProperty.locality : ''}, ${activeProperty.city || ''}`
@@ -1140,17 +1150,14 @@
             document.getElementById('det-location').innerText = locText;
 
             // چھوٹا map preview تھوڑی تاخیر سے شروع کریں تاکہ container کا سائز صحیح طرح مل جائے
-            setTimeout(initDetailsLocationPreviewMap, 150);
+            { const hasCoords = activeProperty.lat && activeProperty.lng; document.getElementById('location-preview-card').classList.toggle('hidden', !hasCoords); if (hasCoords) setTimeout(initDetailsLocationPreviewMap, 150); }
 
-            document.getElementById('det-bedrooms-count').innerText = activeProperty.bedrooms || 1;
-            document.getElementById('det-bathrooms-count').innerText = activeProperty.bathrooms || 1;
-            document.getElementById('det-kitchens-count').innerText = activeProperty.kitchens || 0;
-            document.getElementById('det-lounge-count').innerText = activeProperty.lounge || 0;
-            document.getElementById('det-sofabeds-count').innerText = activeProperty.sofaBeds || 0;
+            renderLivingBar();
+            { const ci = document.getElementById('box-checkin'), co = document.getElementById('box-checkout');
+              if (activeProperty.checkinTime) document.getElementById('det-checkin-time').innerText = activeProperty.checkinTime;
+              if (activeProperty.checkoutTime) document.getElementById('det-checkout-time').innerText = activeProperty.checkoutTime;
+              ci.classList.toggle('hidden', !activeProperty.checkinTime); co.classList.toggle('hidden', !activeProperty.checkoutTime); }
 
-            document.getElementById('det-checkin-time').innerText = activeProperty.checkinTime || "14:00";
-            document.getElementById('det-checkout-time').innerText = activeProperty.checkoutTime || "11:00";
-            
             const boxW = document.getElementById('box-weekly-disc');
             const boxM = document.getElementById('box-monthly-disc');
             if (activeProperty.discWeekly && Number(activeProperty.discWeekly) > 0) {
@@ -1172,7 +1179,7 @@
                 selfCard.classList.add('hidden');
             }
 
-            document.getElementById('det-description').innerText = activeProperty.desc || activeProperty.description || 'Experience ultimate luxury at this verified private sanctuary.';
+            { const ds = activeProperty.desc || activeProperty.description || ''; document.getElementById('det-description').innerText = ds; document.getElementById('about-card').classList.toggle('hidden', !ds); }
 
             document.getElementById('det-guests-count-num').innerText = guestsBookingCount;
             document.getElementById('det-selected-guests-text').innerText = `${guestsBookingCount} Guests`;
@@ -1206,9 +1213,10 @@
                 hi.style.objectPosition = activeProperty.videoCoverPosition || '50% 50%';
             } else {
                 heroWrap.classList.add('hidden');
-                dtGrid.classList.add('md:grid'); dtGrid.classList.remove('hidden');
+                dtGrid.classList.add('md:grid', 'hidden');
                 mobWrap.classList.remove('hidden'); mobWrap.classList.add('md:hidden');
                 const formattedPhotos = detFormattedPhotos(activeProperty, 1200);
+                document.getElementById('gallery-container').classList.toggle('hidden', formattedPhotos.length === 0);
                 const posList = detPhotoPositions(activeProperty);
                 for (let i = 0; i < 5; i++) {
                     const imgEl = document.getElementById(`dt-img-${i}`);
@@ -1227,7 +1235,8 @@
             }
 
             const amContainer = document.getElementById('det-amenities-list');
-            const hostAmenities = activeProperty.amenities || ["Free WiFi", "Air Conditioning"];
+            const hostAmenities = Array.isArray(activeProperty.amenities) ? activeProperty.amenities : [];
+            document.getElementById('amenities-card').classList.toggle('hidden', hostAmenities.length === 0);
             amContainer.innerHTML = hostAmenities.map(amName => {
                 const matchedObj = AMENITIES_CATALOG.find(a => a.name === amName);
                 const icon = matchedObj ? matchedObj.icon : '✓';
@@ -1239,17 +1248,7 @@
                 `;
             }).join('');
 
-            const cancelContainer = document.getElementById('det-cancellation-card');
-            const cp = activeProperty.cancellationPolicy || { daily: { deadlineValue: 24, deadlineUnit: "Hours", fullRefundPct: 75 } };
-            cancelContainer.innerHTML = `
-                <div class="space-y-0.5">
-                    <div class="flex justify-between items-center">
-                        <span class="text-luxuryGreen font-black uppercase text-[9.5px]">Free Cancellation Window</span>
-                        <span class="bg-red-50 text-red-600 border border-red-200 px-2 py-0.5 rounded text-[8.5px] font-black">${cp.daily?.deadlineValue || 24} ${cp.daily?.deadlineUnit || 'Hours'} Before</span>
-                    </div>
-                    <p class="text-[9px] text-gray-500 font-medium">Cancel before deadline for 100% full refund. Late cancellations receive ${cp.daily?.fullRefundPct || 75}% refund of total stay.</p>
-                </div>
-            `;
+            renderCancellationPolicy();
 
             const rulesContainer = document.getElementById('det-house-rules-list');
             let rulesHTML = '';
@@ -1260,10 +1259,9 @@
                 rulesHTML += `<div class="flex items-center space-x-1.5"><span>•</span><span>Events / Parties: ${hr.parties ? 'Allowed' : 'Strictly Prohibited'}</span></div>`;
                 rulesHTML += `<div class="flex items-center space-x-1.5"><span>•</span><span>Photo Shoots: ${hr.shoots ? 'Allowed' : 'Not Allowed'}</span></div>`;
                 if (hr.customRules) rulesHTML += `<div class="flex items-center space-x-1.5 text-luxuryGreen font-bold"><span>•</span><span>${hr.customRules}</span></div>`;
-            } else {
-                rulesHTML = `<div class="flex items-center space-x-1.5"><span>•</span><span>Treat this space with care and respect community rules.</span></div>`;
             }
             rulesContainer.innerHTML = rulesHTML;
+            document.getElementById('house-rules-card').classList.toggle('hidden', !rulesHTML);
         }
 
 
@@ -1272,6 +1270,7 @@
             if (!activeProperty) return;
             if (activeProperty.videoUrl) { openDetailsVideo(); return; }
             const formattedPhotos = detFormattedPhotos(activeProperty, 1200);
+            if (!formattedPhotos.length) return;
 
             document.getElementById('modal-gallery-count').innerText = formattedPhotos.length;
             const grid = document.getElementById('modal-gallery-photos-grid');
@@ -1491,6 +1490,7 @@
         // ================= 💰 RECALCULATE TOTALS =================
         function recalculateBookingTotals() {
             if (!activeProperty) return;
+            renderCancellationPolicy();
             const propCurrency = activeProperty.currency || 'PKR';
             const daily = activeProperty.dailyPrice || activeProperty.price || 5000;
             const hourly = activeProperty.hourlyPrice || Math.round(daily/10);
@@ -1607,10 +1607,8 @@
             if (!container) return;
             const services = (activeProperty.extraServices && activeProperty.extraServices.length > 0) ? activeProperty.extraServices : [];
 
-            if (services.length === 0) {
-                container.innerHTML = `<p class="text-[9px] text-gray-400">No extra add-on services configured.</p>`;
-                return;
-            }
+            document.getElementById('extras-card').classList.toggle('hidden', services.length === 0);
+            if (services.length === 0) { container.innerHTML = ''; return; }
 
             const propCurrency = activeProperty.currency || 'PKR';
 
@@ -1676,10 +1674,8 @@
                 summaryLabel.innerText = activeProperty.rating || (reviews.length > 0 ? `⭐ 5.0 (${reviews.length})` : '⭐ New');
             }
 
-            if (reviews.length === 0) {
-                container.innerHTML = `<div class="p-3 text-[10px] text-gray-400 font-bold">No verified guest reviews yet. Guests can submit reviews from their profile after completing a stay.</div>`;
-                return;
-            }
+            document.getElementById('reviews-card').classList.toggle('hidden', reviews.length === 0);
+            if (reviews.length === 0) { container.innerHTML = ''; return; }
 
             container.innerHTML = reviews.map(r => {
                 const starStr = '⭐'.repeat(r.stars || 5);
@@ -2068,7 +2064,7 @@
         function showBookingToast(msg, icon) { showLuxuryToast(msg, icon || '✨'); }
 
         function detFormattedPhotos(p, w) {
-            const raw = (p.photos && p.photos.length > 0) ? p.photos : (p.image ? [p.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=80&w=1200"]);
+            const raw = ((p.photos && p.photos.length > 0) ? p.photos : (p.image ? [p.image] : [])).filter(x => x && !DUMMY_PHOTO_RE.test(x));
             return raw.map(img => (img.startsWith('http') || img.startsWith('data:')) ? img : `https://images.unsplash.com/${img}?auto=format&fit=crop&q=80&w=${w || 1200}`);
         }
         // visible part the host chose for each photo ("x% y%"), same order as photos
@@ -2479,6 +2475,49 @@ function renderCheckoutDetails() {
                 showLuxuryToast('Could not submit review. Try again.', '⚠️');
                 btn.disabled = false; btn.innerText = 'Submit Review';
             }
+        }
+
+        // ---- living-spaces bar: only the counts the host really entered ----
+        function renderLivingBar() {
+            const items = [['det-bedrooms-count', activeProperty.bedrooms], ['det-bathrooms-count', activeProperty.bathrooms], ['det-kitchens-count', activeProperty.kitchens], ['det-lounge-count', activeProperty.lounge], ['det-sofabeds-count', activeProperty.sofaBeds]];
+            let shown = 0;
+            items.forEach(([id, val]) => {
+                const el = document.getElementById(id); const cell = el.parentElement;
+                const ok = Number(val) > 0;
+                if (ok) el.innerText = val;
+                cell.classList.toggle('hidden', !ok);
+                if (ok) shown++;
+            });
+            document.getElementById('livingbar-card').classList.toggle('hidden', shown === 0);
+            document.getElementById('livingbar-grid').style.gridTemplateColumns = `repeat(${Math.max(1, shown)}, minmax(0, 1fr))`;
+        }
+
+        // ---- cancellation policy shown under the Reserve button: follows daily / hourly / offer ----
+        function renderCancellationPolicy() {
+            const box = document.getElementById('cancel-policy-box');
+            if (!box) return;
+            const cp = activeProperty && activeProperty.cancellationPolicy;
+            if (!cp) { box.classList.add('hidden'); return; }
+            const n = v => Number(v) || 0;
+            let title, badge, text;
+            if (activeBookingMode === 'offer') {
+                const o = cp.offer; if (!o) { box.classList.add('hidden'); return; }
+                title = 'Special offer stay'; badge = `${n(o.deadlineValue)} Hours Before`;
+                text = `Free cancellation up to ${n(o.deadlineValue)} hours before the offer starts. Later cancellations receive a ${n(o.lateRefundPct)}% refund.`;
+            } else if (activeBookingMode === 'hourly') {
+                const h = cp.hourly; if (!h) { box.classList.add('hidden'); return; }
+                title = 'Hourly stay'; badge = `${n(h.deadlineValue)} Hours Before`;
+                text = `Free cancellation up to ${n(h.deadlineValue)} hours before your slot starts. Later cancellations receive a ${n(h.lateRefundPct)}% refund.`;
+            } else {
+                const d = cp.daily; if (!d) { box.classList.add('hidden'); return; }
+                const unit = String(d.deadlineUnit || 'Hours');
+                title = 'Daily stay'; badge = `${n(d.deadlineValue)} ${unit} Before`;
+                text = `Free cancellation up to ${n(d.deadlineValue)} ${unit.toLowerCase()} before check-in. Later cancellations: ${n(d.tokenRefundPct)}% of the advance token is refunded; if the full amount was paid, ${n(d.fullRefundPct)}% is refunded.`;
+            }
+            document.getElementById('cancel-policy-title').innerText = `Cancellation policy · ${title}`;
+            document.getElementById('cancel-policy-badge').innerText = badge;
+            document.getElementById('cancel-policy-text').innerText = text;
+            box.classList.remove('hidden');
         }
     </script>
 </body>
