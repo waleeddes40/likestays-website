@@ -289,7 +289,7 @@
                                 ${t.icon}<span class="notranslate" style="text-transform:uppercase">${t.label}</span>
                             </a>`).join('')}
                     </div>
-                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:10px;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:11px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#0D4E2F,#1E6F45);color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)">Book Now</button>
+                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:10px;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:11px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#D97757,#C2613F);color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)">Book Now</button>
                 </div>`;
             document.body.insertAdjacentHTML('beforeend', html);
             return;
@@ -308,10 +308,10 @@
                     const isActive = tab.id === activeTab;
                     return `
                         <a href="${tab.url}" class="flex flex-col items-center justify-center space-y-1 flex-1 py-1 cursor-pointer group transition-all">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-[#0D4E2F] text-white shadow-md' : 'text-gray-400 group-hover:text-[#0D4E2F]'}">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-[#111827] text-white shadow-md' : 'text-gray-400 group-hover:text-[#111827]'}">
                                 ${tab.iconSvg}
                             </div>
-                            <span class="text-[9px] font-black tracking-tight notranslate ${isActive ? 'text-[#0D4E2F]' : 'text-gray-400'}">
+                            <span class="text-[9px] font-black tracking-tight notranslate ${isActive ? 'text-[#111827]' : 'text-gray-400'}">
                                 ${tab.label}
                             </span>
                         </a>
@@ -332,12 +332,12 @@
                     <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl border border-gray-200 space-y-3 text-left">
                         <div class="flex justify-between items-center border-b border-gray-150 pb-2">
                             <div>
-                                <span class="text-xs font-black uppercase tracking-wider text-[#0D4E2F]">Select Global Currency</span>
+                                <span class="text-xs font-black uppercase tracking-wider text-[#111827]">Select Global Currency</span>
                                 <p class="text-[8.5px] text-gray-400 font-semibold">150 Worldwide Currencies</p>
                             </div>
                             <button type="button" onclick="window.LikeStaysEngine.closeCurrencyModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
                         </div>
-                        <input type="text" id="engine-currency-search" oninput="window.LikeStaysEngine.filterCurrencies(this.value)" placeholder="🔍 Search USD, EUR, GBP, AED..." class="w-full text-xs font-bold p-2.5 bg-[#F2F5F3] rounded-xl border-none outline-none text-[#0D4E2F]">
+                        <input type="text" id="engine-currency-search" oninput="window.LikeStaysEngine.filterCurrencies(this.value)" placeholder="🔍 Search USD, EUR, GBP, AED..." class="w-full text-xs font-bold p-2.5 bg-[#F6F6F7] rounded-xl border-none outline-none text-[#111827]">
                         <div id="engine-currencies-list" class="max-h-64 overflow-y-auto space-y-1"></div>
                     </div>
                 </div>
@@ -361,12 +361,12 @@
         const filtered = WORLD_CURRENCIES.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
 
         listContainer.innerHTML = filtered.map(c => `
-            <button type="button" onclick="window.LikeStaysEngine.selectCurrency('${c.code}')" class="w-full text-left p-2.5 rounded-xl hover:bg-[#F2F5F3] flex items-center justify-between text-xs font-bold text-gray-700 cursor-pointer">
+            <button type="button" onclick="window.LikeStaysEngine.selectCurrency('${c.code}')" class="w-full text-left p-2.5 rounded-xl hover:bg-[#F6F6F7] flex items-center justify-between text-xs font-bold text-gray-700 cursor-pointer">
                 <div class="flex items-center space-x-2">
                     <span class="text-base">${c.flag}</span>
                     <span>${c.name} (${c.code})</span>
                 </div>
-                <span class="text-[#0D4E2F] font-black">${c.symbol}</span>
+                <span class="text-[#111827] font-black">${c.symbol}</span>
             </button>
         `).join('');
     }
@@ -403,6 +403,10 @@
         activeLocale: activeLocale,
         formatPrice: formatPrice,
         formatCompactPrice: formatCompactPrice,
+        // number in the viewer's chosen currency from an amount in `fromCode`
+        convert: function (amount, fromCode) { const usd = fromCode ? toUSD(amount, fromCode) : amount; return usd * activeLocale.rate; },
+        // inverse: viewer-currency amount -> `toCode` currency
+        fromViewer: function (amount, toCode) { const to = WORLD_CURRENCIES.find(c => c.code === toCode) || WORLD_CURRENCIES[0]; return (amount / (activeLocale.rate || 1)) * (to.rate || 1); },
         saveSearchSession: saveSearchSession,
         getSearchSession: getSearchSession,
         renderBottomNav: renderBottomNav,

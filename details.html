@@ -130,6 +130,19 @@
     .rounded-xl{border-radius:10px!important}
     header.sticky{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #e5e7eb!important}
     #details-loading-overlay{background:#fff!important}
+    #details-loading-overlay .ls-spin{width:38px;height:38px;border-radius:50%;border:4px solid #FBEAE3;border-top-color:#D97757;animation:lsspin .8s linear infinite}
+    #details-loading-overlay span{color:#D97757!important}
+    @keyframes lsspin{to{transform:rotate(360deg)}}
+    #desktop-gallery-grid{display:none!important}
+    @media(min-width:768px){#desktop-gallery-grid.ls-show{display:grid!important}#mobile-carousel-wrap{display:none!important}}
+    #details-carousel-slides>img{flex:0 0 100%;width:100%;height:100%;min-width:100%;object-fit:cover;display:block}
+    #photo-gallery-modal{display:flex;flex-direction:column;background:#fff!important;padding:0!important}
+    #photo-gallery-modal.hidden{display:none}
+    #photo-gallery-modal>div:first-child{color:#111827!important;border-bottom:1px solid #e5e7eb!important;padding:12px 16px!important;background:#fff;max-width:none!important}
+    #photo-gallery-modal .neu-circle-btn{border:1px solid #e5e7eb;background:#fff;color:#111827!important;box-shadow:none!important}
+    #modal-gallery-photos-grid{display:block!important;flex:1 1 0;min-height:0;overflow-y:auto;padding:12px 12px 24px!important;max-width:820px;margin:0 auto;width:100%}
+    #modal-gallery-photos-grid img{display:block;width:100%;height:auto;border-radius:12px;margin:0 0 10px;background:#f3f4f6}
+    #cur-btn-hdr{display:flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border-radius:16px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:700 11px Inter,sans-serif;cursor:pointer}
     #luxury-toast{border-radius:12px!important}
     #details-multi-deals-section{background:#FBEAE3!important;background-image:none!important;border-color:#F3CDBF!important}
     .theme-emerald{background:linear-gradient(110deg,#D97757 15%,#E8A58C 40%,#D97757 60%,#C2613F 85%);background-size:200% 100%;border:0;color:#fff}
@@ -216,7 +229,7 @@
 
     <!-- ZERO-FLASH LOADING OVERLAY -->
     <div id="details-loading-overlay" class="fixed inset-0 bg-softMint z-[60000] flex flex-col items-center justify-center space-y-2.5">
-        <div class="w-9 h-9 border-4 border-luxuryGreen/20 border-t-luxuryGreen rounded-full animate-spin"></div>
+        <div class="ls-spin"></div>
         <span class="text-[9px] font-black uppercase tracking-widest text-luxuryGreen">Loading Details...</span>
     </div>
 
@@ -231,6 +244,7 @@
                 <span>🔒</span> <span>Fast Checkout</span>
             </div>
             <div id="hdr-details-actions" class="flex items-center space-x-2">
+                <button type="button" id="cur-btn-hdr" aria-label="Currency" onclick="LikeStaysEngine.openCurrencyModal()"><span id="cur-btn-code"></span></button>
                 <button type="button" class="ls-lang-btn" aria-label="Language" onclick="window.LanguageEngine&&LanguageEngine.openModal()"><span class="ls-lang-ico"></span></button>
                 <button type="button" onclick="sharePropertyDetails()" class="neu-circle-btn w-8 h-8 rounded-full flex items-center justify-center text-luxuryGreen hover:scale-105 cursor-pointer" title="Share">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
@@ -764,6 +778,7 @@
                             <span id="bill-discount-val">-</span>
                         </div>
 
+                        <div id="bill-extras-list" class="space-y-1"></div>
                         <div class="flex justify-between items-center text-[10px]">
                             <span class="text-gray-500">Service Fee</span>
                             <span class="font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">0% Free</span>
@@ -1000,6 +1015,7 @@
             const propId = urlParams.get('id');
 
             parseGuestSearchParameters(urlParams);
+            try { document.getElementById('cur-btn-code').innerText = LikeStaysEngine.activeLocale.currency; } catch (e) {}
             document.querySelectorAll('.ls-lang-ico').forEach(e => { e.innerHTML = (window.LanguageEngine && LanguageEngine.icon) || '🌐'; });
             autoOpenCheckout = urlParams.get('checkout') === '1';
 
@@ -1206,14 +1222,14 @@
             if (hasVideo) {
                 // 🎬 video listing: show exactly the cover the host chose (never the dummy placeholder photo)
                 heroWrap.classList.remove('hidden');
-                dtGrid.classList.add('hidden'); dtGrid.classList.remove('md:grid');
+                dtGrid.classList.remove('ls-show');
                 mobWrap.classList.add('hidden'); mobWrap.classList.remove('md:hidden');
                 const hi = document.getElementById('video-hero-img');
                 hi.src = detVideoCoverSrc(activeProperty);
                 hi.style.objectPosition = activeProperty.videoCoverPosition || '50% 50%';
             } else {
                 heroWrap.classList.add('hidden');
-                dtGrid.classList.add('md:grid', 'hidden');
+                dtGrid.classList.add('ls-show');
                 mobWrap.classList.remove('hidden'); mobWrap.classList.add('md:hidden');
                 const formattedPhotos = detFormattedPhotos(activeProperty, 1200);
                 document.getElementById('gallery-container').classList.toggle('hidden', formattedPhotos.length === 0);
@@ -1275,11 +1291,7 @@
             document.getElementById('modal-gallery-count').innerText = formattedPhotos.length;
             const grid = document.getElementById('modal-gallery-photos-grid');
             // full photos here (not cropped) — the crop only applies to the cards / hero
-            grid.innerHTML = formattedPhotos.map((src, idx) => `
-                <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-gray-900">
-                    <img src="${src}" class="w-full h-full object-contain" alt="Photo ${idx+1}">
-                </div>
-            `).join('');
+            grid.innerHTML = formattedPhotos.map((src, idx) => `<img src="${src}" alt="Photo ${idx+1}" loading="lazy">`).join('');
 
             document.getElementById('photo-gallery-modal').classList.remove('hidden');
         }
@@ -1310,8 +1322,22 @@
             return `${sDate} (${sTime}) ➔ ${eDate} (${eTime})`;
         }
 
+        function liveDealsOf(prop) {
+            const all = (prop && (prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []))) || [];
+            const now = new Date();
+            return all.filter(d => { if (!d || d.enabled === false) return false; const exp = dealExpiry(d); return !exp || now < exp; })
+                      .sort((a, b) => (dealStartDate(a) || 0) - (dealStartDate(b) || 0));
+        }
+        setInterval(() => {
+            if (!activeProperty) return;
+            if (selectedOfferObj && !liveDealsOf(activeProperty).some(d => d.id === selectedOfferObj.id)) {
+                selectedOfferObj = null; if (activeBookingMode === 'offer') activeBookingMode = 'daily';
+                showLuxuryToast('This offer has ended. Switched to Daily Stay.', '⏳'); recalculateBookingTotals();
+            }
+            renderMultiDealsSection();
+        }, 30000);
         function renderMultiDealsSection() {
-            const deals = activeProperty.flashDeals || (activeProperty.flashOffer && activeProperty.flashOffer.enabled ? [activeProperty.flashOffer] : []);
+            const deals = liveDealsOf(activeProperty);
             const container = document.getElementById('details-multi-deals-section');
             const list = document.getElementById('details-deals-list-container');
             const badge = document.getElementById('details-deals-count-badge');
@@ -1349,7 +1375,7 @@
         }
 
         function toggleSelectFlashDeal(id) {
-            const deals = activeProperty.flashDeals || (activeProperty.flashOffer && activeProperty.flashOffer.enabled ? [activeProperty.flashOffer] : []);
+            const deals = liveDealsOf(activeProperty);
             const deal = deals.find(d => d.id === id);
 
             if (selectedOfferObj && selectedOfferObj.id === id) {
@@ -1488,6 +1514,8 @@
         }
 
         // ================= 💰 RECALCULATE TOTALS =================
+        function V(amount, cur) { return Math.round(LikeStaysEngine.convert(amount || 0, cur || (activeProperty && activeProperty.currency) || 'PKR')); }
+        function fmtV(n) { return LikeStaysEngine.activeLocale.symbol + Math.round(n).toLocaleString(); }
         function recalculateBookingTotals() {
             if (!activeProperty) return;
             renderCancellationPolicy();
@@ -1542,7 +1570,7 @@
                 }
             }
 
-            let extrasCost = 0;
+            let extrasCost = 0; const extrasOut = [];
             const extrasListContainer = document.getElementById('det-calc-extras-list-container');
             let extrasHtml = '';
 
@@ -1559,7 +1587,7 @@
                         </div>
                     `;
                 } else {
-                    extrasCost += rawPrice;
+                    extrasCost += rawPrice; extrasOut.push({ name: srvName, price: rawPrice });
                     extrasHtml += `
                         <div class="flex justify-between items-center text-[10px]">
                             <span class="text-gray-600">${srvName}</span>
@@ -1574,7 +1602,9 @@
             document.getElementById('det-calc-subtotal').innerText = LikeStaysEngine.formatPrice(baseCost, propCurrency);
 
             const grandTotal = Math.max(0, (baseCost - discountAmount) + extrasCost);
-            document.getElementById('det-calc-grand-total').innerText = LikeStaysEngine.formatPrice(grandTotal, propCurrency);
+            const grandV = Math.max(0, V(baseCost, propCurrency) - V(discountAmount, propCurrency) + extrasOut.reduce((s, x) => s + V(x.price, propCurrency), 0));
+            document.getElementById('det-calc-grand-total').innerText = fmtV(grandV);
+            window.__lastTotals = { base: baseCost, discount: discountAmount, discountLabel: discountAmount > 0 ? `${discountType} (${discountPercent}%)` : '', extras: extrasOut, grand: grandTotal };
         }
 
         function setDetailsBookingInterval(type) {
@@ -1743,7 +1773,9 @@
                 });
             });
 
+            recalculateBookingTotals();
             const checkoutPayload = {
+                totals: window.__lastTotals || null,
                 propId: activeProperty.id,
                 propName: activeProperty.name || 'Luxury Stay',
                 category: activeProperty.category || 'Stay',
@@ -2139,7 +2171,7 @@
         // ======================================================================
 function renderCheckoutDetails() {
             if (!activeProperty) return;
-            activeSymbol = activeProperty.currencySymbol || "Rs ";
+            activeSymbol = LikeStaysEngine.activeLocale.symbol;
             document.getElementById('label-curr-symbol').innerText = activeSymbol;
 
             const sumImg = document.getElementById('sum-prop-img');
@@ -2166,19 +2198,27 @@ function renderCheckoutDetails() {
                 rawBaseCost = (hr.rate || 500) * (hr.hours || 4);
                 document.getElementById('sum-mode-badge').innerText = `⏱️ Hourly Stay`;
                 document.getElementById('sum-dates-label').innerText = `${hr.date} (${hr.startTime} - ${hr.endTime})`;
-                document.getElementById('bill-nights-label').innerText = `Hourly Rate × ${hr.hours} hrs`;
+                document.getElementById('bill-nights-label').innerText = `${fmtV(V(hr.rate || 500))} × ${hr.hours} hrs`;
             } else {
                 const d = (activeCheckoutPayload && activeCheckoutPayload.daily) || { nights: 3, checkin: 'Aug 22', checkout: 'Aug 25' };
                 const dailyRate = d.rate || activeProperty.dailyPrice || activeProperty.price || 5000;
                 rawBaseCost = dailyRate * (d.nights || 3);
                 document.getElementById('sum-mode-badge').innerText = `🌙 Daily Stay`;
                 document.getElementById('sum-dates-label').innerText = `${d.checkin} - ${d.checkout} (${d.nights}N)`;
-                document.getElementById('bill-nights-label').innerText = `${dailyRate} × ${d.nights} nights`;
+                document.getElementById('bill-nights-label').innerText = `${fmtV(V(dailyRate))} × ${d.nights} nights`;
             }
 
-            convertedTotalAmount = rawBaseCost;
-            document.getElementById('bill-base-rent').innerText = `${activeSymbol}${rawBaseCost.toLocaleString()}`;
-            document.getElementById('bill-grand-total').innerText = `${activeSymbol}${convertedTotalAmount.toLocaleString()}`;
+            const T = activeCheckoutPayload && activeCheckoutPayload.totals;
+            const baseV = V(T ? T.base : rawBaseCost), discV = T ? V(T.discount) : 0;
+            const exList = (T && T.extras) || [];
+            const exV = exList.reduce((s, x) => s + V(x.price), 0);
+            convertedTotalAmount = Math.max(0, baseV - discV + exV);
+            document.getElementById('bill-base-rent').innerText = fmtV(baseV);
+            const dRow = document.getElementById('bill-discount-row');
+            if (T && discV > 0) { dRow.classList.remove('hidden'); document.getElementById('bill-discount-lbl').innerText = T.discountLabel || 'Discount'; document.getElementById('bill-discount-val').innerText = '- ' + fmtV(discV); }
+            else dRow.classList.add('hidden');
+            document.getElementById('bill-extras-list').innerHTML = exList.filter(x => x.price > 0).map(x => `<div class="flex justify-between items-center text-[10px]"><span>${String(x.name).replace(/</g, '&lt;')}</span><span class="font-bold text-gray-800">+ ${fmtV(V(x.price))}</span></div>`).join('');
+            document.getElementById('bill-grand-total').innerText = fmtV(convertedTotalAmount);
 
             // 🌟 جانچ: کیا ہوسٹ نے بغیر ٹوکن اجازت دی ہے؟
             const allowDirectBooking = Boolean(activeProperty.allowDirectBooking);
@@ -2205,7 +2245,7 @@ function renderCheckoutDetails() {
         function calculateRemainingBalanceOnArrival() {
             const depositVal = parseFloat(document.getElementById('input-advance-deposit').value) || 0;
             const remaining = Math.max(0, convertedTotalAmount - depositVal);
-            document.getElementById('bill-remaining-balance').innerText = `${activeSymbol}${remaining.toLocaleString()}`;
+            document.getElementById('bill-remaining-balance').innerText = fmtV(remaining);
         }
 
         // ================= 🌟 DYNAMIC 4 BANK ACCOUNTS RENDERER =================
@@ -2321,6 +2361,11 @@ function renderCheckoutDetails() {
             const hostLink1 = activeProperty.hostContactLink1 || activeProperty.hostWhatsapp || hostPhone;
             const hostLink2 = activeProperty.hostContactLink2 || activeProperty.hostTelegram || "";
 
+            const propCur = activeProperty.currency || 'PKR';
+            const sameCur = LikeStaysEngine.activeLocale.currency === propCur;
+            const T0 = activeCheckoutPayload && activeCheckoutPayload.totals;
+            const totalProp = sameCur ? convertedTotalAmount : (T0 ? Math.round(T0.grand) : Math.round(LikeStaysEngine.fromViewer(convertedTotalAmount, propCur)));
+            const depositProp = sameCur ? depositPaid : Math.round(LikeStaysEngine.fromViewer(depositPaid, propCur));
             // گیسٹ اور ہوسٹ کی تمام تفصیلات کا پے لوڈ
             const bookingPayload = {
                 bookingId: globalBookingKey,
@@ -2330,8 +2375,13 @@ function renderCheckoutDetails() {
                 checkIn: checkIn,
                 checkOut: checkOut,
                 guestsCount: activeCheckoutPayload ? (activeCheckoutPayload.guests || 2) : 2,
-                totalAmount: convertedTotalAmount,
-                commissionAmount: Math.round(convertedTotalAmount * 0.10),
+                // amounts below are stored in the PROPERTY's (host's) currency; the guest's own view is kept alongside
+                currency: propCur,
+                totalAmount: totalProp,
+                commissionAmount: Math.round(totalProp * 0.10),
+                guestCurrency: LikeStaysEngine.activeLocale.currency,
+                guestTotalAmount: convertedTotalAmount,
+                guestDepositPaid: depositPaid,
 
                 // 🌟 گیسٹ کی 5 تفصیلات (4 رابطہ چینلز)
                 guestName: name,
@@ -2353,8 +2403,8 @@ function renderCheckoutDetails() {
                 hostTelegram: hostLink1.includes('t.me') ? hostLink1 : (hostLink2.includes('t.me') ? hostLink2 : ""),
 
                 paymentMethodSelected: selectedBankType || 'Direct on Arrival',
-                depositPaid: depositPaid,
-                remainingDue: Math.max(0, convertedTotalAmount - depositPaid),
+                depositPaid: depositProp,
+                remainingDue: Math.max(0, totalProp - depositProp),
                 status: "new",
                 createdAt: new Date().toISOString()
             };
@@ -2382,7 +2432,7 @@ function renderCheckoutDetails() {
                 document.getElementById('rcpt-guest-name').innerText = name;
                 document.getElementById('rcpt-guest-phone').innerText = phone;
                 document.getElementById('rcpt-stay-duration').innerText = `${checkIn} - ${checkOut}`;
-                document.getElementById('rcpt-total-bill').innerText = `${activeSymbol}${convertedTotalAmount.toLocaleString()}`;
+                document.getElementById('rcpt-total-bill').innerText = fmtV(convertedTotalAmount);
 
                 // 🌟 ہوسٹ کے چاروں رابطہ چینلز واؤچر پر لگائیں
                 document.getElementById('rcpt-host-name').innerText = hostName;
