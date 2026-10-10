@@ -246,18 +246,18 @@
         // 🧭 Home (card-list) style: light bottom bar with 3 tabs → Explore | Search | Map  (enable via window.__lsNavOptions = {threeTab:true})
         if (opts && opts.threeTab) {
             const ic = {
-                explore: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>',
-                search: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
-                map: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 7 9 4zM9 4v13M15 7v12.5"/></svg>'
+                explore: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>',
+                search: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+                map: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 7 9 4zM9 4v13M15 7v12.5"/></svg>'
             };
             const tabs = [
                 { id: 'explore', url: 'index.html', label: labels.explore },
                 { id: 'search', onclick: 'openAirbnbSearchModal()', label: labels.search || 'Search' },
                 { id: 'map', url: 'map.html', label: labels.map }
             ];
-            const tStyle = (on) => `text-decoration:none;background:${on ? '#FBEAE3' : 'none'};border:0;padding:5px 20px;border-radius:18px;display:flex;flex-direction:column;align-items:center;gap:4px;color:${on ? '#D97757' : '#8b93a1'};font-size:11.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
+            const tStyle = (on) => `text-decoration:none;background:${on ? '#FBEAE3' : 'none'};border:0;padding:3px 18px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#D97757' : '#8b93a1'};font-size:10.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
             const html3 = `
-                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#fff;border-top:1px solid #e5e7eb;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 8px);display:flex;justify-content:space-around;align-items:center">
+                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#fff;border-top:1px solid #e5e7eb;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 4px);display:flex;justify-content:space-around;align-items:center">
                     ${tabs.map(t => t.onclick ? `
                         <button type="button" onclick="${t.onclick}" style="${tStyle(false)}">${ic[t.id]}<span class="notranslate">${t.label}</span></button>` : `
                         <a href="${t.url}" style="${tStyle(t.id === activeTab)}">${ic[t.id]}<span class="notranslate">${t.label}</span></a>`).join('')}

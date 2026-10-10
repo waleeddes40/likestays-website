@@ -2,12 +2,13 @@
 <html lang="en" id="html-root">
 <head>
 <meta charset="UTF-8">
+    <meta name="theme-color" content="#ffffff">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Like Stays | Host Listings Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- 🔥 REALTIME FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -27,13 +28,13 @@
             theme: {
                 extend: {
                     colors: {
-                        luxuryGreen: '#0D4E2F',
-                        luxuryLightGreen: '#1E6F45',
-                        softMint: '#F2F5F3',
-                        softShadowDark: '#D2DCD4',
+                        luxuryGreen: '#111827',
+                        luxuryLightGreen: '#374151',
+                        softMint: '#F6F6F7',
+                        softShadowDark: '#E5E7EB',
                         softShadowLight: '#FFFFFF',
-                        goldWarm: '#D4AF37',
-                        inputBg: '#F0F4F2'
+                        goldWarm: '#D97757',
+                        inputBg: '#F6F6F7'
                     }
                 }
             }
@@ -182,11 +183,52 @@
         }
     
     </style>
+    <style>
+    /* ===== LikeStays host panel — same look as Explore / Map (Inter, white cards, terracotta accent #D97757) ===== */
+    html,body{background:#F6F6F7!important;font-family:'Inter',system-ui,sans-serif!important;color:#111827}
+    body,button,input,select,textarea{font-family:'Inter',system-ui,sans-serif!important}
+    .font-cinzel-logo{font-family:'Inter',sans-serif!important;font-weight:800}
+    .neu-flat{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .neu-inset{background:#F6F6F7!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .neu-inset:focus-within,.neu-inset:focus{border-color:#D97757!important}
+    .neu-btn-green{background:#D97757!important;box-shadow:none!important;color:#fff}
+    .neu-btn-green:active{transform:scale(.97)}
+    .neu-circle-btn{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .landing-input{background:#F6F6F7;color:#111827;border-radius:10px}
+    .bg-luxuryGreen{background-color:#D97757!important}
+    .accent-luxuryGreen{accent-color:#D97757}
+    .border-luxuryGreen,.hover\:border-luxuryGreen:hover{border-color:#D97757!important}
+    .text-goldWarm{color:#D97757!important}
+    .bg-emerald-50,.hover\:bg-emerald-50:hover,.bg-emerald-100,.hover\:bg-emerald-100:hover{background:#FBEAE3!important}
+    .text-emerald-700,.text-emerald-800,.text-emerald-900{color:#111827!important}
+    .border-emerald-200,.border-emerald-300{border-color:#e5e7eb!important}
+    .rounded-3xl,.rounded-\[32px\]{border-radius:16px!important}
+    .rounded-2xl{border-radius:12px!important}
+    .rounded-xl{border-radius:10px!important}
+    header.sticky{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #e5e7eb!important}
+    h1,h2,h3{letter-spacing:0}
+    #status-toast{border-radius:12px!important}
+    /* right-side drawers (like Search / Filter / Currency on Explore) */
+    @keyframes lsDrawerIn{from{transform:translateX(100%)}to{transform:none}}
+    :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal){align-items:stretch!important;justify-content:flex-end!important;padding:0!important;overflow:hidden!important;background:rgba(0,0,0,.45)!important;backdrop-filter:blur(3px)}
+    :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal)>div{width:86%!important;max-width:430px!important;height:100%!important;max-height:100%!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:-8px 0 30px rgba(0,0,0,.2)!important;animation:lsDrawerIn .22s ease-out!important;background:#fff!important;overflow-y:auto!important}
+    .ls-lang-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827;cursor:pointer}
+    /* ===== photo / video crop editors ===== */
+    .crop-frame{position:relative;width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb;touch-action:none;cursor:grab;border:2px solid #D97757;user-select:none;-webkit-user-select:none}
+    .crop-frame:active{cursor:grabbing}
+    .crop-frame img,.crop-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+    .crop-frame .grid3{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,transparent 33.2%,rgba(255,255,255,.55) 33.3%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,.55) 66.6%,transparent 66.8%),linear-gradient(to bottom,transparent 33.2%,rgba(255,255,255,.55) 33.3%,transparent 33.5%,transparent 66.5%,rgba(255,255,255,.55) 66.6%,transparent 66.8%)}
+    .crop-hint{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;font:600 10px Inter,sans-serif;padding:4px 10px;border-radius:999px;pointer-events:none;white-space:nowrap}
+    .edit-chip{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);background:rgba(17,24,39,.78);color:#fff;border:0;border-radius:999px;padding:5px 12px;font:700 10px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;gap:4px;z-index:5;white-space:nowrap}
+    .edit-chip:active{background:#D97757}
+    .thumb43{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb}
+    .thumb43 img,.thumb43 video{width:100%;height:100%;object-fit:cover}
+    </style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-48 relative">
 
     <!-- 🌟 LUXURY GREEN TOAST (NO BROWSER ALERTS) — دونوں views کے لیے مشترکہ -->
-    <div id="status-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+    <div id="status-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60000] flex items-center space-x-2 bg-[#111827]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
         <span id="toast-icon">✨</span>
         <span id="toast-msg">Listing Saved!</span>
     </div>
@@ -203,6 +245,7 @@
             <button type="button" onclick="window.location.href='host-dashboard.html'" class="neu-circle-btn px-3 py-1.5 rounded-xl flex items-center space-x-1.5 text-luxuryGreen font-extrabold text-xs cursor-pointer hover:scale-105">
                 <span>◀</span> <span class="uppercase tracking-wider">Dashboard</span>
             </button>
+            <button type="button" class="ls-lang-btn" aria-label="Language" onclick="window.LanguageEngine&&LanguageEngine.openModal()"><span class="ls-lang-ico"></span></button>
 
             <!-- ADD NEW PROPERTY -->
             <button type="button" onclick="startNewListing()" class="neu-btn-green text-white px-3.5 py-1.5 rounded-xl text-xs font-black flex items-center space-x-1.5 cursor-pointer hover:scale-105">
@@ -392,7 +435,7 @@
 
 
     <!-- 🌟 LUXURY GREEN TOAST (NO BROWSER ALERTS) -->
-    <div id="status-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+    <div id="status-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60000] flex items-center space-x-2 bg-[#111827]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
         <span id="toast-icon">✨</span>
         <span id="toast-msg">Listing Saved!</span>
     </div>
@@ -403,6 +446,7 @@
             <button type="button" onclick="navigateBackToDashboard()" class="neu-circle-btn px-3 py-1.5 rounded-xl flex items-center space-x-1.5 text-luxuryGreen font-extrabold text-xs cursor-pointer hover:scale-105">
                 <span>◀</span> <span class="uppercase tracking-wider">My Listings</span>
             </button>
+            <button type="button" class="ls-lang-btn" aria-label="Language" onclick="window.LanguageEngine&&LanguageEngine.openModal()"><span class="ls-lang-ico"></span></button>
 
             <!-- 150 CURRENCIES BUTTON -->
             <button type="button" onclick="toggleGlobalCurrencyModal(true)" id="header-curr-btn" class="neu-flat px-3 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1.5 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
@@ -534,9 +578,26 @@
                             <span class="text-[8px] text-gray-400 font-bold">MP4 / MOV, max 60 MB. Longer clips are auto-trimmed to 30 sec.</span>
                         </div>
                         <div id="video-progress-wrap" class="hidden w-full h-2 rounded-full bg-gray-200 overflow-hidden"><div id="video-progress-bar" class="h-full bg-luxuryGreen" style="width:0%"></div></div>
-                        <div id="video-preview-wrap" class="hidden relative w-40 mx-auto aspect-[9/16] rounded-2xl overflow-hidden bg-black">
-                            <video id="video-preview" class="w-full h-full object-cover" controls playsinline muted></video>
-                            <button type="button" onclick="removeListingVideo()" class="absolute top-1 right-1 bg-red-600 text-white text-[9px] font-black px-2 py-1 rounded-full">Remove</button>
+                        <div id="video-preview-wrap" class="hidden space-y-2.5">
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold block">Card cover</span>
+                                    <div class="thumb43" id="video-cover-thumb">
+                                        <img id="video-cover-img" src="" alt="">
+                                        <button type="button" onclick="openVideoCoverModal()" class="edit-chip">✎ Edit cover</button>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold block">Full video</span>
+                                    <div class="relative aspect-[9/16] max-h-[190px] rounded-xl overflow-hidden bg-black mx-auto">
+                                        <video id="video-preview" class="w-full h-full object-cover" controls playsinline muted></video>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="openVideoCoverModal()" class="flex-1 py-2.5 rounded-xl neu-btn-green text-white text-[11px] font-bold">🎞 Choose cover moment</button>
+                                <button type="button" onclick="removeListingVideo()" class="px-4 py-2.5 rounded-xl bg-red-50 text-red-600 border border-red-100 text-[11px] font-bold">Remove</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -995,33 +1056,64 @@
         </div>
     </div>
 
-    <!-- 🎯 COVER PHOTO CROP-POSITION MODAL -->
-    <div id="cover-crop-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[50000] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl neu-flat border border-gray-200 space-y-3.5 text-left animate-pop-in">
-            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
-                <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">🎯 Adjust Cover Photo Crop</span>
-                <button type="button" onclick="closeCoverCropModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
+    <!-- 🎯 PHOTO CROP EDITOR — host picks which part of the photo is shown on the Explore / Map card -->
+    <div id="cover-crop-modal" class="hidden fixed inset-0 z-[50000] flex" onclick="if(event.target===this)closeCoverCropModal()">
+        <div class="p-5 text-left space-y-3.5">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2.5">
+                <div>
+                    <span class="text-lg font-bold text-gray-900 block">Choose visible area</span>
+                    <span id="crop-photo-label" class="text-[11px] text-gray-500 font-medium">Photo</span>
+                </div>
+                <button type="button" onclick="closeCoverCropModal()" class="w-9 h-9 text-lg font-bold text-gray-900" aria-label="Close">✕</button>
             </div>
-
-            <p class="text-[9.5px] text-gray-400 font-bold">Choose which part of your photo shows inside the card frame on the homepage. Use the sliders to move it.</p>
-
-            <!-- 🖼️ PREVIEW — یہی وہ فریم/تناسب ہے جو index.html کے کارڈ پر نظر آتا ہے -->
-            <div class="w-full aspect-[16/10] rounded-2xl overflow-hidden border-2 border-luxuryGreen bg-gray-100 relative">
-                <img id="cover-crop-preview-img" src="" class="w-full h-full object-cover">
+            <p class="text-[11px] text-gray-500 font-medium leading-relaxed">This frame is exactly how the photo appears on the homepage card and map. <b>Drag the photo</b> to choose the part guests see first. Guests still see the full photo on the details page.</p>
+            <div id="crop-frame" class="crop-frame">
+                <img id="cover-crop-preview-img" src="" alt="">
+                <div class="grid3"></div>
+                <span class="crop-hint">✋ Drag to move</span>
             </div>
-
-            <div class="space-y-2 pt-1">
-                <div class="space-y-1">
-                    <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-black">↔️ Horizontal Position</label>
+            <div id="crop-sliders" class="space-y-2">
+                <div id="crop-row-x" class="space-y-1">
+                    <label class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">↔ Left / Right</label>
                     <input type="range" id="cover-crop-slider-x" min="0" max="100" value="50" oninput="updateCoverCropPreview()" class="w-full accent-luxuryGreen">
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-black">↕️ Vertical Position</label>
+                <div id="crop-row-y" class="space-y-1">
+                    <label class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">↕ Up / Down</label>
                     <input type="range" id="cover-crop-slider-y" min="0" max="100" value="50" oninput="updateCoverCropPreview()" class="w-full accent-luxuryGreen">
                 </div>
             </div>
+            <div class="flex gap-2 pt-1">
+                <button type="button" onclick="resetCropCenter()" class="flex-1 py-3 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 bg-white">Center</button>
+                <button type="button" onclick="closeCoverCropModal()" class="flex-[2] neu-btn-green text-white text-xs font-bold py-3 rounded-xl">Done</button>
+            </div>
+        </div>
+    </div>
 
-            <button type="button" onclick="closeCoverCropModal()" class="w-full neu-btn-green text-white text-xs font-bold py-3 rounded-xl uppercase tracking-wider mt-1">Confirm Crop</button>
+    <!-- 🎬 VIDEO COVER EDITOR — host picks which moment (and which part of the frame) shows on the card -->
+    <div id="video-cover-modal" class="hidden fixed inset-0 z-[50000] flex" onclick="if(event.target===this)closeVideoCoverModal()">
+        <div class="p-5 text-left space-y-3.5">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2.5">
+                <div>
+                    <span class="text-lg font-bold text-gray-900 block">Video cover</span>
+                    <span class="text-[11px] text-gray-500 font-medium">Choose what guests see before they tap play</span>
+                </div>
+                <button type="button" onclick="closeVideoCoverModal()" class="w-9 h-9 text-lg font-bold text-gray-900" aria-label="Close">✕</button>
+            </div>
+            <div id="vcover-frame" class="crop-frame">
+                <video id="vcover-video" muted playsinline preload="auto"></video>
+                <div class="grid3"></div>
+                <span class="crop-hint">✋ Drag to move</span>
+            </div>
+            <div class="space-y-1">
+                <div class="flex justify-between text-[10px] uppercase tracking-wider text-gray-400 font-bold"><span>🎞 Moment</span><span id="vcover-time-label">0.0 s</span></div>
+                <input type="range" id="vcover-time" min="0" max="30" step="0.1" value="0" oninput="onVideoCoverTime(this.value)" class="w-full accent-luxuryGreen">
+            </div>
+            <div id="vcover-row-y" class="space-y-1">
+                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">↕ Up / Down</label>
+                <input type="range" id="vcover-slider-y" min="0" max="100" value="50" oninput="onVideoCoverSlider()" class="w-full accent-luxuryGreen">
+            </div>
+            <p class="text-[11px] text-gray-500 font-medium leading-relaxed">Slide to the best moment of your video. This frame is shown on the homepage card and map. Tapping the card plays the video.</p>
+            <button type="button" onclick="closeVideoCoverModal(true)" class="w-full neu-btn-green text-white text-xs font-bold py-3 rounded-xl">Save cover</button>
         </div>
     </div>
 
@@ -1202,12 +1294,13 @@
 
                 container.innerHTML += `
                     <div class="neu-flat bg-white rounded-2xl border border-gray-150 p-3.5 space-y-2.5 animate-fade-in">
+                        ${listingCoverThumb(prop)}
                         <div class="flex justify-between items-center gap-2">
                             <h3 class="text-xs font-black text-luxuryGreen truncate flex-1">${prop.name}</h3>
                             <span class="text-[8px] font-black uppercase px-2 py-1 rounded-lg shrink-0 ${
                                 prop.status === 'Pending' ? 'bg-amber-500 text-white' :
                                 prop.status === 'Rejected' ? 'bg-red-600 text-white' :
-                                isHidden ? 'bg-gray-500 text-white' : 'bg-luxuryGreen text-white'
+                                isHidden ? 'bg-gray-500 text-white' : 'bg-gray-900 text-white'
                             }">${prop.status === 'Pending' ? '⏳ Pending' : (prop.status || 'Active')}</span>
                         </div>
 
@@ -1451,6 +1544,7 @@
         // آپ اپنا بوٹ ٹوکن اور ایڈمن چیٹ آئی ڈی یہاں لکھ سکتے ہیں
         // (BOT_TOKEN اب یہاں بالکل نہیں — یہ صرف Cloudflare Worker کے محفوظ Secrets میں رہتا ہے)
 
+        document.addEventListener('DOMContentLoaded', () => { document.querySelectorAll('.ls-lang-ico').forEach(e => { e.innerHTML = (window.LanguageEngine && LanguageEngine.icon) || '🌐'; }); });
         let currentHostUser = null;
         let compressedPhotoUrls = [];
         let coverPhotoPosition = { x: 50, y: 50 }; // 🎯 index.html card پر cover تصویر کا کون سا حصہ مرکز میں رہے (فیصد میں)
@@ -1750,7 +1844,8 @@
 
             // 3. Photos Preload
             const rawPhotos = p.photos || (p.image ? [p.image] : []);
-            compressedPhotoUrls = rawPhotos.map(url => ({ src: url, kb: 45 }));
+            const savedPos = Array.isArray(p.photoPositions) ? p.photoPositions : [];
+            compressedPhotoUrls = rawPhotos.map((url, i) => ({ src: url, kb: 45, pos: savedPos[i] || (i === 0 && p.coverPosition) || '50% 50%' }));
 
             // 🎯 پہلے سے محفوظ cover crop position بحال کریں (اگر موجود ہو)
             if (p.coverPosition) {
@@ -1760,7 +1855,9 @@
                 coverPhotoPosition = { x: 50, y: 50 };
             }
             renderPhotosManagerGrid();
-            listingVideoUrl = p.videoUrl || ''; listingVideoPoster = p.videoPoster || ''; setVideoUI(listingVideoUrl);
+            listingVideoUrl = p.videoUrl || ''; listingVideoPoster = p.videoPoster || '';
+            listingVideoCoverTime = Number(p.videoCoverTime) || 0; listingVideoCoverPos = p.videoCoverPosition || '50% 50%';
+            setVideoUI(listingVideoUrl);
 
             // 4. Capacity
             document.getElementById('new-prop-max-guests').value = p.maxGuests || 8;
@@ -1990,7 +2087,7 @@
                             // Instant local preview (base64) so the grid updates immediately —
                             // this preview is only ever used in the browser, never sent to Firebase.
                             const localPreviewUrl = canvas.toDataURL('image/jpeg', 0.7);
-                            const photoEntry = { src: localPreviewUrl, kb: 0, uploading: true, uploadFailed: false };
+                            const photoEntry = { src: localPreviewUrl, kb: 0, uploading: true, uploadFailed: false, pos: '50% 50%' };
                             compressedPhotoUrls.push(photoEntry);
                             renderPhotosManagerGrid();
 
@@ -2089,7 +2186,7 @@
             const vid = document.getElementById('video-preview');
             const label = document.getElementById('video-status-label');
             if (url) {
-                vid.src = url; wrap.classList.remove('hidden'); label.innerText = 'Video ready';
+                vid.src = url; wrap.classList.remove('hidden'); label.innerText = 'Video ready'; refreshVideoCoverThumb();
             } else {
                 vid.removeAttribute('src'); wrap.classList.add('hidden'); label.innerText = 'Click to Select Video';
             }
@@ -2156,6 +2253,7 @@
                         const wasTrimmed = res.duration && res.duration > 30;
                         // f_auto,q_auto,w_720,du_30: چھوٹی، تیز اور 30 سیکنڈ تک محدود ویڈیو؛ poster: پہلا فریم
                         listingVideoUrl = res.secure_url.replace('/upload/', '/upload/f_mp4,q_auto,w_720,du_30/');
+                        listingVideoCoverTime = 0; listingVideoCoverPos = '50% 50%';
                         listingVideoPoster = res.secure_url.replace('/upload/', '/upload/so_0,f_jpg,w_720/').replace(/\.[a-z0-9]+$/i, '.jpg');
                         setVideoUI(listingVideoUrl);
                         if (wasTrimmed) showToast("Video trimmed to 30 seconds.", "✂️");
@@ -2167,7 +2265,7 @@
         }
 
         function removeListingVideo() {
-            listingVideoUrl = ''; listingVideoPoster = '';
+            listingVideoUrl = ''; listingVideoPoster = ''; listingVideoCoverTime = 0; listingVideoCoverPos = '50% 50%';
             document.getElementById('prop-video-input').value = '';
             setVideoUI('');
         }
@@ -2183,11 +2281,12 @@
 
             compressedPhotoUrls.forEach((photo, idx) => {
                 const isCover = idx === 0;
+                const pos = photo.pos || '50% 50%';
 
                 grid.innerHTML += `
-                    <div class="relative rounded-2xl overflow-hidden neu-flat bg-white border ${isCover ? 'border-2 border-luxuryGreen shadow-md' : 'border-gray-200'} p-1 flex flex-col space-y-1">
+                    <div class="relative rounded-2xl overflow-hidden bg-white border ${isCover ? 'border-2 border-luxuryGreen' : 'border-gray-200'} p-1 flex flex-col space-y-1">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden relative bg-gray-100">
-                            <img src="${photo.src}" class="w-full h-full object-cover">
+                            <img src="${photo.src}" style="width:100%;height:100%;object-fit:cover;object-position:${pos}">
 
                             ${photo.uploading ? `
                             <div class="absolute inset-0 bg-black/45 flex items-center justify-center">
@@ -2196,28 +2295,24 @@
 
                             ${photo.uploadFailed ? `
                             <div class="absolute inset-0 bg-red-600/70 flex flex-col items-center justify-center gap-1" onclick="retryFailedPhotoUpload(${idx})">
-                                <span class="text-white text-[8px] font-black">Upload Failed</span>
-                                <span class="text-white text-[7px] underline font-bold">Tap to Retry</span>
+                                <span class="text-white text-[10px] font-bold">Upload Failed</span>
+                                <span class="text-white text-[9px] underline font-semibold">Tap to Retry</span>
                             </div>` : ''}
 
-                            <span class="absolute top-1 left-1 ${isCover ? 'bg-luxuryGreen text-goldWarm font-black' : 'bg-black/70 text-white font-bold'} text-[7.5px] px-1.5 py-0.5 rounded shadow-xs">
-                                ${isCover ? '⭐ #1 Main Cover' : `#${idx + 1}`}
+                            <span class="absolute top-1.5 left-1.5 ${isCover ? 'bg-luxuryGreen text-white font-bold' : 'bg-black/70 text-white font-semibold'} text-[9px] px-2 py-0.5 rounded-md">
+                                ${isCover ? '★ Main cover' : `#${idx + 1}`}
                             </span>
 
-                            <span class="absolute bottom-1 right-1 bg-black/60 text-white text-[7px] font-bold px-1 rounded">
-                                ${photo.uploading ? '...' : photo.kb + ' KB'}
-                            </span>
+                            ${(!photo.uploading && !photo.uploadFailed) ? `<button type="button" onclick="openCropEditor(${idx})" class="edit-chip">✎ Edit</button>` : ''}
                         </div>
 
-                        <div class="flex items-center justify-between text-[9px] pt-0.5 px-0.5">
+                        <div class="flex items-center justify-between text-[10px] pt-0.5 px-0.5">
                             <div class="flex items-center space-x-1">
-                                ${idx > 0 ? `<button type="button" onclick="movePhoto(${idx}, -1)" class="w-5 h-5 rounded bg-softMint hover:bg-emerald-100 flex items-center justify-center text-luxuryGreen font-bold" title="Move Left">◀</button>` : ''}
-                                ${idx < compressedPhotoUrls.length - 1 ? `<button type="button" onclick="movePhoto(${idx}, 1)" class="w-5 h-5 rounded bg-softMint hover:bg-emerald-100 flex items-center justify-center text-luxuryGreen font-bold" title="Move Right">▶</button>` : ''}
+                                ${idx > 0 ? `<button type="button" onclick="movePhoto(${idx}, -1)" class="w-6 h-6 rounded-md bg-softMint flex items-center justify-center text-luxuryGreen font-bold" title="Move Left">◀</button>` : ''}
+                                ${idx < compressedPhotoUrls.length - 1 ? `<button type="button" onclick="movePhoto(${idx}, 1)" class="w-6 h-6 rounded-md bg-softMint flex items-center justify-center text-luxuryGreen font-bold" title="Move Right">▶</button>` : ''}
                             </div>
-
-                            ${!isCover ? `<button type="button" onclick="setAsCoverPhoto(${idx})" class="text-[8px] text-luxuryGreen hover:underline font-black">Make Cover</button>` : `<button type="button" onclick="openCoverCropModal()" class="text-[8px] text-emerald-700 hover:underline font-black">🎯 Adjust Crop</button>`}
-
-                            <button type="button" onclick="removeSinglePhoto(${idx})" class="text-red-500 hover:text-red-700 font-black text-xs" title="Delete Photo">✕</button>
+                            ${!isCover ? `<button type="button" onclick="setAsCoverPhoto(${idx})" class="text-[10px] text-luxuryGreen hover:underline font-bold">Make Cover</button>` : `<span class="text-[10px] text-gray-400 font-semibold">${photo.uploading ? '...' : (photo.kb ? photo.kb + ' KB' : '')}</span>`}
+                            <button type="button" onclick="removeSinglePhoto(${idx})" class="text-red-500 hover:text-red-700 font-bold text-xs" title="Delete Photo">✕</button>
                         </div>
                     </div>
                 `;
@@ -2228,30 +2323,179 @@
             if (index <= 0 || index >= compressedPhotoUrls.length) return;
             const chosen = compressedPhotoUrls.splice(index, 1)[0];
             compressedPhotoUrls.unshift(chosen);
-            coverPhotoPosition = { x: 50, y: 50 }; // نیا cover منتخب ہونے پر crop دوبارہ درمیان پر ری سیٹ ہو جاتا ہے
             renderPhotosManagerGrid();
         }
 
-        // ================= 🎯 COVER PHOTO CROP-POSITION MODAL =================
-        function openCoverCropModal() {
-            if (compressedPhotoUrls.length === 0) return;
-            const coverPhoto = compressedPhotoUrls[0];
-            document.getElementById('cover-crop-preview-img').src = coverPhoto.src;
-            document.getElementById('cover-crop-preview-img').style.objectPosition = `${coverPhotoPosition.x}% ${coverPhotoPosition.y}%`;
-            document.getElementById('cover-crop-slider-x').value = coverPhotoPosition.x;
-            document.getElementById('cover-crop-slider-y').value = coverPhotoPosition.y;
-            document.getElementById('cover-crop-modal').classList.remove('hidden');
+        // ================= 🎯 PHOTO CROP EDITOR (drag to choose the visible part) =================
+        // Each photo keeps its own .pos ("x% y%"). Explore + Map cards show the photo with object-position = pos.
+        let cropIdx = 0;
+        function cropPosOf(photo) {
+            const parts = String((photo && photo.pos) || '50% 50%').replace(/%/g, '').trim().split(/\s+/);
+            const cl = v => Math.max(0, Math.min(100, Number.isFinite(Number(v)) ? Number(v) : 50));
+            return { x: cl(parts[0]), y: cl(parts[1] !== undefined ? parts[1] : 50) };
+        }
+        // overflow (px) of an object-fit:cover media inside its frame — how far it can be dragged on each axis
+        function coverOverflow(frame, nw, nh) {
+            const w = frame.clientWidth, h = frame.clientHeight;
+            if (!nw || !nh || !w || !h) return { ox: 0, oy: 0 };
+            const sc = Math.max(w / nw, h / nh);
+            return { ox: Math.max(0, nw * sc - w), oy: Math.max(0, nh * sc - h) };
+        }
+        // generic drag binder used by both the photo editor and the video-cover editor
+        function bindCropDrag(frame, getNatural, getPos, setPos) {
+            if (frame._dragBound) return;
+            frame._dragBound = true;
+            let sx = 0, sy = 0, start = null;
+            frame.addEventListener('pointerdown', e => {
+                start = getPos(); sx = e.clientX; sy = e.clientY;
+                try { frame.setPointerCapture(e.pointerId); } catch (_) {}
+                const hint = frame.querySelector('.crop-hint'); if (hint) hint.style.display = 'none';
+            });
+            frame.addEventListener('pointermove', e => {
+                if (!start) return;
+                const n = getNatural();
+                const o = coverOverflow(frame, n.w, n.h);
+                let x = start.x, y = start.y;
+                if (o.ox > 1) x = Math.max(0, Math.min(100, start.x - (e.clientX - sx) / o.ox * 100));
+                if (o.oy > 1) y = Math.max(0, Math.min(100, start.y - (e.clientY - sy) / o.oy * 100));
+                setPos({ x: Math.round(x), y: Math.round(y) });
+            });
+            const end = () => { start = null; };
+            frame.addEventListener('pointerup', end);
+            frame.addEventListener('pointercancel', end);
         }
 
+        function openCropEditor(idx) {
+            const photo = compressedPhotoUrls[idx];
+            if (!photo) return;
+            cropIdx = idx;
+            const img = document.getElementById('cover-crop-preview-img');
+            document.getElementById('crop-photo-label').innerText = idx === 0 ? 'Main cover photo' : `Photo #${idx + 1}`;
+            document.getElementById('cover-crop-modal').classList.remove('hidden');
+            img.onload = () => applyCropToUI(cropPosOf(photo));
+            img.src = photo.src;
+            if (img.complete && img.naturalWidth) applyCropToUI(cropPosOf(photo));
+            bindCropDrag(document.getElementById('crop-frame'),
+                () => ({ w: img.naturalWidth, h: img.naturalHeight }),
+                () => cropPosOf(compressedPhotoUrls[cropIdx]),
+                pos => { if (compressedPhotoUrls[cropIdx]) { compressedPhotoUrls[cropIdx].pos = `${pos.x}% ${pos.y}%`; applyCropToUI(pos); } });
+        }
+        function openCoverCropModal() { openCropEditor(0); } // old name kept
+
+        function applyCropToUI(pos) {
+            const img = document.getElementById('cover-crop-preview-img');
+            img.style.objectPosition = `${pos.x}% ${pos.y}%`;
+            document.getElementById('cover-crop-slider-x').value = pos.x;
+            document.getElementById('cover-crop-slider-y').value = pos.y;
+            const o = coverOverflow(document.getElementById('crop-frame'), img.naturalWidth, img.naturalHeight);
+            document.getElementById('crop-row-x').style.display = o.ox > 1 ? '' : 'none';
+            document.getElementById('crop-row-y').style.display = o.oy > 1 ? '' : 'none';
+            if (cropIdx === 0) coverPhotoPosition = pos;
+        }
+        function updateCoverCropPreview() {
+            const photo = compressedPhotoUrls[cropIdx];
+            if (!photo) return;
+            const pos = { x: Number(document.getElementById('cover-crop-slider-x').value), y: Number(document.getElementById('cover-crop-slider-y').value) };
+            photo.pos = `${pos.x}% ${pos.y}%`;
+            applyCropToUI(pos);
+        }
+        function resetCropCenter() {
+            const photo = compressedPhotoUrls[cropIdx];
+            if (!photo) return;
+            photo.pos = '50% 50%';
+            applyCropToUI({ x: 50, y: 50 });
+        }
         function closeCoverCropModal() {
             document.getElementById('cover-crop-modal').classList.add('hidden');
+            renderPhotosManagerGrid();
         }
 
-        function updateCoverCropPreview() {
-            const x = document.getElementById('cover-crop-slider-x').value;
-            const y = document.getElementById('cover-crop-slider-y').value;
-            coverPhotoPosition = { x: Number(x), y: Number(y) };
-            document.getElementById('cover-crop-preview-img').style.objectPosition = `${x}% ${y}%`;
+        // ================= 🎬 VIDEO COVER EDITOR (moment + visible part) =================
+        let listingVideoCoverTime = 0;
+        let listingVideoCoverPos = '50% 50%';
+        let vcDraft = { t: 0, pos: { x: 50, y: 50 } };
+
+        // Cloudinary still frame of the uploaded video at second t (same transformation family used at upload time)
+        function videoPosterAt(url, t) {
+            if (!url || url.indexOf('/upload/') < 0) return '';
+            const base = url.replace(/\/upload\/(?:[a-z]{1,3}_[^\/]*\/)+/, '/upload/');
+            return base.replace('/upload/', `/upload/so_${Number(t).toFixed(1)},f_jpg,w_720/`).replace(/\.[a-z0-9]+(\?.*)?$/i, '.jpg');
+        }
+        function vcPosOf(str) { return cropPosOf({ pos: str }); }
+
+        function refreshVideoCoverThumb() {
+            const img = document.getElementById('video-cover-img');
+            if (!img) return;
+            img.src = listingVideoPoster || '';
+            const p = vcPosOf(listingVideoCoverPos);
+            img.style.objectPosition = `${p.x}% ${p.y}%`;
+        }
+
+        function openVideoCoverModal() {
+            if (!listingVideoUrl) return;
+            const vid = document.getElementById('vcover-video');
+            vcDraft = { t: Number(listingVideoCoverTime) || 0, pos: vcPosOf(listingVideoCoverPos) };
+            document.getElementById('video-cover-modal').classList.remove('hidden');
+            const slider = document.getElementById('vcover-time');
+            vid.onloadedmetadata = () => {
+                const dur = Math.min(30, vid.duration || 30);
+                slider.max = String(Math.max(0.5, dur - 0.1));
+                slider.value = String(Math.min(vcDraft.t, dur - 0.1));
+                onVideoCoverTime(slider.value);
+                applyVideoCoverPos();
+            };
+            vid.src = listingVideoUrl;
+            vid.load();
+            slider.value = String(vcDraft.t);
+            document.getElementById('vcover-time-label').innerText = vcDraft.t.toFixed(1) + ' s';
+            applyVideoCoverPos();
+            bindCropDrag(document.getElementById('vcover-frame'),
+                () => ({ w: vid.videoWidth, h: vid.videoHeight }),
+                () => vcDraft.pos,
+                pos => { vcDraft.pos = pos; applyVideoCoverPos(); });
+        }
+        function onVideoCoverTime(v) {
+            vcDraft.t = Number(v) || 0;
+            document.getElementById('vcover-time-label').innerText = vcDraft.t.toFixed(1) + ' s';
+            const vid = document.getElementById('vcover-video');
+            try { vid.currentTime = vcDraft.t; } catch (e) {}
+        }
+        function onVideoCoverSlider() {
+            vcDraft.pos = { x: vcDraft.pos.x, y: Number(document.getElementById('vcover-slider-y').value) };
+            applyVideoCoverPos();
+        }
+        function applyVideoCoverPos() {
+            const vid = document.getElementById('vcover-video');
+            vid.style.objectPosition = `${vcDraft.pos.x}% ${vcDraft.pos.y}%`;
+            document.getElementById('vcover-slider-y').value = vcDraft.pos.y;
+            const o = coverOverflow(document.getElementById('vcover-frame'), vid.videoWidth, vid.videoHeight);
+            document.getElementById('vcover-row-y').style.display = (!vid.videoWidth || o.oy > 1) ? '' : 'none';
+        }
+        function closeVideoCoverModal(save) {
+            const vid = document.getElementById('vcover-video');
+            if (save) {
+                listingVideoCoverTime = vcDraft.t;
+                listingVideoCoverPos = `${vcDraft.pos.x}% ${vcDraft.pos.y}%`;
+                listingVideoPoster = videoPosterAt(listingVideoUrl, listingVideoCoverTime) || listingVideoPoster;
+                refreshVideoCoverThumb();
+                showToast('Video cover updated', '🎞');
+            }
+            try { vid.pause(); vid.removeAttribute('src'); vid.load(); } catch (e) {}
+            document.getElementById('video-cover-modal').classList.add('hidden');
+        }
+
+        // small cover preview on each listing card (exactly what Explore shows)
+        function listingCoverThumb(prop) {
+            let src = '', pos = '50% 50%';
+            if (prop.videoUrl && prop.videoPoster) { src = prop.videoPoster; pos = prop.videoCoverPosition || '50% 50%'; }
+            else {
+                const ph = (prop.photos && prop.photos.length) ? prop.photos : (prop.image ? [prop.image] : []);
+                src = ph[0] || '';
+                pos = (prop.photoPositions && prop.photoPositions[0]) || prop.coverPosition || '50% 50%';
+            }
+            if (!src) return '';
+            const esc = v => String(v).replace(/"/g, '&quot;');
+            return `<div class="thumb43"><img src="${esc(src)}" style="object-position:${esc(pos)}" loading="lazy" alt="">${prop.videoUrl ? '<span style="position:absolute;left:8px;top:8px;background:rgba(0,0,0,.6);color:#fff;font:700 10px Inter,sans-serif;padding:3px 8px;border-radius:6px">▶ Video</span>' : ''}</div>`;
         }
 
         function movePhoto(index, direction) {
@@ -2482,6 +2726,7 @@
             // never write a base64 preview (uploadFailed) into the database.
             const successfullyUploadedPhotos = compressedPhotoUrls.filter(p => !p.uploadFailed && p.src && !p.src.startsWith('data:'));
 
+            const finalPhotoPositions = successfullyUploadedPhotos.map(p => p.pos || '50% 50%');
             const finalPhotosList = (successfullyUploadedPhotos.length > 0)
                 ? successfullyUploadedPhotos.map(p => p.src)
                 : ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1200"];
@@ -2563,7 +2808,10 @@
                 image: finalPhotosList[0],
                 videoUrl: listingVideoUrl || null,
                 videoPoster: listingVideoPoster || null,
-                coverPosition: `${coverPhotoPosition.x}% ${coverPhotoPosition.y}%`, // 🎯 index.html کارڈ پر کون سا حصہ مرکز میں رہے
+                coverPosition: finalPhotoPositions[0] || '50% 50%', // 🎯 main cover — which part shows on Explore / Map cards
+                photoPositions: finalPhotoPositions,                  // 🎯 visible part for every photo (same order as photos)
+                videoCoverTime: listingVideoUrl ? Number(listingVideoCoverTime) || 0 : null,
+                videoCoverPosition: listingVideoUrl ? listingVideoCoverPos : null,
                 currency: String(activeSelectedCurrency.code),
                 currencySymbol: String(activeSelectedCurrency.symbol),
                 status: "Pending", // نئی listing ہمیشہ منظوری کی منتظر — ترمیم کے وقت نیچے یہ field ہٹا دی جاتی ہے
