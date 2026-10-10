@@ -424,8 +424,8 @@
         else if (path.includes('map')) currentTab = 'map';
         else if (path.includes('profile')) currentTab = 'profile';
 
-        // ہوسٹ ڈیش بورڈ، ایڈ لسٹنگ اور مائی لسٹنگ پر گیسٹ باٹم نیو بار نہ کھلے
-        if (!path.includes('host') && !path.includes('add-listing') && !path.includes('my-listings')) {
+        // ہوسٹ ڈیش بورڈ، ایڈ لسٹنگ، مائی لسٹنگ اور ڈیٹیلز/بکنگ پیج پر گیسٹ باٹم نیو بار نہ کھلے
+        if (!path.includes('host') && !path.includes('add-listing') && !path.includes('my-listings') && !path.includes('details') && !path.includes('booking-confirmation')) {
             renderBottomNav(currentTab);
         }
     });
