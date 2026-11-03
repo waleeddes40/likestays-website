@@ -133,6 +133,7 @@
     #details-loading-overlay .ls-spin{width:38px;height:38px;border-radius:50%;border:4px solid #FBEAE3;border-top-color:#D97757;animation:lsspin .8s linear infinite}
     #details-loading-overlay span{color:#D97757!important}
     @keyframes lsspin{to{transform:rotate(360deg)}}
+    #token-controller-box,#host-payment-accounts-section{display:none!important}
     #desktop-gallery-grid{display:none!important}
     @media(min-width:768px){#desktop-gallery-grid.ls-show{display:grid!important}#mobile-carousel-wrap{display:none!important}}
     #details-carousel-slides>img{flex:0 0 100%;width:100%;height:100%;min-width:100%;object-fit:cover;display:block}
@@ -691,35 +692,35 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="space-y-0.5">
                             <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Guest Full Name *</label>
-                            <input type="text" id="guest-input-name" required placeholder="e.g. Ahmed Khan" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                            <input type="text" id="guest-input-name" required placeholder="Full name" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
                         <div class="space-y-0.5">
-                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Calling Phone Number *</label>
-                            <input type="tel" id="guest-input-phone" required placeholder="e.g. 03001234567" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Phone Number (with country code) *</label>
+                            <input type="tel" id="guest-input-phone" required placeholder="+1 202 555 0123" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
                     </div>
 
                     <!-- Email -->
                     <div class="space-y-0.5">
                         <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Email Address *</label>
-                        <input type="email" id="guest-input-email" required placeholder="e.g. guest@example.com" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                        <input type="email" id="guest-input-email" required placeholder="name@email.com" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                     </div>
 
                     <!-- 2 Extra Links -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-gray-100">
                         <div class="space-y-0.5">
                             <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Contact Link 1 (WhatsApp / Telegram)</label>
-                            <input type="text" id="guest-input-link1" placeholder="e.g. https://wa.me/923001234567 or @username" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
+                            <input type="text" id="guest-input-link1" placeholder="WhatsApp / Telegram link or @username" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
                         </div>
                         <div class="space-y-0.5">
                             <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Contact Link 2 (Instagram / WeChat / IMO)</label>
-                            <input type="text" id="guest-input-link2" placeholder="e.g. Instagram Link or alternate chat ID" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
+                            <input type="text" id="guest-input-link2" placeholder="Instagram link or other chat ID" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
                         </div>
                     </div>
                 </div>
 
                 <!-- 🌟 3. DYNAMIC HOST PAYMENT ACCOUNTS (SHOWS 1, 2, 3 OR 4 DEPENDING ON AVAILABILITY) -->
-                <div id="host-payment-accounts-section" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
+                <div id="host-payment-accounts-section" class="hidden neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
                         <div>
                             <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen block">2. Host Bank & Payment Accounts</span>
@@ -736,12 +737,12 @@
                 </div>
 
                 <!-- DIRECT BOOKING NOTICE (SHOWN IF HOST ALLOWS NO TOKEN) -->
-                <div id="direct-booking-banner" class="hidden p-4 bg-emerald-50/80 border-2 border-emerald-200 rounded-3xl space-y-1.5 text-left">
+                <div id="direct-booking-banner" class="p-4 bg-emerald-50/80 border-2 border-emerald-200 rounded-3xl space-y-1.5 text-left">
                     <span class="text-xs font-black text-emerald-900 flex items-center space-x-1.5">
-                        <span>⚡</span> <span>No Advance Token Deposit Required!</span>
+                        <span>✅</span> <span>No advance payment needed</span>
                     </span>
                     <p class="text-[10px] text-emerald-800 font-bold leading-relaxed">
-                        ہوسٹ نے اس پراپرٹی پر بغیر ایڈوانس ٹوکن بکنگ کی اجازت دی ہے۔ آپ کا کوئی پیشگی خرچہ نہیں ہوگا، تمام رقم پراپرٹی پر چیک اِن کے وقت وصول کی جائے گی۔
+                        Confirm your reservation here. You pay the host directly at the property. Our team and the host are notified instantly.
                     </p>
                 </div>
 
@@ -749,7 +750,7 @@
                 <div class="neu-flat-white bg-white p-3.5 rounded-2xl border border-gray-150 flex items-start space-x-2.5">
                     <input type="checkbox" id="check-accept-rules" required class="w-4 h-4 accent-luxuryGreen mt-0.5 cursor-pointer" checked>
                     <label for="check-accept-rules" class="text-[9.5px] text-gray-600 font-medium leading-tight cursor-pointer">
-                        I agree to the House Rules, cancellation policies, and acknowledge that remaining balance is payable upon arrival at property.
+                        I agree to the House Rules, cancellation policies, and acknowledge that the full amount is payable directly to the host at the property.
                     </label>
                 </div>
 
@@ -791,7 +792,7 @@
                     </div>
 
                     <!-- TOKEN DEPOSIT CONTROLLER -->
-                    <div id="token-controller-box" class="bg-softMint/70 p-3.5 rounded-2xl border border-gray-200 space-y-2.5">
+                    <div id="token-controller-box" class="hidden bg-softMint/70 p-3.5 rounded-2xl border border-gray-200 space-y-2.5">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] font-black uppercase text-luxuryGreen block">Advance Token Deposit</span>
                             <span class="text-[7.5px] font-black bg-luxuryGreen text-white px-2 py-0.5 rounded-full">Advance</span>
@@ -1514,8 +1515,8 @@
         }
 
         // ================= 💰 RECALCULATE TOTALS =================
-        function V(amount, cur) { return Math.round(LikeStaysEngine.convert(amount || 0, cur || (activeProperty && activeProperty.currency) || 'PKR')); }
-        function fmtV(n) { return LikeStaysEngine.activeLocale.symbol + Math.round(n).toLocaleString(); }
+        function V(amount, cur) { return Math.round(LikeStaysEngine.convert(amount || 0, cur || (activeProperty && activeProperty.currency) || 'PKR') * 100) / 100; }
+        function fmtV(n) { n = Math.round((Number(n) || 0) * 100) / 100; return LikeStaysEngine.activeLocale.symbol + n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
         function recalculateBookingTotals() {
             if (!activeProperty) return;
             renderCancellationPolicy();
@@ -1540,14 +1541,14 @@
                 const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : '';
                 const sTime = document.getElementById('book-hourly-start')?.value || '12:00';
                 const eTime = document.getElementById('book-hourly-end')?.value || '16:00';
-                document.getElementById('det-calc-nights-lbl').innerText = `${LikeStaysEngine.formatPrice(hourly, propCurrency)} × ${hourlyDurationHours} hrs`;
+                document.getElementById('det-calc-nights-lbl').innerText = `${fmtV(V(hourly, propCurrency))} × ${hourlyDurationHours} hrs`;
                 document.getElementById('det-selected-dates-text').innerText = `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : ''} (${sTime} - ${eTime})`;
                 document.getElementById('det-calc-discount-row').classList.add('hidden');
             } else {
                 baseCost = Math.round(daily * nights);
                 const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : '';
                 const eMName = detailsEndDate ? MONTH_NAMES[detailsEndDate.getMonth()].slice(0,3) : '';
-                document.getElementById('det-calc-nights-lbl').innerText = `${LikeStaysEngine.formatPrice(daily, propCurrency)} × ${nights} nights`;
+                document.getElementById('det-calc-nights-lbl').innerText = `${fmtV(V(daily, propCurrency))} × ${nights} nights`;
                 document.getElementById('det-selected-dates-text').innerText = `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : ''} - ${eMName} ${detailsEndDate ? detailsEndDate.getDate() : ''} (${nights}N)`;
 
                 if (nights >= 30 && activeProperty.discMonthly && Number(activeProperty.discMonthly) > 0) {
@@ -1564,7 +1565,7 @@
                 if (discountAmount > 0) {
                     discRow.classList.remove('hidden');
                     document.getElementById('det-calc-discount-lbl').innerText = `${discountType} (${discountPercent}%)`;
-                    document.getElementById('det-calc-discount-val').innerText = `- ${LikeStaysEngine.formatPrice(discountAmount, propCurrency)}`;
+                    document.getElementById('det-calc-discount-val').innerText = `- ${fmtV(V(discountAmount, propCurrency))}`;
                 } else {
                     discRow.classList.add('hidden');
                 }
@@ -1599,7 +1600,7 @@
 
             if (extrasListContainer) extrasListContainer.innerHTML = extrasHtml;
 
-            document.getElementById('det-calc-subtotal').innerText = LikeStaysEngine.formatPrice(baseCost, propCurrency);
+            document.getElementById('det-calc-subtotal').innerText = fmtV(V(baseCost, propCurrency));
 
             const grandTotal = Math.max(0, (baseCost - discountAmount) + extrasCost);
             const grandV = Math.max(0, V(baseCost, propCurrency) - V(discountAmount, propCurrency) + extrasOut.reduce((s, x) => s + V(x.price, propCurrency), 0));
@@ -2220,26 +2221,9 @@ function renderCheckoutDetails() {
             document.getElementById('bill-extras-list').innerHTML = exList.filter(x => x.price > 0).map(x => `<div class="flex justify-between items-center text-[10px]"><span>${String(x.name).replace(/</g, '&lt;')}</span><span class="font-bold text-gray-800">+ ${fmtV(V(x.price))}</span></div>`).join('');
             document.getElementById('bill-grand-total').innerText = fmtV(convertedTotalAmount);
 
-            // 🌟 جانچ: کیا ہوسٹ نے بغیر ٹوکن اجازت دی ہے؟
-            const allowDirectBooking = Boolean(activeProperty.allowDirectBooking);
-
-            if (allowDirectBooking) {
-                document.getElementById('direct-booking-banner').classList.remove('hidden');
-                document.getElementById('host-payment-accounts-section').classList.add('hidden');
-                document.getElementById('token-controller-box').classList.add('hidden');
-                document.getElementById('input-advance-deposit').value = 0;
-            } else {
-                document.getElementById('direct-booking-banner').classList.add('hidden');
-                document.getElementById('host-payment-accounts-section').classList.remove('hidden');
-                document.getElementById('token-controller-box').classList.remove('hidden');
-                
-                const defaultToken = Math.round(convertedTotalAmount * 0.15);
-                document.getElementById('input-advance-deposit').value = defaultToken;
-                calculateRemainingBalanceOnArrival();
-
-                // 🌟 فلٹر شدہ 4 بینک اکاؤنٹس رینڈر کریں
-                setupDynamicBankAccounts();
-            }
+            // no token / no advance: guest just confirms
+            document.getElementById('direct-booking-banner').classList.remove('hidden');
+            document.getElementById('input-advance-deposit').value = 0;
         }
 
         function calculateRemainingBalanceOnArrival() {
@@ -2270,7 +2254,7 @@ function renderCheckoutDetails() {
             tabsContainer.innerHTML = '';
 
             if (activeBankAccountsList.length === 0) {
-                document.getElementById('host-account-details-box').innerHTML = `<p class="text-[10px] text-gray-400">ہوسٹ نے کوئی اکاؤنٹ سیٹ نہیں کیا۔ براہ کرم رابطہ کریں۔</p>`;
+                document.getElementById('host-account-details-box').innerHTML = `<p class="text-[10px] text-gray-400">No payment account.</p>`;
                 return;
             }
 
@@ -2315,7 +2299,7 @@ function renderCheckoutDetails() {
                         <span class="text-gray-400">Number / Address:</span>
                         <div class="flex items-center space-x-1.5 min-w-0">
                             <span class="text-luxuryGreen font-mono font-black truncate max-w-[150px]">${acc.detail2 || '-'}</span>
-                            <button type="button" onclick="navigator.clipboard.writeText('${acc.detail2 || ''}'); showBookingToast('کاپی ہو گیا! 📋', '✓');" class="px-2 py-0.5 bg-luxuryGreen text-white text-[8px] font-black rounded cursor-pointer">Copy</button>
+                            <button type="button" onclick="navigator.clipboard.writeText('${acc.detail2 || ''}'); showBookingToast('Copied', '✓');" class="px-2 py-0.5 bg-luxuryGreen text-white text-[8px] font-black rounded cursor-pointer">Copy</button>
                         </div>
                     </div>
                 </div>
@@ -2329,10 +2313,10 @@ function renderCheckoutDetails() {
             const email = document.getElementById('guest-input-email').value.trim();
             const link1 = document.getElementById('guest-input-link1').value.trim();
             const link2 = document.getElementById('guest-input-link2').value.trim();
-            const depositPaid = parseFloat(document.getElementById('input-advance-deposit').value) || 0;
+            const depositPaid = 0;
 
             if (!name || !phone || !email) {
-                showBookingToast("براہ کرم اپنا نام، فون نمبر اور ای میل لازمی درج کریں!", "⚠️");
+                showBookingToast("Please enter your name, phone number and email.", "⚠️");
                 return;
             }
 
@@ -2361,6 +2345,10 @@ function renderCheckoutDetails() {
             const hostLink1 = activeProperty.hostContactLink1 || activeProperty.hostWhatsapp || hostPhone;
             const hostLink2 = activeProperty.hostContactLink2 || activeProperty.hostTelegram || "";
 
+            let durationStr = '';
+            if (mode === 'offer' && activeCheckoutPayload.offer) durationStr = activeCheckoutPayload.offer.timing || '';
+            else if (mode === 'hourly' && activeCheckoutPayload.hourly) durationStr = `${activeCheckoutPayload.hourly.date} (${activeCheckoutPayload.hourly.startTime} - ${activeCheckoutPayload.hourly.endTime})`;
+            else durationStr = `${checkIn} - ${checkOut}`;
             const propCur = activeProperty.currency || 'PKR';
             const sameCur = LikeStaysEngine.activeLocale.currency === propCur;
             const T0 = activeCheckoutPayload && activeCheckoutPayload.totals;
@@ -2369,6 +2357,14 @@ function renderCheckoutDetails() {
             // گیسٹ اور ہوسٹ کی تمام تفصیلات کا پے لوڈ
             const bookingPayload = {
                 bookingId: globalBookingKey,
+                propId: activeProperty.id,
+                propName: activeProperty.name || activeProperty.title || "Stay",
+                propLocation: activeProperty.location || activeProperty.city || "",
+                category: activeProperty.category || "Stay",
+                guests: activeCheckoutPayload ? (activeCheckoutPayload.guests || 2) : 2,
+                bookingMode: mode,
+                durationString: durationStr,
+                cancellationPolicy: activeProperty.cancellationPolicy || null,
                 propertyId: activeProperty.id,
                 propertyName: activeProperty.name || activeProperty.title || "Stay",
                 city: activeProperty.city || "Pakistan",
@@ -2405,6 +2401,7 @@ function renderCheckoutDetails() {
                 paymentMethodSelected: selectedBankType || 'Direct on Arrival',
                 depositPaid: depositProp,
                 remainingDue: Math.max(0, totalProp - depositProp),
+                remainingBalance: Math.max(0, totalProp - depositProp),
                 status: "new",
                 createdAt: new Date().toISOString()
             };
@@ -2421,8 +2418,9 @@ function renderCheckoutDetails() {
                 // 2. Cloudflare Worker کو کال کریں (ایڈمن کو ٹیلی گرام پر فوری الرٹ جائے گا)
                 fetch(`${CLOUDFLARE_WORKER_URL}/api/new-booking`, {
                     method: "POST",
+                    keepalive: true,
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(bookingPayload)
+                    body: JSON.stringify(Object.assign({}, bookingPayload, { guestTotalFormatted: fmtV(convertedTotalAmount), source: 'details-confirm' }))
                 }).catch(e => console.log("Telegram Worker Alert dispatched."));
 
                 // 3. واؤچر اسکرین دکھائیں
@@ -2456,7 +2454,7 @@ function renderCheckoutDetails() {
 
             } catch (err) {
                 console.error("Booking Error:", err);
-                showBookingToast("خرابی پیش آئی، دوبارہ کوشش کریں!", "⚠️");
+                showBookingToast("Something went wrong, please try again.", "⚠️");
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Confirm & Lock Reservation";
             }

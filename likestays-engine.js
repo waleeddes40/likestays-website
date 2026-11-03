@@ -209,7 +209,9 @@
         if (!amount || isNaN(amount)) return `${activeLocale.symbol}0`;
         const usd = fromCode ? toUSD(amount, fromCode) : amount; // fromCode نہ ہو تو پرانے رویے کی طرح amount کو ہی USD مانا جائے
         const converted = usd * activeLocale.rate;
-        return `${activeLocale.symbol}${Math.round(converted).toLocaleString()}`;
+        // small amounts keep their cents ($1.79 /night, not $2) so unit price × nights always adds up
+        const shown = Math.abs(converted) < 100 ? Number(converted.toFixed(2)) : Math.round(converted);
+        return `${activeLocale.symbol}${shown.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
     }
 
     // 🆕 چھوٹی جگہ (deal بیجز) کے لیے مختصر قیمت — بڑی رقم کو K/M میں دکھاتی ہے
@@ -219,7 +221,8 @@
         const converted = usd * activeLocale.rate;
         if (converted >= 1000000) return `${activeLocale.symbol}${(converted / 1000000).toFixed(1)}M`;
         if (converted >= 1000) return `${activeLocale.symbol}${(converted / 1000).toFixed(1)}K`;
-        return `${activeLocale.symbol}${Math.round(converted).toLocaleString()}`;
+        const shown2 = Math.abs(converted) < 100 ? Number(converted.toFixed(2)) : Math.round(converted);
+        return `${activeLocale.symbol}${shown2.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
     }
 
     // 🆕 موجودہ سرچ (منزل، تاریخیں، مہمان) کو localStorage میں محفوظ کرنا — تاکہ صفحہ دوبارہ کھلنے پر یاد رہے
@@ -237,6 +240,9 @@
     function renderBottomNav(activeTab = 'explore', opts) {
         const existing = document.getElementById('likestays-global-bottom-nav');
         if (existing) existing.remove();
+        // the bottom bar lives ONLY on Explore, Map and Highlights — never on any other page
+        const __seg = (location.pathname.split('/').pop() || '').toLowerCase().replace(/\.html$/, '');
+        if (!['', 'index', 'map', 'highlights'].includes(__seg)) return;
 
         const lang = activeLocale.language || 'EN';
         const labels = NAV_TRANSLATIONS[lang] || NAV_TRANSLATIONS['EN'];
@@ -244,18 +250,23 @@
         // 🎬 Explore-feed style: one floating white pill = 4 tabs + Book Now (enabled per page via window.__lsNavOptions = {bookNow:true})
         opts = opts || window.__lsNavOptions || null;
         // 🧭 Home (card-list) style: light bottom bar with 3 tabs → Explore | Search | Map  (enable via window.__lsNavOptions = {threeTab:true})
+        if (!(opts && opts.bookNow)) opts = { threeTab: true };
         if (opts && opts.threeTab) {
             const ic = {
                 explore: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>',
                 search: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
-                map: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 7 9 4zM9 4v13M15 7v12.5"/></svg>'
+                map: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 7 9 4zM9 4v13M15 7v12.5"/></svg>',
+                highlights: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>'
             };
             const tabs = [
                 { id: 'explore', url: 'index.html', label: labels.explore },
-                { id: 'search', onclick: 'openAirbnbSearchModal()', label: labels.search || 'Search' },
-                { id: 'map', url: 'map.html', label: labels.map }
+                (typeof window.openAirbnbSearchModal === 'function')
+                    ? { id: 'search', onclick: 'openAirbnbSearchModal()', label: labels.search || 'Search' }
+                    : { id: 'search', url: 'index.html#search', label: labels.search || 'Search' },
+                { id: 'map', url: 'map.html', label: labels.map },
+                { id: 'highlights', url: 'highlights.html', label: labels.highlights }
             ];
-            const tStyle = (on) => `text-decoration:none;background:${on ? '#FBEAE3' : 'none'};border:0;padding:3px 18px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#D97757' : '#8b93a1'};font-size:10.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
+            const tStyle = (on) => `text-decoration:none;background:${on ? '#FBEAE3' : 'none'};border:0;padding:3px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#D97757' : '#8b93a1'};font-size:10.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
             const html3 = `
                 <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#fff;border-top:1px solid #e5e7eb;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 4px);display:flex;justify-content:space-around;align-items:center">
                     ${tabs.map(t => t.onclick ? `
@@ -429,9 +440,8 @@
         else if (path.includes('profile')) currentTab = 'profile';
 
         // ہوسٹ ڈیش بورڈ، ایڈ لسٹنگ، مائی لسٹنگ اور ڈیٹیلز/بکنگ پیج پر گیسٹ باٹم نیو بار نہ کھلے
-        if (!path.includes('host') && !path.includes('add-listing') && !path.includes('my-listings') && !path.includes('details') && !path.includes('booking-confirmation')) {
-            renderBottomNav(currentTab);
-        }
+        if (path.includes('highlights')) currentTab = 'highlights';
+        renderBottomNav(currentTab);   // renderBottomNav itself skips every page except Explore / Map / Highlights
     });
 
 })();
