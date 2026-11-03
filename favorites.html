@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root">
+<html lang="en" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#0E0E10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Like Stays | My Favorite Stays</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- 🔥 REALTIME FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -16,6 +17,7 @@
 
     <!-- 🌐 GLOBAL LIKESTAYS UNIVERSAL ENGINE & FILTERS -->
     <script src="likestays-engine.js"></script>
+    <script src="language-engine.js"></script>
     <script src="filters.js"></script>
 
     <script>
@@ -23,12 +25,13 @@
             theme: {
                 extend: {
                     colors: {
-                        luxuryGreen: '#0D4E2F',
-                        luxuryLightGreen: '#1E6F45',
-                        softMint: '#F2F5F3',
-                        softShadowDark: '#D2DCD4',
+                        luxuryGreen: '#111827',
+                        luxuryLightGreen: '#374151',
+                        softMint: '#F6F6F7',
+                        inputBg: '#F6F6F7',
+                        softShadowDark: '#E5E7EB',
                         softShadowLight: '#FFFFFF',
-                        goldWarm: '#D4AF37'
+                        goldWarm: '#D97757'
                     }
                 }
             }
@@ -111,8 +114,236 @@
 
         .spark-icon { display: inline-block; }
     </style>
+    <style>
+    /* ===== LikeStays shared theme — same look as Explore / Map / Details (Inter, white bordered cards, small radii, terracotta accent #D97757) ===== */
+    html,body{background:#fff!important;font-family:'Inter',system-ui,sans-serif!important;color:#111827}
+    body,button,input,select,textarea{font-family:'Inter',system-ui,sans-serif}
+    .font-cinzel-logo{font-family:'Inter',sans-serif!important;font-weight:800!important;letter-spacing:.02em}
+    .neu-flat,.neu-flat-white,.landing-card-shadow,.neu-logo-card,.neu-social-circle{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .landing-card-shadow{border-radius:14px!important;transform:none!important}
+    .landing-card-shadow:hover{transform:none!important;border-color:#D97757!important;box-shadow:none!important}
+    .neu-social-circle:hover{transform:none!important;border-color:#D97757!important;box-shadow:none!important}
+    .neu-inset{background:#F6F6F7!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .neu-inset:focus-within,.neu-inset:focus{border-color:#D97757!important}
+    .neu-btn-green{background:#D97757!important;box-shadow:none!important;color:#fff!important}
+    .neu-btn-green:active{transform:scale(.98)!important}
+    .neu-circle-btn{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .rounded-\[36px\],.rounded-\[32px\],.rounded-\[28px\],.rounded-3xl{border-radius:16px!important}
+    .rounded-2xl{border-radius:12px!important}
+    .rounded-xl{border-radius:10px!important}
+    /* colour: no green anywhere → terracotta / warm tints */
+    .bg-luxuryGreen,.hover\:bg-luxuryGreen:hover{background-color:#D97757!important;color:#fff!important}
+    .hover\:bg-luxuryLightGreen:hover{background-color:#C2613F!important}
+    .accent-luxuryGreen{accent-color:#D97757}
+    .border-luxuryGreen,.hover\:border-luxuryGreen:hover{border-color:#D97757!important}
+    .text-goldWarm{color:#D97757!important}
+    .text-luxuryLightGreen{color:#D97757!important}
+    [class*="bg-luxuryGreen/10"],[class*="bg-luxuryGreen/15"],[class*="bg-luxuryGreen/20"]{background:#FBEAE3!important;color:#D97757!important}
+    [class*="bg-emerald-"],[class*="from-emerald-"],[class*="via-emerald-"],[class*="to-emerald-"]{background-color:#FBEAE3!important;background-image:none!important}
+    .bg-emerald-700,.bg-emerald-800{background-color:#D97757!important;color:#fff!important}
+    .hover\:bg-emerald-800:hover{background-color:#C2613F!important}
+    .hover\:bg-emerald-50:hover,.hover\:bg-emerald-100:hover{background:#FBEAE3!important}
+    [class*="text-emerald-"]{color:#B4532F!important}
+    .bg-emerald-700 *,.bg-emerald-800 *,.bg-luxuryGreen *{color:inherit}
+    a.bg-emerald-700,a.bg-emerald-800,button.bg-emerald-700{color:#fff!important}
+    [class*="border-emerald-"]{border-color:#F3CDBF!important}
+    .text-emerald-400{color:#D97757!important}
+    [class*="bg-amber-"],[class*="from-amber-"],[class*="to-amber-"]{background-color:#FBEAE3!important;background-image:none!important}
+    [class*="border-amber-"]{border-color:#F3CDBF!important}
+    [class*="text-amber-"]{color:#9A4A2A!important}
+    .bg-amber-500{background-color:#D97757!important}
+    .fill-luxuryGreen{fill:#111827}
+    .bg-gray-150{background:#f3f4f6}.border-gray-150{border-color:#eceef1}
+    header.sticky,header.bg-white{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #e5e7eb!important}
+    #toast-msg{font-weight:600}
+    [id$="toast"]{border-radius:12px!important;background:rgba(17,24,39,.95)!important}
+    input[type=range]::-webkit-slider-runnable-track{background:#e5e7eb!important}
+    input[type=range]::-webkit-slider-thumb{background:#D97757!important;box-shadow:none!important}
+    input[type=range]::-moz-range-thumb{background:#D97757!important}
+    input:focus,select:focus,textarea:focus{outline:none}
+    ::selection{background:#FBEAE3}
+    @keyframes popIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+    .animate-pop-in{animation:popIn .18s ease-out forwards}
+    /* header buttons shared (language icon + currency code) */
+    .ls-lang-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;color:#111827;cursor:pointer;flex:none}
+    .ls-lang-btn svg{width:18px;height:18px}
+    .ls-cur-btn{display:flex;align-items:center;justify-content:center;gap:4px;height:32px;padding:0 10px;border-radius:16px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:700 11px Inter,sans-serif;cursor:pointer;flex:none}
+    .ls-hdr-tools{display:flex;align-items:center;gap:6px}
+:root{--pri:#D97757;--br:#e5e7eb;--mut:#8b93a1}
+  .offer-cycle{position:relative;height:12px;overflow:hidden;flex:1;min-width:0}
+  .offer-cycle span{position:absolute;left:0;right:0;top:0;white-space:nowrap;opacity:0}
+  .offer-cycle .s1{animation:offerFade1 4s infinite}
+  .offer-cycle .s2{animation:offerFade2 4s infinite}
+  @keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+  @keyframes offerFade1{0%{opacity:0}5%{opacity:1}22%{opacity:1}30%{opacity:0}100%{opacity:0}}
+  @keyframes offerFade2{0%{opacity:0}30%{opacity:0}38%{opacity:1}95%{opacity:1}100%{opacity:0}}
+  .price-stack{position:absolute;left:10px;top:8px;z-index:10;display:flex;flex-direction:column;gap:2px}
+  .price-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:7px;font-weight:800;padding:3px 8px;width:fit-content}
+  .price-stack{top:calc(env(safe-area-inset-top,0px) + 14px)!important}
+  .offer-cycle{height:13px!important}
+  .offer-badge-inline{display:flex;align-items:center;background:#F5A524;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden;margin-bottom:3px;max-width:230px}
+  .feed-slide{position:relative;margin:0 0 34px;height:auto;overflow:visible;background:#fff;color:#0f172a;cursor:pointer}
+  .cd-img{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb}
+  .cd-track{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .cd-track::-webkit-scrollbar{display:none}
+  .cd-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;display:block}
+  .cd-fav{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:#fff;color:#0f172a;border:0;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);z-index:6}
+  .cd-fav.on svg{fill:var(--pri);stroke:var(--pri)}
+  .cd-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border:2px solid rgba(255,255,255,.85);display:grid;place-items:center;cursor:pointer;padding:0;z-index:6}
+  .cd-dots{position:absolute;bottom:10px;right:12px;display:flex;gap:5px;pointer-events:none;z-index:6}
+  .cd-dots span{display:block;width:6px;height:6px;border-radius:50%}
+  .cd-title{font-size:13.5px;font-weight:700;margin:10px 0 4px;line-height:1.3;display:flex;justify-content:space-between;gap:8px}
+  .cd-title em{font-style:normal;font-size:12px;font-weight:600;white-space:nowrap}
+  .cd-loc,.cd-meta{display:flex;align-items:center;gap:6px;color:var(--mut);font-size:12px;margin:3px 0}
+  .cd-meta span+span{border-left:1px solid var(--br);padding-left:10px;margin-left:2px}
+  .feed-slide .price-stack{position:absolute!important;left:10px!important;top:10px!important;z-index:6;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+  .feed-slide .price-chip{border-radius:7px;padding:4px 7px;font-weight:800;font-size:11.5px;border:0;backdrop-filter:none;box-shadow:0 1px 4px rgba(0,0,0,.25);width:fit-content}
+  .price-chip.pc-d{background:var(--pri);color:#fff}.price-chip.pc-d small{font-weight:500;font-size:9px;opacity:.9}
+  .price-chip.pc-h{background:rgba(15,23,42,.78);color:#fff;font-weight:600;font-size:10px;padding:3px 7px}
+  .feed-slide .offer-badge-inline{font-size:9px;padding:3px 8px;max-width:200px}
+  .cd-play{width:auto!important;height:auto!important;background:none!important;border:0!important;backdrop-filter:none!important;border-radius:0!important}
+  .cd-play svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.55))}
+  .cd-track video{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;display:block;pointer-events:none;background:#e5e7eb}
+  .cd-loc{flex-wrap:nowrap!important;justify-content:space-between;gap:8px}
+  .cd-loc>.cd-locname{display:flex;align-items:center;gap:5px;flex:1;min-width:0}
+  .cd-loc>.cd-locname span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cd-loc .cd-meta{display:flex;gap:9px;margin:0;flex:none;font-size:11.5px;color:#6b7280}
+  .cd-loc .cd-meta span{display:flex;align-items:center;gap:3px;border:0!important;padding:0!important;margin:0!important}
+  .feed-slide .price-chip.pc-d{background:rgba(15,23,42,.36)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .feed-slide .price-chip.pc-h{background:rgba(15,23,42,.28)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .cd-offer-bar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 6px;padding:6px 10px;border-left:3px solid #000;font-size:12px;font-weight:600;color:#111827}
+  .cd-offer-bar::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
+  @keyframes offerSweep{0%{left:0;opacity:0}10%{opacity:1}72%{left:calc(100% - 2px);opacity:1}86%,100%{left:calc(100% - 2px);opacity:0}}
+  .of-more{flex:none;font-size:10.5px;font-weight:700;color:#D97757}
+  .cd-vtag{position:absolute;bottom:10px;right:12px;z-index:6;display:flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;letter-spacing:.2px;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+  .cd-vtag i{width:6px;height:6px;border-radius:50%;background:#D97757;display:block}
+  .feed-slide .price-chip.pc-d{background:rgba(15,23,42,.82);color:#fff}
+  .price-chip.pc-h{background:rgba(15,23,42,.6)}
+  .cd-loc{flex-wrap:wrap}
+  .cd-offer{border:1px solid #000;border-radius:6px;padding:2px 7px;font-size:10.5px;font-weight:600;color:#000;background:transparent;margin-left:4px;white-space:nowrap}
+.more-grid .feed-slide{margin-bottom:26px}
+    #favorites-property-list{display:grid;gap:0 18px}
+    #favorites-property-list .feed-slide{margin-bottom:26px}
+    #favorites-property-list .col-span-full{grid-column:1/-1}
+    .ls-search{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    </style>
+<style id="ls-dark-theme">
+/* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #D97757 ===== */
+html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#D97757;--soft:#2E1D16;--br:#2C2C31;--mut:#9CA3AF}
+html[data-theme=dark],html[data-theme=dark] body{background:#0E0E10!important;color:#F3F4F6!important}
+/* surfaces */
+html[data-theme=dark] .bg-white,html[data-theme=dark] .hover\:bg-white:hover,html[data-theme=dark] .neu-flat,html[data-theme=dark] .neu-flat-white,html[data-theme=dark] .landing-card-shadow,html[data-theme=dark] .neu-logo-card,html[data-theme=dark] .neu-social-circle,html[data-theme=dark] .neu-circle-btn{background:#17171A!important;border-color:#2C2C31!important;box-shadow:none!important}
+html[data-theme=dark] [class*="bg-white/"]{background:rgba(23,23,26,.92)!important}
+html[data-theme=dark] .bg-softMint,html[data-theme=dark] [class*="bg-softMint/"],html[data-theme=dark] .hover\:bg-softMint:hover,html[data-theme=dark] .neu-inset,html[data-theme=dark] .bg-gray-50,html[data-theme=dark] .bg-gray-100,html[data-theme=dark] .bg-gray-150,html[data-theme=dark] .bg-gray-200,html[data-theme=dark] .hover\:bg-gray-50:hover,html[data-theme=dark] .hover\:bg-gray-100:hover,html[data-theme=dark] .hover\:bg-gray-200:hover,html[data-theme=dark] [class*="to-softMint"],html[data-theme=dark] [class*="from-softMint"]{background:#1F1F23!important;background-image:none!important;border-color:#2C2C31!important}
+html[data-theme=dark] .neu-inset{box-shadow:none!important}
+html[data-theme=dark] .neu-inset:focus-within,html[data-theme=dark] .neu-inset:focus{border-color:#D97757!important}
+html[data-theme=dark] .bg-gray-300{background:#3a3a40!important}
+/* text */
+html[data-theme=dark] .text-luxuryGreen,html[data-theme=dark] .text-gray-900,html[data-theme=dark] .text-gray-800,html[data-theme=dark] .text-gray-700,html[data-theme=dark] .text-black,html[data-theme=dark] .hover\:text-black:hover,html[data-theme=dark] .text-slate-900,html[data-theme=dark] .text-slate-800,html[data-theme=dark] .text-slate-700{color:#F3F4F6!important}
+html[data-theme=dark] .text-gray-600,html[data-theme=dark] .text-gray-500,html[data-theme=dark] .text-gray-400,html[data-theme=dark] .text-gray-300,html[data-theme=dark] .text-slate-500,html[data-theme=dark] .text-slate-400{color:#9CA3AF!important}
+html[data-theme=dark] .text-luxuryLightGreen,html[data-theme=dark] .text-goldWarm{color:#E8896A!important}
+html[data-theme=dark] .fill-luxuryGreen{fill:#F3F4F6}
+/* borders / dividers */
+html[data-theme=dark] [class*="border-gray-"],html[data-theme=dark] .border-slate-200,html[data-theme=dark] .border-b,html[data-theme=dark] .border-t,html[data-theme=dark] .border-r,html[data-theme=dark] .border{border-color:#2C2C31!important}
+html[data-theme=dark] [class*="divide-gray-"]>*{border-color:#2C2C31!important}
+html[data-theme=dark] .border-luxuryGreen,html[data-theme=dark] .hover\:border-luxuryGreen:hover,html[data-theme=dark] .landing-card-shadow:hover{border-color:#D97757!important}
+html[data-theme=dark] [class*="border-luxuryGreen/"]{border-color:#2C2C31!important}
+/* accent buttons stay terracotta */
+html[data-theme=dark] .bg-luxuryGreen,html[data-theme=dark] .neu-btn-green,html[data-theme=dark] .bg-emerald-700,html[data-theme=dark] .bg-emerald-800,html[data-theme=dark] .bg-amber-500{background:#D97757!important;color:#fff!important;border-color:#D97757!important;box-shadow:none!important}
+html[data-theme=dark] .hover\:bg-luxuryLightGreen:hover,html[data-theme=dark] .hover\:bg-emerald-800:hover{background:#C2613F!important}
+html[data-theme=dark] .bg-luxuryGreen *,html[data-theme=dark] .neu-btn-green *{color:inherit}
+html[data-theme=dark] [class*="bg-luxuryGreen/"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] [class*="bg-emerald-"]:not(.bg-emerald-700):not(.bg-emerald-800),html[data-theme=dark] [class*="from-emerald-"],html[data-theme=dark] [class*="to-emerald-"],html[data-theme=dark] [class*="bg-amber-"]:not(.bg-amber-500),html[data-theme=dark] [class*="from-amber-"],html[data-theme=dark] [class*="to-amber-"],html[data-theme=dark] .hover\:bg-emerald-50:hover,html[data-theme=dark] .hover\:bg-emerald-100:hover{background:#2E1D16!important;background-image:none!important}
+html[data-theme=dark] [class*="text-emerald-"],html[data-theme=dark] [class*="text-amber-"]{color:#F0A585!important}
+html[data-theme=dark] [class*="border-emerald-"],html[data-theme=dark] [class*="border-amber-"]{border-color:#4A2C20!important}
+html[data-theme=dark] [class*="bg-rose-"],html[data-theme=dark] [class*="bg-red-"],html[data-theme=dark] .hover\:bg-rose-100:hover{background:#2A1517!important}
+html[data-theme=dark] [class*="text-rose-"],html[data-theme=dark] [class*="text-red-"]{color:#FCA5A5!important}
+html[data-theme=dark] [class*="border-rose-"],html[data-theme=dark] [class*="border-red-"]{border-color:#5B2A2E!important}
+html[data-theme=dark] [class*="bg-blue-"],html[data-theme=dark] [class*="bg-sky-"]{background:#16222E!important}
+html[data-theme=dark] [class*="text-blue-"],html[data-theme=dark] [class*="text-sky-"]{color:#93C5FD!important}
+/* shadows softer */
+html[data-theme=dark] .shadow-2xl,html[data-theme=dark] .shadow-xl,html[data-theme=dark] .shadow-lg,html[data-theme=dark] .shadow-md,html[data-theme=dark] .shadow-sm,html[data-theme=dark] .shadow-xs,html[data-theme=dark] .shadow-2xs{box-shadow:0 6px 24px rgba(0,0,0,.55)!important}
+/* header */
+html[data-theme=dark] header.sticky,html[data-theme=dark] header.bg-white,html[data-theme=dark] #ls-home-header{background:rgba(14,14,16,.96)!important;border-color:#2C2C31!important}
+html[data-theme=dark] #details-loading-overlay{background:#0E0E10!important}
+/* form controls */
+html[data-theme=dark] input:not([type=checkbox]):not([type=radio]):not([type=range]),html[data-theme=dark] select,html[data-theme=dark] textarea{background:#1F1F23!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] input::placeholder,html[data-theme=dark] textarea::placeholder{color:#6B7280!important;opacity:1}
+html[data-theme=dark] option{background:#1F1F23;color:#F3F4F6}
+html[data-theme=dark] input[type=range]::-webkit-slider-runnable-track{background:#3a3a40!important}
+html[data-theme=dark] input[type=date],html[data-theme=dark] input[type=time]{color-scheme:dark}
+html[data-theme=dark] ::selection{background:#4A2C20}
+html[data-theme=dark] hr{border-color:#2C2C31}
+/* ---- home / map cards ---- */
+html[data-theme=dark] .hs-bar{background:#17171A!important;border-color:#2C2C31!important;box-shadow:0 3px 14px rgba(0,0,0,.5)!important}
+html[data-theme=dark] .hs-ic{background:#2A2A2F!important;color:#F3F4F6!important}
+html[data-theme=dark] .hs-t b,html[data-theme=dark] .hs-btn,html[data-theme=dark] .hs-cur{color:#F3F4F6!important}
+html[data-theme=dark] .type-chip,html[data-theme=dark] .cat-tag{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] .type-chip.on,html[data-theme=dark] .cat-tag.on{background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+html[data-theme=dark] #explore-property-list,html[data-theme=dark] .feed-slide,html[data-theme=dark] #feed-wrap{background:transparent!important;color:#F3F4F6!important}
+html[data-theme=dark] .cd-img,html[data-theme=dark] .cd-track video{background:#1F1F23!important}
+html[data-theme=dark] .cd-fav{background:#17171A!important;color:#F3F4F6!important;box-shadow:0 1px 6px rgba(0,0,0,.5)!important}
+html[data-theme=dark] .cd-fav.on svg{fill:#D97757;stroke:#D97757}
+html[data-theme=dark] .cd-title,html[data-theme=dark] .cd-title em{color:#F3F4F6}
+html[data-theme=dark] .cd-loc,html[data-theme=dark] .cd-meta,html[data-theme=dark] .cd-loc .cd-meta{color:#9CA3AF!important}
+html[data-theme=dark] .cd-meta span+span{border-color:#2C2C31}
+html[data-theme=dark] .cd-offer-bar{border-left-color:#F3F4F6;color:#F3F4F6}
+html[data-theme=dark] .cd-offer{border-color:#F3F4F6;color:#F3F4F6}
+html[data-theme=dark] .cat-head,html[data-theme=dark] #ls-more-sheet .drawer-head{background:#17171A!important;border-color:#2C2C31!important}
+html[data-theme=dark] .drawer-title,html[data-theme=dark] .drawer-x{color:#F3F4F6!important}
+html[data-theme=dark] #ls-more-sheet{background:#17171A!important}
+html[data-theme=dark] #ls-more-sheet a{color:#E5E7EB!important}
+html[data-theme=dark] #ls-more-sheet a:hover,html[data-theme=dark] #ls-more-sheet a:active{background:#D97757!important;color:#fff!important}
+html[data-theme=dark] #ls-more-sheet .sep{background:#2C2C31}
+html[data-theme=dark] :is(#filter-modal-overlay,#airbnb-search-modal,#cat-modal,#global-currency-modal,#global-lang-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #map-empty{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #main-interactive-map{background:#0E0E10!important}
+html[data-theme=dark] .leaflet-container{background:#0E0E10!important}
+/* map tiles + popups: darken the basemap */
+html[data-theme=dark] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.9) saturate(.75)}
+html[data-theme=dark] .leaflet-popup-content-wrapper,html[data-theme=dark] .leaflet-popup-tip{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] .leaflet-bar a{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] .leaflet-control-attribution{background:rgba(14,14,16,.7)!important;color:#9CA3AF!important}
+html[data-theme=dark] .leaflet-control-attribution a{color:#E8896A!important}
+/* ---- details/checkout ---- */
+html[data-theme=dark] #details-multi-deals-section{background:#2E1D16!important;border-color:#4A2C20!important}
+html[data-theme=dark] .star-btn{color:#3a3a40}html[data-theme=dark] .star-btn.on{color:#D97757}
+/* ---- header tool buttons ---- */
+html[data-theme=dark] .ls-lang-btn,html[data-theme=dark] .ls-cur-btn{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+/* ---- generic inline-style leaks ---- */
+html[data-theme=dark] [style*="background:#fff"],html[data-theme=dark] [style*="background: #fff"],html[data-theme=dark] [style*="background:white"],html[data-theme=dark] [style*="background-color:#fff"]{background:#17171A!important}
+html[data-theme=dark] [style*="color:#111827"],html[data-theme=dark] [style*="color:#0f172a"]{color:#F3F4F6!important}
+/* ---- bottom nav (engine) ---- */
+html[data-theme=dark] #likestays-global-bottom-nav{background:#0E0E10!important;border-top:1px solid #2C2C31!important;box-shadow:none!important}
+html[data-theme=dark] #likestays-global-bottom-nav [style*="#8b93a1"]{color:#9CA3AF!important}
+html[data-theme=dark] #likestays-global-bottom-nav [style*="#FBEAE3"]{background:#2E1D16!important}
+/* ---- engine currency modal & language modal ---- */
+html[data-theme=dark] #global-currency-modal *{border-color:#2C2C31}
+html[data-theme=dark] #global-language-modal .ls-lang-panel{background:#17171A!important;box-shadow:-8px 0 30px rgba(0,0,0,.6)!important}
+html[data-theme=dark] #global-language-modal .ls-lang-head{border-color:#2C2C31!important}
+html[data-theme=dark] #global-language-modal .ls-lang-title,html[data-theme=dark] #global-language-modal .ls-lang-x,html[data-theme=dark] #lang-modal-list-container .ls-l-name{color:#F3F4F6!important}
+html[data-theme=dark] #global-language-modal .ls-lang-sub,html[data-theme=dark] #lang-modal-list-container .ls-l-native{color:#9CA3AF!important}
+html[data-theme=dark] #global-language-modal .ls-lang-search{background:#1F1F23!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] #lang-modal-list-container button:active{background:#1F1F23!important}
+html[data-theme=dark] #lang-modal-list-container button.on{background:#2E1D16!important}
+html[data-theme=dark] #lang-modal-list-container button{color:#F3F4F6}
+/* scrollbars */
+html[data-theme=dark] *{scrollbar-color:#3a3a40 transparent}
+html[data-theme=dark] .hl-card{background:#17171A!important;border-color:#2C2C31!important}
+html[data-theme=dark] .hl-tag{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] .ls-search{background:#17171A!important;border-color:#2C2C31!important;color:#F3F4F6!important}
+html[data-theme=dark] .border-gray-150{border-color:#2C2C31!important}
+html[data-theme=dark] .text-\[\#111827\]{color:#F3F4F6!important}
+html[data-theme=dark] .bg-\[\#F6F6F7\]{background:#1F1F23!important}
+html[data-theme=dark] .sd-box,html[data-theme=dark] .sd-arrow,html[data-theme=dark] .sd-city,html[data-theme=dark] .sd-step,html[data-theme=dark] .map-tab{background:#17171A!important;border-color:#2C2C31!important;color:#F3F4F6!important;box-shadow:none!important}
+html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
+html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
+html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+
+</style>
 </head>
-<body class="no-scrollbar bg-softMint text-gray-800 pb-28">
+<body class="no-scrollbar bg-softMint text-gray-800 pb-10">
 
     <!-- BALANCED HEADER -->
     <header class="sticky top-0 z-40 bg-softMint/95 backdrop-blur-md border-b border-gray-200/50 py-2.5 px-3 sm:px-6">
@@ -126,22 +357,14 @@
                     </div>
                 </a>
 
-                <div class="flex items-center space-x-1.5 md:hidden">
-                    <button type="button" onclick="toggleGlobalCurrencyModal(true)" class="neu-flat px-2 py-1 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1 text-[10px] font-bold text-luxuryGreen">
-                        <span id="mobile-curr-flag">🇵🇰</span>
-                        <span id="mobile-curr-text">PKR</span>
-                        <span class="text-[7px]">▼</span>
-                    </button>
-                    <button type="button" onclick="toggleGlobalLangModal(true)" class="neu-flat px-2 py-1 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1 text-[10px] font-bold text-luxuryGreen">
-                        <span id="mobile-lang-flag">🌐</span>
-                        <span id="mobile-lang-text">EN</span>
-                        <span class="text-[7px]">▼</span>
-                    </button>
-                </div>
+                <div class="md:hidden"><div class="ls-hdr-tools">
+                <button type="button" class="ls-cur-btn" aria-label="Currency" onclick="LikeStaysEngine.openCurrencyModal()"><span class="ls-cur-code">USD</span></button>
+                <button type="button" class="ls-lang-btn" aria-label="Language" onclick="window.LanguageEngine&&LanguageEngine.openModal()"><span class="ls-lang-ico"></span></button>
+            </div></div>
             </div>
 
             <!-- UNIFIED SEARCH BAR -->
-            <div class="w-full max-w-xl mx-auto bg-white rounded-full neu-flat px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-1.5 border border-gray-200/70">
+            <div class="w-full max-w-xl mx-auto bg-white rounded-full ls-search px-2.5 py-1 sm:px-3 sm:py-1.5 flex items-center justify-between gap-1.5 border border-gray-200/70">
                 <div class="flex-1 min-w-[70px] flex items-center space-x-1 pl-1">
                     <span class="text-[10px]">📍</span>
                     <input type="text" id="home-search-dest" oninput="executeLiveFavoritesFilter()" placeholder="Search in saved stays..." class="w-full text-[10.5px] font-bold text-luxuryGreen outline-none bg-transparent placeholder-gray-400 truncate">
@@ -175,19 +398,10 @@
             </div>
 
             <!-- DESKTOP RIGHT -->
-            <div class="hidden md:flex items-center space-x-2 shrink-0">
-                <button type="button" onclick="toggleGlobalCurrencyModal(true)" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1.5 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
-                    <span id="header-curr-flag">🇵🇰</span>
-                    <span id="header-curr-text">PKR (Rs )</span>
-                    <span class="text-[8px]">▼</span>
-                </button>
-
-                <button type="button" onclick="toggleGlobalLangModal(true)" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200/60 flex items-center space-x-1.5 text-xs font-bold text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
-                    <span id="header-lang-flag">🌐</span>
-                    <span id="header-lang-text">English</span>
-                    <span class="text-[8px]">▼</span>
-                </button>
-            </div>
+            <div class="hidden md:flex items-center space-x-2 shrink-0"><div class="ls-hdr-tools">
+                <button type="button" class="ls-cur-btn" aria-label="Currency" onclick="LikeStaysEngine.openCurrencyModal()"><span class="ls-cur-code">USD</span></button>
+                <button type="button" class="ls-lang-btn" aria-label="Language" onclick="window.LanguageEngine&&LanguageEngine.openModal()"><span class="ls-lang-ico"></span></button>
+            </div></div>
 
         </div>
     </header>
@@ -203,12 +417,12 @@
         </div>
 
         <!-- FAVORITES PROPERTY CARDS GRID (100% IDENTICAL TO HOME.HTML) -->
-        <div id="favorites-property-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"></div>
+        <div id="favorites-property-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
     </main>
 
     <!-- ========================================== 📅 2-DATES RANGE CALENDAR (2 SECONDS DELAY) ========================================== -->
     <div id="home-calendar-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
-        <div class="bg-[#F2F5F3] w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-white space-y-3.5 animate-pop-in text-left">
+        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-white space-y-3.5 animate-pop-in text-left">
             <div class="flex justify-between items-center pb-2 border-b border-gray-200/70">
                 <button type="button" onclick="changeHomeCalendarMonth(-1)" class="w-7 h-7 rounded-lg neu-circle-btn flex items-center justify-center text-xs font-bold text-luxuryGreen cursor-pointer">❮</button>
                 <div class="text-center">
@@ -237,7 +451,7 @@
 
     <!-- ========================================== 👥 GUESTS MODAL ========================================== -->
     <div id="home-guests-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[25000] flex items-center justify-center p-4">
-        <div class="bg-[#F2F5F3] w-full max-w-xs rounded-3xl p-5 shadow-2xl neu-flat border border-white space-y-4 animate-pop-in text-left">
+        <div class="bg-white w-full max-w-xs rounded-3xl p-5 shadow-2xl neu-flat border border-white space-y-4 animate-pop-in text-left">
             <div class="flex justify-between items-center pb-2 border-b border-gray-200">
                 <span class="text-xs font-black text-luxuryGreen uppercase tracking-wider">Select Guests</span>
                 <button type="button" onclick="toggleGuestsModal(false)" class="text-xs font-bold text-gray-400 hover:text-luxuryGreen">✕</button>
@@ -375,35 +589,6 @@
         </div>
     </div>
 
-    <!-- ========================================== CURRENCY & LANG MODALS ========================================== -->
-    <div id="global-currency-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3 animate-pop-in text-left">
-            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Select Currency</span>
-                    <p class="text-[8.5px] text-gray-400 font-bold">150 Global Currencies</p>
-                </div>
-                <button type="button" onclick="toggleGlobalCurrencyModal(false)" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
-            </div>
-            <input type="text" id="currency-search-input" oninput="filterCurrenciesList()" placeholder="🔍 Search currency code or name..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
-            <div id="currencies-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
-        </div>
-    </div>
-
-    <div id="global-lang-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[30000] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3.5 animate-pop-in text-left">
-            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Select Language</span>
-                    <p class="text-[8.5px] text-gray-400 font-bold">40 Global Languages</p>
-                </div>
-                <button type="button" onclick="toggleGlobalLangModal(false)" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
-            </div>
-            <input type="text" id="lang-search-input" oninput="filterLanguagesList()" placeholder="🔍 Search language..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
-            <div id="lang-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
-        </div>
-    </div>
-
     <!-- JAVASCRIPT SYSTEM ENGINE -->
     <script>
         const firebaseConfig = {
@@ -431,37 +616,15 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             syncHeaderUI();
-            renderCurrenciesList();
-            renderLanguagesList();
             renderFilterChecklists();
             loadUniversalSearchHandshake();
             renderHomeCalendar();
             listenToFirebaseRealtimeCloud();
-
-            if (typeof LikeStaysEngine !== 'undefined' && LikeStaysEngine.renderBottomNav) {
-                LikeStaysEngine.renderBottomNav('favorites');
-            }
         });
 
-        window.addEventListener('likestays:locale_changed', () => {
-            syncHeaderUI();
-            updateSliderCurrencyLabels();
-            executeLiveFavoritesFilter();
-        });
+        window.__lsOnLocaleChange = () => { syncHeaderUI(); updateSliderCurrencyLabels(); executeLiveFavoritesFilter(); };
 
-        function syncHeaderUI() {
-            if (typeof LikeStaysEngine === 'undefined') return;
-            const locale = LikeStaysEngine.getLocale();
-            document.getElementById('header-curr-flag').innerText = locale.currFlag;
-            document.getElementById('header-curr-text').innerText = `${locale.currency} (${locale.symbol})`;
-            document.getElementById('mobile-curr-flag').innerText = locale.currFlag;
-            document.getElementById('mobile-curr-text').innerText = locale.currency;
-
-            document.getElementById('header-lang-flag').innerText = locale.langFlag;
-            document.getElementById('header-lang-text').innerText = locale.langName;
-            document.getElementById('mobile-lang-flag').innerText = locale.langFlag;
-            document.getElementById('mobile-lang-text').innerText = (locale.language || 'EN').toUpperCase();
-        }
+        function syncHeaderUI() { lsPaintHeaderTools(); }
 
         function updateSliderCurrencyLabels() {
             if (typeof LikeStaysEngine === 'undefined') return;
@@ -527,7 +690,152 @@
             return isSameDay ? `${sDate} (${deal.startTime} - ${deal.endTime})` : `${sDate} - ${eDate}`;
         }
 
-        // ========================================== RENDER FAVORITES CARDS ==========================================
+        // ================= MORE STAYS BY THIS HOST — same cards as the Explore page =================
+        const escF = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        const HEART_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-10-9.3C.3 8 1.8 4 5.6 3.2 8 2.7 10.3 3.9 12 6.4c1.7-2.5 4-3.7 6.4-3.2C22.2 4 23.7 8 22 11.7 19.5 16.4 12 21 12 21z"/></svg>';
+        const PIN_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>';
+        
+
+        // offers expire by themselves: hourly offer ends at its start time, multi-day offer ends 8:00 PM on its start date
+        function parseDealTime(t) {
+            if (!t) return null;
+            const m = String(t).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+            if (!m) return null;
+            let h = +m[1]; const mi = +m[2]; const ap = m[3] && m[3].toUpperCase();
+            if (ap === 'PM' && h < 12) h += 12;
+            if (ap === 'AM' && h === 12) h = 0;
+            return [h, mi];
+        }
+        function dealStartDate(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const t = parseDealTime(deal.startTime) || [14, 0];
+            return new Date(y, mo - 1, d, t[0], t[1], 0);
+        }
+        function dealExpiry(deal) {
+            if (!deal || !/^\d{4}-\d{2}-\d{2}$/.test(deal.startDate || '')) return null;
+            const [y, mo, d] = deal.startDate.split('-').map(Number);
+            const isSameDay = !deal.endDate || deal.endDate === deal.startDate;
+            if (isSameDay) { const t = parseDealTime(deal.startTime); return t ? new Date(y, mo - 1, d, t[0], t[1], 0) : null; }
+            return new Date(y, mo - 1, d, 20, 0, 0);
+        }
+        function formatOfferTimingLabel(deal) {
+            const formatStr = (d) => {
+                if (!d) return '';
+                if (d.includes('-')) {
+                    const p = d.split('-');
+                    if (p.length === 3) {
+                        const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                        return `${parseInt(p[2])} ${m[parseInt(p[1])-1] || ''}`;
+                    }
+                }
+                return d;
+            };
+            const sDate = formatStr(deal.startDate);
+            const eDate = formatStr(deal.endDate);
+            const isSameDay = (deal.startDate === deal.endDate) || !deal.endDate;
+            return isSameDay ? `${sDate} (${deal.startTime} - ${deal.endTime})` : `${sDate} - ${eDate}`;
+        }
+        function buildOfferText(prop, deal) {
+            if (!deal) return '';
+            return `${formatOfferTimingLabel(deal)} • ${LikeStaysEngine.formatCompactPrice(deal.discountPrice || deal.price || 0, prop.currency || 'PKR')}`;
+        }
+        function offerBarHTML(prop) {
+            const now = new Date();
+            const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
+            const live = deals.filter(d => { if (!d || d.enabled === false) return false; const exp = dealExpiry(d); return !exp || now < exp; });
+            if (!live.length) return '';
+            live.sort((x, y) => (dealStartDate(x) || 0) - (dealStartDate(y) || 0));
+            const d = live[0];
+            const tm = v => { const t = String(v || '').match(/^(\d{1,2}):(\d{2})/); return t ? (+t[1] * 60 + +t[2]) : null; };
+            const sameDay = (d.startDate === d.endDate) || !d.endDate;
+            let hrs = null;
+            if (sameDay) { const a1 = tm(d.startTime), b1 = tm(d.endTime); if (a1 != null && b1 != null) { let df = b1 - a1; if (df <= 0) df += 1440; hrs = Math.round(df / 6) / 10; } }
+            const price = LikeStaysEngine.formatCompactPrice(d.discountPrice || d.price || 0, prop.currency || 'PKR');
+            const label = hrs != null ? `${hrs} hr stay · ${price}` : buildOfferText(prop, d);
+            const n = live.length - 1;
+            return `<span class="of-t">${escF(label)}</span>` + (n > 0 ? `<span class="of-more">+${n} more offer${n > 1 ? 's' : ''}</span>` : '');
+        }
+        function priceStackHTML(prop) {
+            const cur = prop.currency || 'PKR';
+            const daily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, cur);
+            const hourly = (prop.hourlyPrice && prop.hourlyPrice > 0) ? LikeStaysEngine.formatPrice(prop.hourlyPrice, cur) : '';
+            return `<span class="price-chip pc-d">${daily}<small> /day</small></span>` + (hourly ? `<span class="price-chip pc-h">${hourly} /hr</span>` : '');
+        }
+
+        function buildMoreStayCard(prop, favs) {
+            const fallback = "https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=900";
+            let photos = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : []);
+            if (!photos.length) photos = [prop.videoPoster || fallback];
+            const isFav = favs.includes(String(prop.id));
+            const id = escF(prop.id);
+            const hasVideo = !!prop.videoUrl;
+            let imgs = photos.map((photo, idx) => {
+                const url = (photo.startsWith('http') || photo.startsWith('data:')) ? photo : `https://images.unsplash.com/${photo}?auto=format&fit=crop&q=70&w=900`;
+                const pos = (prop.photoPositions && prop.photoPositions[idx]) || ((idx === 0 && prop.coverPosition) ? prop.coverPosition : 'center');
+                return `<img src="${escF(url)}" loading="lazy" decoding="async" style="object-position:${escF(pos)}" alt="${escF(prop.name)}">`;
+            }).join('');
+            if (hasVideo) {
+                const t = prop.videoCoverTime != null ? prop.videoCoverTime : 0.1;
+                imgs = prop.videoPoster
+                    ? `<img src="${escF(prop.videoPoster)}" decoding="async" style="object-position:${escF(prop.videoCoverPosition || 'center')}" alt="${escF(prop.name)}">`
+                    : `<video src="${escF(prop.videoUrl)}#t=${t}" preload="metadata" muted playsinline></video>`;
+            }
+            const dots = (photos.length > 1 && !hasVideo) ? `<div class="cd-dots">${photos.map((_, d) => `<span id="dot-${id}-${d}" class="${d === 0 ? 'bg-white scale-125' : 'bg-white/50'}" style="width:6px;height:6px;border-radius:50%"></span>`).join('')}</div>` : '';
+            const bd = prop.bedrooms != null ? prop.bedrooms : prop.beds;
+            const ba = prop.bathrooms != null ? prop.bathrooms : prop.baths;
+            const gu = prop.maxGuests != null ? prop.maxGuests : prop.guests;
+            const ico = (p) => `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+            const meta = [
+                gu != null ? `<span>${ico('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/>')}${escF(gu)}</span>` : '',
+                bd != null ? `<span>${ico('<path d="M3 18V6M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.5"/>')}${escF(bd)}</span>` : '',
+                ba != null ? `<span>${ico('<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3zM6 12V6a2 2 0 0 1 3.5-1.3"/>')}${escF(ba)}</span>` : ''
+            ].join('');
+            const barInner = offerBarHTML(prop);
+            return `
+            <section class="feed-slide" data-id="${id}" onclick="if(!event.target.closest('button'))goToStay('${id}')">
+                <div class="cd-img">
+                    <div class="cd-track" onscroll="moreCardScroll('${id}', event)">${imgs}</div>
+                    <div class="price-stack">${priceStackHTML(prop)}</div>
+                    <button type="button" class="cd-fav${isFav ? ' on' : ''}" data-fav="${id}" onclick="toggleMoreFav(event,'${id}')" aria-label="Favourite">${HEART_SVG}</button>
+                    ${hasVideo ? `<div class="cd-vtag"><i></i>Video</div>` : ''}
+                    ${dots}
+                </div>
+                <div class="cd-title"><span>${escF(prop.name)}</span>${prop.rating != null ? `<em>${/^\d/.test(String(prop.rating)) ? '★ ' : ''}${escF(prop.rating)}</em>` : ''}</div>
+                <div class="cd-offer-bar" style="display:${barInner ? '' : 'none'}">${barInner}</div>
+                <div class="cd-loc"><div class="cd-locname">${PIN_SVG}<span>${escF(prop.location || prop.city || 'Prime Location')}</span></div>${meta ? `<div class="cd-meta">${meta}</div>` : ''}</div>
+            </section>`;
+        }
+
+
+        function goToStay(id) { navigateToDetailsPage(id); }
+        function moreCardScroll(id, ev) {
+            const t = ev.target; if (!t.clientWidth) return;
+            const idx = Math.round(t.scrollLeft / t.clientWidth);
+            let d = 0, el;
+            while ((el = document.getElementById(`dot-${id}-${d}`))) { el.className = d === idx ? 'bg-white scale-125' : 'bg-white/50'; d++; }
+        }
+        function toggleMoreFav(ev, id) {
+            ev.stopPropagation();
+            let favs = [];
+            try { favs = JSON.parse(localStorage.getItem('likestays_favorites') || '[]'); } catch (e) {}
+            const sId = String(id);
+            favs = favs.includes(sId) ? favs.filter(x => x !== sId) : favs.concat(sId);
+            try { localStorage.setItem('likestays_favorites', JSON.stringify(favs)); } catch (e) {}
+            executeLiveFavoritesFilter();      // un-saved stay leaves this page straight away
+        }
+        // offers end by themselves — refresh the offer lines without redrawing the cards
+        setInterval(() => {
+            document.querySelectorAll('#favorites-property-list .feed-slide[data-id]').forEach(sl => {
+                const p = masterPropertiesList.find(x => String(x.id) === sl.dataset.id);
+                const el = sl.querySelector('.cd-offer-bar');
+                if (!p || !el) return;
+                const html = offerBarHTML(p);
+                el.innerHTML = html; el.style.display = html ? '' : 'none';
+            });
+        }, 20000);
+
+        // ========================================== RENDER FAVORITES CARDS (same card as Explore) ==========================================
         function executeLiveFavoritesFilter() {
             const destBox = document.getElementById('home-search-dest');
             const destInput = destBox ? destBox.value.trim() : '';
@@ -553,7 +861,7 @@
                                 Tap the heart icon on any villa or apartment on the explore page to save your dream stays here.
                             </p>
                         </div>
-                        <button type="button" onclick="window.location.href='home.html'" class="neu-btn-green text-white text-xs font-black px-6 py-3.5 rounded-2xl uppercase tracking-wider cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-transform inline-flex items-center space-x-2">
+                        <button type="button" onclick="window.location.href='index.html'" class="neu-btn-green text-white text-xs font-black px-6 py-3.5 rounded-2xl uppercase tracking-wider cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-transform inline-flex items-center space-x-2">
                             <span>Explore Stays ➔</span>
                         </button>
                     </div>
@@ -561,85 +869,7 @@
                 return;
             }
 
-            container.innerHTML = filteredStays.map(prop => {
-                const photosList = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : ["https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=500"]);
-                const formattedDaily = LikeStaysEngine.formatPrice(prop.dailyPrice || prop.price || 5000, prop.currency || 'PKR');
-                const hasHourly = prop.hourlyPrice && prop.hourlyPrice > 0;
-                const formattedHourly = hasHourly ? LikeStaysEngine.formatPrice(prop.hourlyPrice, prop.currency || 'PKR') : '';
-                const isFav = favs.includes(String(prop.id));
-
-                const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
-                const activeDeals = deals.filter(d => d && d.enabled !== false);
-                const currentDeal = activeDeals.length > 0 ? activeDeals[0] : null;
-                const moreDealsCount = activeDeals.length > 1 ? (activeDeals.length - 1) : 0;
-
-                const mainPhoto = photosList[0].startsWith('http') || photosList[0].startsWith('data:') 
-                    ? photosList[0] 
-                    : `https://images.unsplash.com/${photosList[0]}?auto=format&fit=crop&q=70&w=500`;
-
-                let offerRowHTML = '';
-                if (currentDeal) {
-                    const formattedDealPrice = LikeStaysEngine.formatCompactPrice(currentDeal.discountPrice || currentDeal.price || 0, prop.currency || 'PKR');
-                    const timingText = formatOfferTimingLabel(currentDeal);
-                    const themeClass = `theme-${currentDeal.theme || 'emerald'}`;
-
-                    offerRowHTML = `
-                        <div class="pt-2 border-t border-gray-100 flex flex-wrap items-center justify-between gap-1.5">
-                            <div class="inline-flex items-center space-x-1.5 ${themeClass} text-[8.5px] font-black px-2.5 py-1 rounded-full shadow-md">
-                                <span class="spark-icon text-amber-300">⚡</span>
-                                <span>${timingText}</span>
-                                <span>•</span>
-                                <span class="font-extrabold">${formattedDealPrice}</span>
-                            </div>
-                            ${moreDealsCount > 0 ? `
-                                <div class="inline-flex items-center space-x-1 bg-amber-100 border border-amber-300 text-amber-950 font-black text-[8px] px-2 py-0.5 rounded-full shadow-xs">
-                                    <span>⚡</span> <span>+${moreDealsCount} More</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                }
-
-                return `
-                    <div onclick="navigateToDetailsPage('${prop.id}')" class="property-card-3d neu-flat bg-white rounded-3xl overflow-hidden cursor-pointer flex flex-col justify-between border border-gray-150">
-                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
-                            <img src="${mainPhoto}" loading="lazy" decoding="async" class="w-full h-full object-cover pointer-events-none transition-transform duration-300 hover:scale-105" alt="${prop.name}">
-                            
-                            <div class="absolute top-2.5 left-2.5 z-20 flex flex-col space-y-1 items-start">
-                                <div class="bg-black/65 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded-lg border border-white/20">
-                                    <span class="text-emerald-400">●</span> ${formattedDaily}<span class="text-[7px] text-gray-300">/night</span>
-                                </div>
-                                ${hasHourly ? `
-                                    <div class="bg-black/65 backdrop-blur-md text-white text-[8px] font-bold px-2 py-0.5 rounded-lg border border-white/20">
-                                        <span>⏱️</span> ${formattedHourly}<span class="text-[7px] text-gray-300">/hr</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-
-                            <button type="button" onclick="toggleFavoriteFromFavoritesPage(event, '${prop.id}')" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-xs shadow hover:scale-110 active:scale-95 transition-transform cursor-pointer" title="Remove Favorite">
-                                <span>${isFav ? '❤️' : '🤍'}</span>
-                            </button>
-                        </div>
-
-                        <div class="p-3.5 space-y-1.5 text-left">
-                            <div class="flex justify-between items-center text-[9px] font-bold text-gray-400">
-                                <span class="text-luxuryGreen font-extrabold">🏡 ${prop.category || 'Stay'}</span>
-                                <span class="text-gray-500">👥 Max ${prop.maxGuests || 8} Guests</span>
-                                <span class="text-emerald-700 font-black">${prop.rating || '⭐ New'}</span>
-                            </div>
-
-                            <h4 class="text-xs font-black text-luxuryGreen truncate">${prop.name}</h4>
-                            
-                            <div class="flex justify-between items-center text-[9.5px] font-bold pt-0.5">
-                                <span class="text-gray-400 truncate max-w-[170px]">📍 ${prop.location || prop.city || 'Prime Location'}</span>
-                                <span class="text-emerald-700 font-black text-[8px] bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded-md shrink-0">🛡️ Free Cancel</span>
-                            </div>
-                            
-                            ${offerRowHTML}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            container.innerHTML = filteredStays.map(prop => buildMoreStayCard(prop, favs)).join('');
         }
 
         function toggleFavoriteFromFavoritesPage(event, propId) {
@@ -978,36 +1208,13 @@
             executeLiveFavoritesFilter();
         }
 
-        // ================= CURRENCY & LANG =================
-        function toggleGlobalCurrencyModal(open) { document.getElementById('global-currency-modal').classList.toggle('hidden', !open); }
-        function renderCurrenciesList() { filterCurrenciesList(); }
-        function filterCurrenciesList() {
-            const q = (document.getElementById('currency-search-input')?.value || '').toLowerCase().trim();
-            const container = document.getElementById('currencies-options-list');
-            if (!container) return;
-            const filtered = LikeStaysEngine.currencies.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
-            container.innerHTML = filtered.map(c => `
-                <button type="button" onclick="LikeStaysEngine.setCurrency('${c.code}'); toggleGlobalCurrencyModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
-                    <div class="flex items-center space-x-2"><span>${c.flag}</span><span>${c.name} (${c.code})</span></div>
-                    <span class="text-luxuryGreen font-black">${c.symbol}</span>
-                </button>
-            `).join('');
+    
+        // header tools: current currency code + language icon (selection made on Explore applies everywhere)
+        function lsPaintHeaderTools() {
+            try { document.querySelectorAll('.ls-cur-code').forEach(e => e.innerText = LikeStaysEngine.activeLocale.currency); } catch (e) {}
+            document.querySelectorAll('.ls-lang-ico').forEach(e => { e.innerHTML = (window.LanguageEngine && LanguageEngine.icon) || '🌐'; });
         }
-
-        function toggleGlobalLangModal(open) { document.getElementById('global-lang-modal').classList.toggle('hidden', !open); }
-        function renderLanguagesList() { filterLanguagesList(); }
-        function filterLanguagesList() {
-            const q = (document.getElementById('lang-search-input')?.value || '').toLowerCase().trim();
-            const container = document.getElementById('lang-options-list');
-            if (!container) return;
-            const filtered = LikeStaysEngine.languages.filter(l => l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q));
-            container.innerHTML = filtered.map(l => `
-                <button type="button" onclick="LikeStaysEngine.setLanguage('${l.code}'); toggleGlobalLangModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700">
-                    <div class="flex items-center space-x-2"><span class="text-base">${l.flag}</span><span>${l.name}</span></div>
-                    <span class="text-[10px] text-gray-400 font-semibold">${l.native}</span>
-                </button>
-            `).join('');
-        }
+        window.addEventListener('DOMContentLoaded', lsPaintHeaderTools);
     </script>
 </body>
 </html>

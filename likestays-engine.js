@@ -266,9 +266,9 @@
                 { id: 'map', url: 'map.html', label: labels.map },
                 { id: 'highlights', url: 'highlights.html', label: labels.highlights }
             ];
-            const tStyle = (on) => `text-decoration:none;background:${on ? '#FBEAE3' : 'none'};border:0;padding:3px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#D97757' : '#8b93a1'};font-size:10.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
+            const tStyle = (on) => `text-decoration:none;background:${on ? '#2E1D16' : 'none'};border:0;padding:3px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#E8896A' : '#9CA3AF'};font-size:10.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
             const html3 = `
-                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#fff;border-top:1px solid #e5e7eb;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 4px);display:flex;justify-content:space-around;align-items:center">
+                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#0E0E10;border-top:1px solid #2C2C31;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 4px);display:flex;justify-content:space-around;align-items:center">
                     ${tabs.map(t => t.onclick ? `
                         <button type="button" onclick="${t.onclick}" style="${tStyle(false)}">${ic[t.id]}<span class="notranslate">${t.label}</span></button>` : `
                         <a href="${t.url}" style="${tStyle(t.id === activeTab)}">${ic[t.id]}<span class="notranslate">${t.label}</span></a>`).join('')}

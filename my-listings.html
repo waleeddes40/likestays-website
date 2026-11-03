@@ -649,10 +649,10 @@
                     <div class="bg-gradient-to-r from-amber-50 to-amber-100/70 p-3.5 rounded-2xl border-2 border-amber-300/80 space-y-1 text-left text-amber-950 shadow-sm">
                         <div class="flex items-center space-x-1.5">
                             <span class="text-base">💡</span>
-                            <span class="text-[10px] font-black uppercase tracking-wider text-amber-900">All-Inclusive Pricing</span>
+                            <span class="text-[10px] font-black uppercase tracking-wider text-amber-900">All-Inclusive Pricing · 10% Commission</span>
                         </div>
                         <p class="text-[8.5px] font-bold leading-relaxed text-amber-900/90">
-                            Please enter listing prices <strong>inclusive of taxes and cleaning</strong>.
+                            Enter the <strong>final total price</strong> — inclusive of taxes, cleaning and all services (extras like breakfast included). No extra charges are shown to guests on the main page. <strong>LikeStays commission: 10%</strong>.
                         </p>
                     </div>
 
@@ -909,7 +909,7 @@
                     </div>
                 </div>
 
-                <!-- 11. HOST CONTACT & 4 PAYOUT ACCOUNTS (WITH GUEST VISIBILITY TOGGLE) -->
+                <!-- 11. HOST CONTACT -->
                 <div class="neu-flat bg-white rounded-3xl p-5 border border-gray-150 space-y-4 text-xs font-bold text-gray-600">
                     
                     <!-- 👤 HOST CONTACT SECTION (5 OPTIONS) -->
@@ -943,71 +943,6 @@
                                 <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Extra Link (Telegram / Instagram / Other)</label>
                                 <input type="text" id="host-contact-link-2" placeholder="e.g. @telegram or Instagram link" class="w-full p-2 neu-inset bg-softMint rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- 💳 4 PAYOUT & GUEST PAYMENT ACCOUNTS WITH ON/OFF TOGGLE -->
-                    <div class="space-y-3.5">
-                        <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
-                            <div>
-                                <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen block">12. Payout & Payment Accounts (4 Accounts)</span>
-                                <span class="text-[8px] text-gray-400 font-semibold">Worldwide payout support</span>
-                            </div>
-
-                            <!-- ON/OFF TOGGLE FOR GUEST VISIBILITY -->
-                            <div class="flex items-center space-x-2 bg-softMint p-1.5 rounded-xl border border-gray-200">
-                                <span class="text-[8.5px] font-bold text-luxuryGreen">Show to Guests?</span>
-                                <input type="checkbox" id="toggle-show-bank-to-guests" checked class="w-4 h-4 accent-luxuryGreen cursor-pointer" title="Enable to display payment accounts to guests on booking">
-                            </div>
-                        </div>
-
-                        <!-- ACCOUNT 1: LOCAL DOMESTIC BANK -->
-                        <div class="p-3 bg-softMint/40 rounded-2xl border border-gray-200/80 space-y-2">
-                            <span class="text-[9px] font-black text-luxuryGreen uppercase block">1. Local Domestic Bank Account</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-1-name" placeholder="Bank Name (e.g. HBL / Meezan)" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-1-title" placeholder="Account Title" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-1-number" placeholder="Account Number" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-1-iban" placeholder="IBAN (Optional)" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                        </div>
-
-                        <!-- ACCOUNT 2: MOBILE WALLET / SECOND LOCAL BANK -->
-                        <div class="p-3 bg-softMint/40 rounded-2xl border border-gray-200/80 space-y-2">
-                            <span class="text-[9px] font-black text-luxuryGreen uppercase block">2. Mobile Wallet / Second Local Account (EasyPaisa / JazzCash / SadaPay / Nayapay)</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-4-name" placeholder="Wallet / Bank Name (e.g. JazzCash / SadaPay)" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-4-title" placeholder="Account Title" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-4-number" placeholder="Mobile / Account Number" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-4-iban" placeholder="IBAN / PayID (Optional)" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                        </div>
-
-                        <!-- ACCOUNT 3: INTERNATIONAL WIRE -->
-                        <div class="p-3 bg-softMint/40 rounded-2xl border border-gray-200/80 space-y-2">
-                            <span class="text-[9px] font-black text-luxuryGreen uppercase block">3. International Wire (IBAN & SWIFT)</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-2-name" placeholder="International Bank Name" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-2-title" placeholder="Beneficiary Account Title" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-2-iban" placeholder="Full IBAN Number" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-2-swift" placeholder="SWIFT / BIC Code" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                        </div>
-
-                        <!-- ACCOUNT 4: CRYPTO & DIGITAL WALLET -->
-                        <div class="p-3 bg-softMint/40 rounded-2xl border border-gray-200/80 space-y-2">
-                            <span class="text-[9px] font-black text-luxuryGreen uppercase block">4. Crypto & Digital Wallet</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="text" id="host-bank-3-provider" placeholder="Provider (e.g. USDT TRC20 / PayPal / Binance Pay)" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                                <input type="text" id="host-bank-3-network" placeholder="Network (e.g. TRC20 / BEP20 / USD)" class="p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
-                            </div>
-                            <input type="text" id="host-bank-3-address" placeholder="Public Wallet Address / PayID / Email" class="w-full p-2 neu-inset bg-white rounded-xl text-[10px] font-bold text-luxuryGreen outline-none border-none">
                         </div>
                     </div>
 
@@ -1951,36 +1886,7 @@
                 document.getElementById('host-contact-link-2').value = p.hostContact.link2 || '';
             }
 
-            // 12. Bank Visibility Toggle & 4 Accounts Preload
-            if (p.showBankToGuests !== undefined) {
-                document.getElementById('toggle-show-bank-to-guests').checked = Boolean(p.showBankToGuests);
-            }
-
-            const bAccounts = p.bankAccounts || [];
-            const b1 = bAccounts.find(b => b.id === 'b1' || b.type === 'local') || {};
-            const b4 = bAccounts.find(b => b.id === 'b4' || b.type === 'mobile_wallet') || {};
-            const b2 = bAccounts.find(b => b.id === 'b2' || b.type === 'international') || {};
-            const b3 = bAccounts.find(b => b.id === 'b3' || b.type === 'crypto') || {};
-
-            document.getElementById('host-bank-1-name').value = b1.bankName || '';
-            document.getElementById('host-bank-1-title').value = b1.accountTitle || '';
-            document.getElementById('host-bank-1-number').value = b1.accountNumber || '';
-            document.getElementById('host-bank-1-iban').value = b1.iban || '';
-
-            document.getElementById('host-bank-4-name').value = b4.bankName || '';
-            document.getElementById('host-bank-4-title').value = b4.accountTitle || '';
-            document.getElementById('host-bank-4-number').value = b4.accountNumber || '';
-            document.getElementById('host-bank-4-iban').value = b4.iban || '';
-
-            document.getElementById('host-bank-2-name').value = b2.bankName || '';
-            document.getElementById('host-bank-2-title').value = b2.accountTitle || '';
-            document.getElementById('host-bank-2-iban').value = b2.iban || '';
-            document.getElementById('host-bank-2-swift').value = b2.swift || '';
-
-            document.getElementById('host-bank-3-provider').value = b3.provider || '';
-            document.getElementById('host-bank-3-network').value = b3.network || '';
-            document.getElementById('host-bank-3-address').value = b3.address || '';
-        }
+                    }
 
         // ================= 📍 SMART CITY-TO-MAP =================
         function openMapPinPickerModal() {
@@ -2671,7 +2577,7 @@
             const hostContactLink2 = getSafeVal('host-contact-link-2');
 
             // Show Bank Accounts to Guests Toggle
-            const showBankToGuests = document.getElementById('toggle-show-bank-to-guests').checked;
+            const showBankToGuests = false;
 
             if (!title || !city || !hostContactName || !hostContactPhone) {
                 showToast("Please fill Title, City, Host Name and Phone.", "⚠️");
@@ -2731,36 +2637,7 @@
                 ? successfullyUploadedPhotos.map(p => p.src)
                 : ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1200"];
 
-            // 4 BANK ACCOUNTS
-            const hostBankAccounts = [
-                {
-                    id: "b1", type: "local",
-                    bankName: getSafeVal('host-bank-1-name'),
-                    accountTitle: getSafeVal('host-bank-1-title'),
-                    accountNumber: getSafeVal('host-bank-1-number'),
-                    iban: getSafeVal('host-bank-1-iban')
-                },
-                {
-                    id: "b4", type: "mobile_wallet",
-                    bankName: getSafeVal('host-bank-4-name'),
-                    accountTitle: getSafeVal('host-bank-4-title'),
-                    accountNumber: getSafeVal('host-bank-4-number'),
-                    iban: getSafeVal('host-bank-4-iban')
-                },
-                {
-                    id: "b2", type: "international",
-                    bankName: getSafeVal('host-bank-2-name'),
-                    accountTitle: getSafeVal('host-bank-2-title'),
-                    iban: getSafeVal('host-bank-2-iban'),
-                    swift: getSafeVal('host-bank-2-swift')
-                },
-                {
-                    id: "b3", type: "crypto",
-                    provider: getSafeVal('host-bank-3-provider'),
-                    network: getSafeVal('host-bank-3-network'),
-                    address: getSafeVal('host-bank-3-address')
-                }
-            ];
+            const hostBankAccounts = [];
 
             const targetPropertyId = activeEditingListingId || firebase.database().ref('properties').push().key;
 
