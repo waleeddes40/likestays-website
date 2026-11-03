@@ -750,7 +750,7 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
         <!-- ========================================================================= -->
         <div class="pt-4 pb-2 text-center">
             <button type="button" onclick="openReportPropertyModal()" class="inline-flex items-center space-x-1.5 text-xs font-black text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-4 py-2 rounded-2xl cursor-pointer shadow-2xs transition-all active:scale-95">
-                <span>🚩</span> <span>Report this listing to LikeStays Admin</span>
+                <span>🚩</span> <span>Report this listing</span>
             </button>
             <p class="text-[8px] text-gray-400 font-semibold mt-1">Reports are confidential and reviewed directly by regional administrators.</p>
         </div>
@@ -976,34 +976,22 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                 <div class="flex justify-between"><span class="text-gray-400">Total Bill:</span><span id="rcpt-total-bill" class="font-black text-luxuryGreen text-xs">-</span></div>
             </div>
 
-            <!-- 🌟 4 HOST CONTACT CHANNELS (UNLOCKED DIRECTLY FROM ADD-LISTING) -->
+            <!-- HOST CONTACT DETAILS (all visible) -->
             <div class="p-4 bg-emerald-50/90 rounded-2xl border border-emerald-200 space-y-3">
                 <div class="flex justify-between items-center">
                     <span class="text-[9px] uppercase tracking-wider text-emerald-950 font-black flex items-center space-x-1">
-                        <span>🏠</span> <span>Host Direct Contacts (4 Channels):</span>
+                        <span>🏠</span> <span>Your Host</span>
                     </span>
                     <span class="text-[7.5px] font-black text-emerald-800 bg-white px-2 py-0.5 rounded-full border border-emerald-200">Verified Host</span>
                 </div>
-
-                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-gray-700">
-                    <div>Host Name: <strong id="rcpt-host-name" class="text-luxuryGreen">-</strong></div>
-                    <div>Calling Phone: <strong id="rcpt-host-phone" class="text-luxuryGreen font-mono">-</strong></div>
-                </div>
-
-                <!-- 4 1-CLICK ACTION BUTTONS -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[10px] font-black">
-                    <a id="rcpt-host-call-btn" href="#" class="p-2.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl flex items-center justify-center space-x-1 hover:bg-gray-50 shadow-2xs">
-                        <span>📞</span> <span>Call Host</span>
-                    </a>
-                    <a id="rcpt-host-wa-btn" href="#" target="_blank" class="p-2.5 bg-emerald-700 text-white rounded-xl flex items-center justify-center space-x-1 hover:bg-emerald-800 shadow-2xs">
-                        <span>💬</span> <span>WhatsApp</span>
-                    </a>
-                    <a id="rcpt-host-email-btn" href="#" class="p-2.5 bg-luxuryGreen text-white rounded-xl flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen shadow-2xs">
-                        <span>📧</span> <span>Email</span>
-                    </a>
-                    <a id="rcpt-host-extra-btn" href="#" target="_blank" class="p-2.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl flex items-center justify-center space-x-1 hover:bg-softMint shadow-2xs">
-                        <span>🌐</span> <span>Social Link</span>
-                    </a>
+                <div class="text-xs font-bold text-gray-700 space-y-2.5">
+                    <div class="flex justify-between gap-3"><span class="text-gray-400">Host</span><strong id="rcpt-host-name" class="text-luxuryGreen text-right">-</strong></div>
+                    <div id="rcpt-row-phone" class="flex justify-between items-center gap-3"><div class="min-w-0"><span class="text-gray-400 block text-[10px]">Phone</span><strong id="rcpt-host-phone" class="text-luxuryGreen font-mono break-all">-</strong></div>
+                        <a id="rcpt-host-call-btn" href="#" class="shrink-0 px-3.5 py-2 bg-luxuryGreen text-white rounded-xl text-[10px] font-black">📞 Call</a></div>
+                    <div id="rcpt-row-wa" class="flex justify-between items-center gap-3"><div class="min-w-0"><span class="text-gray-400 block text-[10px]">WhatsApp</span><strong id="rcpt-host-wa" class="text-luxuryGreen font-mono break-all">-</strong></div>
+                        <a id="rcpt-host-wa-btn" href="#" target="_blank" rel="noopener" class="shrink-0 px-3.5 py-2 bg-luxuryGreen text-white rounded-xl text-[10px] font-black">💬 WhatsApp</a></div>
+                    <div id="rcpt-row-email"><span class="text-gray-400 block text-[10px]">Email</span><a id="rcpt-host-email" href="#" class="text-luxuryGreen break-all underline">-</a></div>
+                    <div id="rcpt-row-extra"><span class="text-gray-400 block text-[10px]">Link</span><a id="rcpt-host-extra" href="#" target="_blank" rel="noopener" class="text-luxuryGreen break-all underline">-</a></div>
                 </div>
             </div>
 
@@ -1021,7 +1009,7 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
             
             <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
                 <div class="flex items-center space-x-2 text-rose-700 font-black text-xs uppercase tracking-wider">
-                    <span class="text-base">🚩</span> <span>Report Listing to Admin</span>
+                    <span class="text-base">🚩</span> <span>Report Listing</span>
                 </div>
                 <button type="button" onclick="closeReportPropertyModal()" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
             </div>
@@ -1064,7 +1052,7 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                 </div>
 
                 <button type="submit" id="btn-submit-report" class="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-black text-xs uppercase tracking-wider rounded-2xl cursor-pointer shadow-md transition-all active:scale-95">
-                    Submit Report to Admin 🚩
+                    Submit Report 🚩
                 </button>
 
             </form>
@@ -1585,7 +1573,7 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                 const sMName = MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3);
                 const eMName = MONTH_NAMES[detailsEndDate.getMonth()].slice(0,3);
                 const nights = Math.round((detailsEndDate.getTime() - detailsStartDate.getTime()) / (1000 * 60 * 60 * 24));
-                if (helper) helper.innerText = `Selected: ${sMName} ${detailsStartDate.getDate()} - ${eMName} ${detailsEndDate.getDate()} (${nights} Nights)`;
+                if (helper) helper.innerText = `Selected: ${sMName} ${detailsStartDate.getDate()} - ${eMName} ${detailsEndDate.getDate()} · ${nights} ${nights === 1 ? 'night' : 'nights'} stay`;
             }
         }
 
@@ -1664,7 +1652,7 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                 const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : '';
                 const eMName = detailsEndDate ? MONTH_NAMES[detailsEndDate.getMonth()].slice(0,3) : '';
                 document.getElementById('det-calc-nights-lbl').innerText = `${fmtV(V(daily, propCurrency))} × ${nights} nights`;
-                document.getElementById('det-selected-dates-text').innerText = `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : ''} - ${eMName} ${detailsEndDate ? detailsEndDate.getDate() : ''} (${nights}N)`;
+                document.getElementById('det-selected-dates-text').innerText = `${sMName} ${detailsStartDate ? detailsStartDate.getDate() : ''} - ${eMName} ${detailsEndDate ? detailsEndDate.getDate() : ''} · ${nights} ${nights === 1 ? 'night' : 'nights'} stay`;
 
                 if (nights >= 30 && activeProperty.discMonthly && Number(activeProperty.discMonthly) > 0) {
                     discountPercent = Number(activeProperty.discMonthly);
@@ -2306,21 +2294,21 @@ function renderCheckoutDetails() {
 
             if (mode === 'offer' && activeCheckoutPayload.offer) {
                 rawBaseCost = activeCheckoutPayload.offer.price || 0;
-                document.getElementById('sum-mode-badge').innerText = `⚡ Offer Package`;
+                document.getElementById('sum-mode-badge').innerText = `⚡ Special Offer`;
                 document.getElementById('sum-dates-label').innerText = activeCheckoutPayload.offer.timing || 'Dates';
                 document.getElementById('bill-nights-label').innerText = activeCheckoutPayload.offer.title || 'Special Package';
             } else if (mode === 'hourly' && activeCheckoutPayload.hourly) {
                 const hr = activeCheckoutPayload.hourly;
                 rawBaseCost = (hr.rate || 500) * (hr.hours || 4);
-                document.getElementById('sum-mode-badge').innerText = `⏱️ Hourly Stay`;
+                document.getElementById('sum-mode-badge').innerText = `⏱️ Hourly Stay · ${hr.hours} ${hr.hours === 1 ? 'hour' : 'hours'}`;
                 document.getElementById('sum-dates-label').innerText = `${hr.date} (${hr.startTime} - ${hr.endTime})`;
                 document.getElementById('bill-nights-label').innerText = `${fmtV(V(hr.rate || 500))} × ${hr.hours} hrs`;
             } else {
                 const d = (activeCheckoutPayload && activeCheckoutPayload.daily) || { nights: 3, checkin: 'Aug 22', checkout: 'Aug 25' };
                 const dailyRate = d.rate || activeProperty.dailyPrice || activeProperty.price || 5000;
                 rawBaseCost = dailyRate * (d.nights || 3);
-                document.getElementById('sum-mode-badge').innerText = `🌙 Daily Stay`;
-                document.getElementById('sum-dates-label').innerText = `${d.checkin} - ${d.checkout} (${d.nights}N)`;
+                document.getElementById('sum-mode-badge').innerText = `🌙 Daily Stay · ${(activeCheckoutPayload.daily && activeCheckoutPayload.daily.nights) || ''} ${((activeCheckoutPayload.daily && activeCheckoutPayload.daily.nights) === 1) ? 'night' : 'nights'}`;
+                document.getElementById('sum-dates-label').innerText = `${d.checkin} - ${d.checkout} · ${d.nights} ${d.nights === 1 ? 'night' : 'nights'} stay`;
                 document.getElementById('bill-nights-label').innerText = `${fmtV(V(dailyRate))} × ${d.nights} nights`;
             }
 
@@ -2454,11 +2442,8 @@ function renderCheckoutDetails() {
                 checkOut = "Flexible";
             }
 
-            const hostName = activeProperty.hostName || activeProperty.host?.name || "Verified Host";
-            const hostPhone = activeProperty.hostPhone || activeProperty.host?.phone || "";
-            const hostEmail = activeProperty.hostEmail || activeProperty.host?.email || "";
-            const hostLink1 = activeProperty.hostContactLink1 || activeProperty.hostWhatsapp || hostPhone;
-            const hostLink2 = activeProperty.hostContactLink2 || activeProperty.hostTelegram || "";
+            const _hi = getHostInfo();
+            const hostName = _hi.name, hostPhone = _hi.phone, hostEmail = _hi.email, hostLink1 = _hi.wa || hostPhone, hostLink2 = _hi.extra;
 
             let durationStr = '';
             if (mode === 'offer' && activeCheckoutPayload.offer) durationStr = activeCheckoutPayload.offer.timing || '';
@@ -2535,7 +2520,7 @@ function renderCheckoutDetails() {
                     method: "POST",
                     keepalive: true,
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(Object.assign({}, bookingPayload, { guestTotalFormatted: fmtV(convertedTotalAmount), source: 'details-confirm' }))
+                    body: JSON.stringify(Object.assign({}, bookingPayload, { guestTotalFormatted: fmtV(convertedTotalAmount), source: 'details-confirm' }, hostContactForAlert()))
                 }).catch(e => console.log("Telegram Worker Alert dispatched."));
 
                 // 3. واؤچر اسکرین دکھائیں
@@ -2547,25 +2532,21 @@ function renderCheckoutDetails() {
                 document.getElementById('rcpt-stay-duration').innerText = `${checkIn} - ${checkOut}`;
                 document.getElementById('rcpt-total-bill').innerText = fmtV(convertedTotalAmount);
 
-                // 🌟 ہوسٹ کے چاروں رابطہ چینلز واؤچر پر لگائیں
-                document.getElementById('rcpt-host-name').innerText = hostName;
-                document.getElementById('rcpt-host-phone').innerText = hostPhone || "-";
-                
-                const cleanPhone = hostPhone.replace(/[^0-9]/g, '');
+                // host contact details — shown openly, with Call and WhatsApp buttons
+                const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v || '-'; };
+                const setRow = (rowId, v) => { const r = document.getElementById(rowId); if (r) r.classList.toggle('hidden', !v); };
+                setTxt('rcpt-host-name', hostName);
+                setTxt('rcpt-host-phone', hostPhone);
+                setRow('rcpt-row-phone', hostPhone);
+                const cleanPhone = hostPhone.replace(/[^0-9+]/g, '');
                 document.getElementById('rcpt-host-call-btn').href = cleanPhone ? `tel:${cleanPhone}` : '#';
-                
-                const cleanWa = (hostLink1 || hostPhone).replace(/[^0-9]/g, '');
-                document.getElementById('rcpt-host-wa-btn').href = cleanWa ? `https://wa.me/${cleanWa}` : '#';
-                
-                document.getElementById('rcpt-host-email-btn').href = hostEmail ? `mailto:${hostEmail}` : '#';
-
-                const extraBtn = document.getElementById('rcpt-host-extra-btn');
-                if (hostLink2) {
-                    extraBtn.href = hostLink2.startsWith('http') ? hostLink2 : `https://${hostLink2}`;
-                    extraBtn.classList.remove('opacity-40', 'pointer-events-none');
-                } else {
-                    extraBtn.classList.add('opacity-40', 'pointer-events-none');
-                }
+                const waUrl = waLinkOf(hostLink1);
+                setTxt('rcpt-host-wa', hostLink1); setRow('rcpt-row-wa', hostLink1);
+                document.getElementById('rcpt-host-wa-btn').href = waUrl || '#';
+                setTxt('rcpt-host-email', hostEmail); setRow('rcpt-row-email', hostEmail);
+                const em = document.getElementById('rcpt-host-email'); if (em) em.href = hostEmail ? `mailto:${hostEmail}` : '#';
+                setTxt('rcpt-host-extra', hostLink2); setRow('rcpt-row-extra', hostLink2);
+                const ex = document.getElementById('rcpt-host-extra'); if (ex) ex.href = webLinkOf(hostLink2) || '#';
 
             } catch (err) {
                 console.error("Booking Error:", err);
@@ -2655,6 +2636,35 @@ function renderCheckoutDetails() {
             document.getElementById('livingbar-grid').style.gridTemplateColumns = `repeat(${Math.max(1, shown)}, minmax(0, 1fr))`;
         }
 
+
+
+        // host contact details (saved by my-listings as hostContact.{name,phone,email,link1(WhatsApp),link2(extra)})
+        function getHostInfo() {
+            const c = (activeProperty && activeProperty.hostContact) || {};
+            const g = (a, b) => String(c[a] || (activeProperty && activeProperty[b]) || '').trim();
+            const wa = g('link1', 'hostWhatsapp') || g('phone', 'hostPhone');
+            return { name: g('name', 'hostName') || 'Verified Host', phone: g('phone', 'hostPhone'), email: g('email', 'hostEmail'), wa: wa, extra: g('link2', 'hostContactLink2') };
+        }
+        function waLinkOf(v) {
+            v = String(v || '').trim(); if (!v) return '';
+            if (/^https?:\/\//i.test(v) || /^(wa\.me|t\.me)/i.test(v)) return v.startsWith('http') ? v : 'https://' + v;
+            const d = v.replace(/[^0-9]/g, ''); return d ? 'https://wa.me/' + d : '';
+        }
+        function webLinkOf(v) {
+            v = String(v || '').trim(); if (!v) return '';
+            if (/^https?:\/\//i.test(v)) return v;
+            if (v.startsWith('@')) return 'https://t.me/' + v.slice(1);
+            return 'https://' + v;
+        }
+
+        // host contact details attached to the new-booking alert (all 4 options + a ready-made text block)
+        function hostContactForAlert() {
+            const c = (activeProperty && activeProperty.hostContact) || {};
+            const o = { hostName: c.name || '', hostPhone: c.phone || '', hostEmail: c.email || '', hostWhatsapp: c.link1 || '', hostExtraLink: c.link2 || '' };
+            o.hostContactText = ['👤 Host: ' + (o.hostName || '-'), '📞 Phone: ' + (o.hostPhone || '-'), '💬 WhatsApp: ' + (o.hostWhatsapp || '-'), '✉️ Email: ' + (o.hostEmail || '-'), '🔗 Link: ' + (o.hostExtraLink || '-')].join('\n');
+            return o;
+        }
+
         // ---- cancellation policy shown under the Reserve button: follows daily / hourly / offer ----
         function renderCancellationPolicy() {
             const box = document.getElementById('cancel-policy-box');
@@ -2675,7 +2685,7 @@ function renderCheckoutDetails() {
                 const d = cp.daily; if (!d) { box.classList.add('hidden'); return; }
                 const unit = String(d.deadlineUnit || 'Hours');
                 title = 'Daily stay'; badge = `${n(d.deadlineValue)} ${unit} Before`;
-                text = `Free cancellation up to ${n(d.deadlineValue)} ${unit.toLowerCase()} before check-in. Later cancellations: ${n(d.tokenRefundPct)}% of the advance token is refunded; if the full amount was paid, ${n(d.fullRefundPct)}% is refunded.`;
+                text = `Free cancellation up to ${n(d.deadlineValue)} ${unit.toLowerCase()} before check-in. Later cancellations receive a ${n(d.lateRefundPct ?? d.fullRefundPct)}% refund.`;
             }
             document.getElementById('cancel-policy-title').innerText = `Cancellation policy · ${title}`;
             document.getElementById('cancel-policy-badge').innerText = badge;
