@@ -510,10 +510,12 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 .cd-type{position:absolute;left:10px;bottom:10px;z-index:6;max-width:55%;padding:4px 8px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
 .cd-offer-bar .of-cyc{flex:1 1 auto;min-width:0;display:grid}
 .cd-offer-bar .of-a,.cd-offer-bar .of-b{grid-area:1/1;opacity:0}
-.cd-offer-bar .of-a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px;row-gap:3px;animation:ofA 6s infinite}
-.cd-offer-bar .of-b{font-weight:800;letter-spacing:.3px;animation:ofB 6s infinite}
-@keyframes ofA{0%,44%{opacity:1}50%,94%{opacity:0}100%{opacity:1}}
-@keyframes ofB{0%,44%{opacity:0}50%,94%{opacity:1}100%{opacity:0}
+.cd-offer-bar .of-a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px;row-gap:3px;animation:ofA 9s ease-in-out infinite}
+.cd-offer-bar .of-b{font-weight:800;letter-spacing:.3px;color:#D97757;animation:ofB 9s ease-in-out infinite}
+@keyframes ofA{0%{opacity:0;transform:translateY(4px)}8%,40%{opacity:1;transform:none}50%{opacity:0;transform:translateY(-4px)}100%{opacity:0;transform:translateY(4px)}}
+@keyframes ofB{0%,50%{opacity:0;transform:translateY(4px)}58%,90%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
+.portal-name{font:800 22px/1.2 Inter,sans-serif;letter-spacing:-.02em;color:#111827}
+html[data-theme=dark] .portal-name{color:#F3F4F6}
 </style>
 </head>
 

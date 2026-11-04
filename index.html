@@ -508,10 +508,12 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 .cd-type{position:absolute;left:10px;bottom:10px;z-index:6;max-width:55%;padding:4px 8px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
 .cd-offer-bar .of-cyc{flex:1 1 auto;min-width:0;display:grid}
 .cd-offer-bar .of-a,.cd-offer-bar .of-b{grid-area:1/1;opacity:0}
-.cd-offer-bar .of-a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px;row-gap:3px;animation:ofA 6s infinite}
-.cd-offer-bar .of-b{font-weight:800;letter-spacing:.3px;animation:ofB 6s infinite}
-@keyframes ofA{0%,44%{opacity:1}50%,94%{opacity:0}100%{opacity:1}}
-@keyframes ofB{0%,44%{opacity:0}50%,94%{opacity:1}100%{opacity:0}
+.cd-offer-bar .of-a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px;row-gap:3px;animation:ofA 9s ease-in-out infinite}
+.cd-offer-bar .of-b{font-weight:800;letter-spacing:.3px;color:#D97757;animation:ofB 9s ease-in-out infinite}
+@keyframes ofA{0%{opacity:0;transform:translateY(4px)}8%,40%{opacity:1;transform:none}50%{opacity:0;transform:translateY(-4px)}100%{opacity:0;transform:translateY(4px)}}
+@keyframes ofB{0%,50%{opacity:0;transform:translateY(4px)}58%,90%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
+.portal-name{font:800 22px/1.2 Inter,sans-serif;letter-spacing:-.02em;color:#111827}
+html[data-theme=dark] .portal-name{color:#F3F4F6}
 </style>
 </head>
 <body class="no-scrollbar text-gray-800" style="background:#fff">
@@ -559,19 +561,8 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
     
 
     <!-- 🌟 DYNAMIC EXCLUSIVE SUBDOMAIN / HOTEL BANNER -->
-    <div id="exclusive-hotel-banner" class="hidden max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3">
-        <div class="p-3 sm:p-4 bg-gradient-to-r from-emerald-50 via-white to-softMint rounded-2xl border-2 border-luxuryGreen flex items-center justify-between shadow-sm">
-            <div class="flex items-center space-x-2.5 min-w-0">
-                <span class="text-xl shrink-0">🏢</span>
-                <div class="space-y-0.5 min-w-0">
-                    <span class="text-[8px] uppercase tracking-widest text-goldWarm font-black block">Official Hotel Portal</span>
-                    <h3 id="exclusive-hotel-title" class="text-xs sm:text-sm font-black text-luxuryGreen truncate">Hotel Name</h3>
-                </div>
-            </div>
-            <button type="button" onclick="resetExclusiveHotelView()" class="px-3 py-1.5 bg-white hover:bg-emerald-50 text-luxuryGreen border border-emerald-300 rounded-xl text-[9px] font-black uppercase shrink-0 shadow-2xs cursor-pointer transition-transform active:scale-95">
-                Explore All LikeStays ✕
-            </button>
-        </div>
+    <div id="exclusive-hotel-banner" class="hidden max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4">
+        <h3 id="exclusive-hotel-title" class="portal-name"></h3>
     </div>
 
     <!-- MAIN WORKSPACE -->
@@ -1252,9 +1243,9 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                     activeHotelName = featuredStay ? (featuredStay.hostName || featuredStay.host?.name || featuredStay.name) : activeSubdomainSlug;
 
                     const banner = document.getElementById('exclusive-hotel-banner');
-                    document.getElementById('exclusive-hotel-title').innerText = `${activeHotelName} • Official Hotel Portal`;
+                    document.getElementById('exclusive-hotel-title').innerText = String(activeSubdomainSlug).replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
                     banner.classList.remove('hidden');
-                    const exitBtn = banner.querySelector('button'); if (exitBtn) exitBtn.style.display = 'none';
+                    
 
                     document.getElementById('search-title-label').innerText = `${activeHotelName} Stays`;
                     document.getElementById('search-subtitle-label').innerText = `Direct verified stays`;
