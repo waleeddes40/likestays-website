@@ -338,6 +338,11 @@ html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-
 html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
+<style>
+#det-extra-services-grid>*{padding-top:6px!important;padding-bottom:6px!important;font-size:11.5px!important}
+.deal-sweep{position:relative;overflow:hidden}
+.deal-sweep::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
+</style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-28 relative">
 
@@ -572,6 +577,16 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 </span>
             </div>
 
+            <!-- EXTRA SERVICES (paid add-ons, next to the offers) -->
+        <div id="extras-card" class="bg-white p-2.5 rounded-xl border border-gray-200 space-y-2" style="font-size:11px">
+            <div class="flex justify-between items-center">
+                <h3 class="text-[9.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
+                <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
+            </div>
+            <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+        </div>
+
+
             <!-- SPECIAL OFFERS CONTAINER -->
             <div id="details-multi-deals-section" class="hidden space-y-2 bg-gradient-to-r from-emerald-50/80 to-softMint p-3 rounded-2xl border border-emerald-200/80 shadow-xs">
                 <div class="flex justify-between items-center">
@@ -582,16 +597,6 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 </div>
                 <div id="details-deals-list-container" class="space-y-2"></div>
             </div>
-
-            <!-- EXTRA SERVICES (paid add-ons, next to the offers) -->
-        <div id="extras-card" class="bg-white p-3 rounded-2xl border border-gray-200 space-y-2.5">
-            <div class="flex justify-between items-center">
-                <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
-                <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
-            </div>
-            <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
-        </div>
-
 
             <!-- Pricing Header -->
             <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
@@ -1466,7 +1471,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 const themeClass = `theme-${d.theme || 'emerald'}`;
 
                 return `
-                    <div onclick="toggleSelectFlashDeal('${d.id}')" class="p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between bg-white border border-gray-200 hover:border-luxuryGreen shadow-xs ${isSelected ? 'ring-2 ring-luxuryGreen bg-emerald-50/50' : ''}">
+                    <div onclick="toggleSelectFlashDeal('${d.id}')" class="deal-sweep p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between bg-white border border-gray-200 hover:border-luxuryGreen shadow-xs ${isSelected ? 'ring-2 ring-luxuryGreen bg-emerald-50/50' : ''}">
                         <div class="space-y-1 text-left min-w-0 pr-1">
                             <div class="flex items-center space-x-1.5">
                                 <span class="spark-icon text-amber-500 text-xs">⚡</span>
