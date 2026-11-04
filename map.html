@@ -377,8 +377,8 @@
 <style>.cd-offer-bar{flex-wrap:wrap!important;align-items:flex-start!important;row-gap:3px;line-height:1.35}.cd-offer-bar .of-t{flex:1 1 auto;min-width:0;white-space:normal;overflow-wrap:anywhere}.cd-offer-bar .of-more{flex:none;white-space:nowrap}</style>
 <style>
 #ls-more-sheet{font-family:'Inter',system-ui,sans-serif}
-#ls-more-sheet .ls-brand{font-family:'Playfair Display',Georgia,serif!important;font-size:23px!important;font-weight:600;letter-spacing:.01em;text-transform:none}
-#ls-more-sheet .ls-brand em{font-style:italic;color:#D97757;font-weight:500}
+#ls-more-sheet .ls-brand{font-family:Inter,sans-serif!important;font-size:19px!important;font-weight:800;letter-spacing:-.02em;text-transform:none}
+#ls-more-sheet .ls-brand em{font-style:normal;color:#D97757;font-weight:800}
 .ms-lab{font:700 9.5px Inter,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8b93a1;padding:16px 22px 6px}
 #ls-more-sheet a{display:flex!important;align-items:center;gap:14px;padding:12px 16px!important;margin:1px 12px!important;font-size:14px!important;font-weight:500!important;letter-spacing:.01em;border-radius:12px!important;position:relative}
 #ls-more-sheet a .mi{flex:none;color:#D97757;opacity:.95}
@@ -506,6 +506,15 @@ html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-
 html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
+<style>
+.cd-type{position:absolute;left:10px;bottom:10px;z-index:6;max-width:55%;padding:4px 8px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.cd-offer-bar .of-cyc{flex:1 1 auto;min-width:0;display:grid}
+.cd-offer-bar .of-a,.cd-offer-bar .of-b{grid-area:1/1;opacity:0}
+.cd-offer-bar .of-a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px;row-gap:3px;animation:ofA 6s infinite}
+.cd-offer-bar .of-b{font-weight:800;letter-spacing:.3px;animation:ofB 6s infinite}
+@keyframes ofA{0%,44%{opacity:1}50%,94%{opacity:0}100%{opacity:1}}
+@keyframes ofB{0%,44%{opacity:0}50%,94%{opacity:1}100%{opacity:0}
+</style>
 </head>
 
 <style>
@@ -572,7 +581,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
 <div id="ls-more-backdrop" onclick="toggleMoreMenu(false)"></div>
     <div id="ls-more-sheet">
-        <div class="drawer-head"><span class="drawer-title ls-brand">Like<em>Stays</em></span><button type="button" class="drawer-x" onclick="toggleMoreMenu(false)" aria-label="Close">✕</button></div>
+        <div class="drawer-head"><span class="drawer-title ls-brand">LikeStays<em>.co</em></span><button type="button" class="drawer-x" onclick="toggleMoreMenu(false)" aria-label="Close">✕</button></div>
         <div class="ms-lab">Preferences</div>
         <a href="#" onclick="toggleMoreMenu(false);toggleGlobalLangModal(true);return false"><svg class="mi" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><span>Language</span></a>
         <div class="ms-lab">My Trips</div>

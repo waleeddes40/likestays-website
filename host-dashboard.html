@@ -256,6 +256,8 @@ html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGree
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
 html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
 html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
+html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
 </head>
@@ -371,12 +373,17 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
                         <div class="flex gap-2 justify-center pt-2">
                             <button type="button" onclick="copyBrandLink()" class="px-4 py-2 rounded-lg border border-gray-200 text-[10px] font-black uppercase tracking-wider cursor-pointer" id="brand-link-copy-btn">📋 Copy Link</button>
                             <a id="brand-link-open-btn" href="#" target="_blank" rel="noopener" class="px-4 py-2 rounded-lg border border-gray-200 text-[10px] font-black uppercase tracking-wider">Open ↗</a>
+                            <button type="button" onclick="editBrandLink(true)" class="px-4 py-2 rounded-lg border border-gray-200 text-[10px] font-black uppercase tracking-wider cursor-pointer" id="brand-link-edit-btn">✏️ Edit</button>
                         </div>
                     </div>
 
                     <div id="brand-link-setup-form" class="space-y-2">
-                        <input type="text" id="brand-link-input" oninput="updateBrandLinkPreview(this.value)" placeholder="e.g. sunset-villas" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
-                        <button type="button" onclick="saveHostBrandLink()" class="w-full neu-btn-green text-white font-black text-xs py-3 rounded-xl uppercase tracking-wider cursor-pointer">💾 Save Link</button>
+                        <div class="flex items-center gap-1">
+                            <input type="text" id="brand-link-input" oninput="updateBrandLinkPreview(this.value)" placeholder="e.g. sunset-villas" class="flex-1 min-w-0 p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                            <span class="text-[11px] font-black text-gray-400 font-mono">.likestays.co</span>
+                        </div>
+                        <button type="button" id="brand-link-save-btn" onclick="saveHostBrandLink()" class="w-full neu-btn-green text-white font-black text-xs py-3 rounded-xl uppercase tracking-wider cursor-pointer">💾 Save Link</button>
+                        <button type="button" id="brand-link-cancel-btn" onclick="editBrandLink(false)" class="hidden w-full text-[10px] font-black py-2 rounded-xl border border-gray-200 uppercase tracking-wider cursor-pointer">Cancel</button>
                     </div>
                     <p class="text-[9px] text-gray-400 font-semibold">🔗 Preview: <span id="brand-link-live-preview" class="font-mono text-luxuryGreen font-black">yourname.likestays.co</span> <button type="button" onclick="copyBrandLink(true)" class="ml-1 px-2 py-0.5 rounded border border-gray-200 text-[9px] font-black cursor-pointer">Copy</button></p>
                     <p id="brand-link-status-msg" class="text-[9px] font-bold pt-0.5"></p>
@@ -518,8 +525,23 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
                     document.getElementById('brand-link-current-url').innerText = `${slug}.likestays.co`; document.getElementById('brand-link-open-btn').href = brandUrlFor(slug);
                     document.getElementById('brand-link-input').value = slug;
                     updateBrandLinkPreview(slug);
+                    editBrandLink(false);
                 }
             });
+        }
+
+        // existing link: form hidden until ✏️ Edit is pressed
+        function editBrandLink(open) {
+            const form = document.getElementById('brand-link-setup-form');
+            const has = !document.getElementById('brand-link-current-display').classList.contains('hidden');
+            form.classList.toggle('hidden', has && !open);
+            document.getElementById('brand-link-cancel-btn').classList.toggle('hidden', !(has && open));
+            document.getElementById('brand-link-save-btn').innerText = has ? '💾 Update Link' : '💾 Save Link';
+            if (open) {
+                const cur = document.getElementById('brand-link-current-url').innerText.replace('.likestays.co', '');
+                const inp = document.getElementById('brand-link-input'); inp.value = cur; updateBrandLinkPreview(cur);
+                inp.focus(); inp.select();
+            }
         }
 
         function saveHostBrandLink() {
@@ -548,7 +570,7 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
                 statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
                 statusMsg.innerText = denied ? "❌ Save blocked by database rules (brandSlugRegistry / hostProfiles need write access for signed-in hosts)." : "❌ Could not save: " + ((e && e.message) || 'please try again');
             };
-            const saveBtn = document.querySelector('#brand-link-setup-form button');
+            const saveBtn = document.getElementById('brand-link-save-btn');
             if (saveBtn) { saveBtn.disabled = true; saveBtn.style.opacity = '.6'; }
             const done = () => { if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = ''; } };
 
@@ -572,6 +594,7 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
                         document.getElementById('brand-link-open-btn').href = brandUrlFor(slug);
                         statusMsg.className = "text-[9px] font-bold pt-0.5 text-emerald-700";
                         statusMsg.innerText = "✅ Saved! Your link is now live.";
+                        editBrandLink(false);
                         // tag the host's existing stays with this link (a failure here must not undo the save)
                         return propagateBrandSlugToHostProperties(hostUid, slug).catch(e => {
                             console.warn('propagate failed', e);
