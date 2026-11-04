@@ -219,6 +219,12 @@
   .cd-offer{border:1px solid #000;border-radius:6px;padding:2px 7px;font-size:10.5px;font-weight:600;color:#000;background:transparent;margin-left:4px;white-space:nowrap}
 .more-grid .feed-slide{margin-bottom:26px}
     </style>
+<style>
+#det-extra-services-grid>*{padding-top:6px!important;padding-bottom:6px!important;font-size:11.5px!important}
+.deal-sweep{position:relative;overflow:hidden}
+.deal-sweep::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
+</style>
+<style>.ls-tab-on{background:#D97757!important;color:#fff!important;box-shadow:none!important}</style>
 <style id="ls-dark-theme">
 /* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #D97757 ===== */
 html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#D97757;--soft:#2E1D16;--br:#2C2C31;--mut:#9CA3AF}
@@ -338,12 +344,6 @@ html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-
 html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
-<style>
-#det-extra-services-grid>*{padding-top:6px!important;padding-bottom:6px!important;font-size:11.5px!important}
-.deal-sweep{position:relative;overflow:hidden}
-.deal-sweep::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
-</style>
-<style>.ls-tab-on{background:#D97757!important;color:#fff!important;box-shadow:none!important}</style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-28 relative">
 
@@ -1969,8 +1969,10 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
         // ================= 🚩 REPORT PROPERTY LOGIC =================
         function openReportPropertyModal() {
-            document.getElementById('report-details-textarea').value = '';
-            document.getElementById('report-property-modal').classList.remove('hidden');
+            // one shared report/support form (about.html) — pre-filled with this listing and its host
+            const hi = (typeof getHostInfo === 'function') ? getHostInfo() : {};
+            const q = new URLSearchParams({ property: (activeProperty && (activeProperty.name || activeProperty.title)) || '', propId: (activeProperty && activeProperty.id) || '', host: hi.phone || '' });
+            window.location.href = 'about.html?' + q.toString() + '#contact';
         }
 
         function closeReportPropertyModal() {

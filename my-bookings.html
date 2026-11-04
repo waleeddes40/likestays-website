@@ -120,6 +120,12 @@
     .ls-hdr-tools{display:flex;align-items:center;gap:6px}
     .tab-on{background:#D97757!important;color:#fff!important}
     </style>
+<style>
+.cr-chip{width:100%;text-align:left;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;color:#111827;font:600 12px Inter,sans-serif;cursor:pointer}
+.cr-chip.on{background:#D97757;border-color:#D97757;color:#fff}
+html[data-theme=dark] .cr-chip{background:#1F1F23;border-color:#2C2C31;color:#F3F4F6}
+html[data-theme=dark] .cr-chip.on{background:#D97757;border-color:#D97757;color:#fff}
+</style>
 <style id="ls-dark-theme">
 /* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #D97757 ===== */
 html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#D97757;--soft:#2E1D16;--br:#2C2C31;--mut:#9CA3AF}
@@ -238,12 +244,6 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
 html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
 html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
-</style>
-<style>
-.cr-chip{width:100%;text-align:left;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;color:#111827;font:600 12px Inter,sans-serif;cursor:pointer}
-.cr-chip.on{background:#D97757;border-color:#D97757;color:#fff}
-html[data-theme=dark] .cr-chip{background:#1F1F23;border-color:#2C2C31;color:#F3F4F6}
-html[data-theme=dark] .cr-chip.on{background:#D97757;border-color:#D97757;color:#fff}
 </style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-10 text-left">
@@ -499,6 +499,7 @@ html[data-theme=dark] .cr-chip.on{background:#D97757;border-color:#D97757;color:
                 listenToGuestBookings();
                 loadGuestPendingReviews();
                 loadMyReviews();
+                try { const h = (location.hash || '').replace('#',''); if (h === 'pending' || h === 'myreviews') switchBookingsTab(h); } catch (e) {}
             });
         });
 
@@ -876,6 +877,10 @@ html[data-theme=dark] .cr-chip.on{background:#D97757;border-color:#D97757;color:
         function openAdminSupportModal(bookingId) {
             const b = globalTripsCache.find(trip => trip.id === bookingId);
             if (!b) return;
+            // one shared report/support form (about.html) — pre-filled with this booking
+            const q = new URLSearchParams({ booking: b.bookingId || b.bookingCode || b.id, property: b.propName || '', host: b.hostPhone || '' });
+            window.location.href = 'about.html?' + q.toString() + '#contact';
+            return;
 
             const displayBookingCode = b.id.startsWith('LS-') ? `#${b.id}` : (b.bookingCode ? `#${b.bookingCode}` : `#${b.id}`);
             document.getElementById('support-modal-voucher-badge').innerText = `Voucher: ${displayBookingCode} (${b.propName || 'Stay'})`;
@@ -991,6 +996,7 @@ html[data-theme=dark] .cr-chip.on{background:#D97757;border-color:#D97757;color:
 
             firebase.database().ref(`bookings/${activeCancellingBooking.id}`).update(cancelPayload)
                 .then(() => {
+                    try{fetch('https://likestays-api.waleeddes40.workers.dev/api/booking-cancelled',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bookingId:activeCancellingBooking.id,cancelledBy:'guest',reason,notes})}).catch(()=>{});}catch(e){}
                     closeCancelModal();
                     showToast("Booking cancelled. Your host has been notified.", "✓");
                     btn.innerText = "Confirm Cancellation";

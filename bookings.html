@@ -868,6 +868,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             };
 
             firebase.database().ref(`bookings/${bookingId}`).update(payload).then(() => {
+                try{fetch('https://likestays-api.waleeddes40.workers.dev/api/booking-cancelled',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bookingId,cancelledBy:'host',reason,notes})}).catch(()=>{});}catch(e){}
                 closeHostCancelModal();
                 showHostToast("Booking cancelled & rejected.", "✓");
                 btn.innerText = "Confirm Rejection & Notify Guest ➔";
