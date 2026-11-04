@@ -343,6 +343,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 .deal-sweep{position:relative;overflow:hidden}
 .deal-sweep::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
 </style>
+<style>.ls-tab-on{background:#D97757!important;color:#fff!important;box-shadow:none!important}</style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-28 relative">
 
@@ -562,6 +563,17 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             <div id="det-amenities-list" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2"></div>
         </div>
 
+            <!-- EXTRA SERVICES (separate card, just above Reserve) -->
+        <div id="extras-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+        <div class="flex justify-between items-center">
+            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
+            <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
+        </div>
+        <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+        </div>
+
+
+
         <!-- ======================================================================= -->
         <!-- 🎯 11. LUXURY RESERVATION CARD -->
         <!-- ======================================================================= -->
@@ -577,16 +589,6 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 </span>
             </div>
 
-            <!-- EXTRA SERVICES (paid add-ons, next to the offers) -->
-        <div id="extras-card" class="bg-white p-2.5 rounded-xl border border-gray-200 space-y-2" style="font-size:11px">
-            <div class="flex justify-between items-center">
-                <h3 class="text-[9.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
-                <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
-            </div>
-            <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
-        </div>
-
-
             <!-- SPECIAL OFFERS CONTAINER -->
             <div id="details-multi-deals-section" class="hidden space-y-2 bg-gradient-to-r from-emerald-50/80 to-softMint p-3 rounded-2xl border border-emerald-200/80 shadow-xs">
                 <div class="flex justify-between items-center">
@@ -601,12 +603,12 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             <!-- Pricing Header -->
             <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
                 <div>
-                    <span class="text-[8px] font-bold text-gray-400 uppercase block">Daily Rate</span>
+                    <span class="text-[8px] font-bold text-gray-400 uppercase block">Nightly Price</span>
                     <span id="det-card-daily-price" class="text-lg sm:text-xl font-black text-luxuryGreen">Rs 5,000</span>
                     <span class="text-[9.5px] font-semibold text-gray-400">/ night</span>
                 </div>
                 <div id="det-card-hourly-col" class="text-right hidden">
-                    <span class="text-[8px] font-bold text-gray-400 uppercase block">Hourly Rate</span>
+                    <span class="text-[8px] font-bold text-gray-400 uppercase block">Hourly Price</span>
                     <span id="det-card-hourly-price" class="text-xs font-bold text-luxuryLightGreen">Rs 500</span>
                     <span class="text-[8.5px] font-semibold text-gray-400">/ hr</span>
                 </div>
@@ -614,7 +616,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
             <!-- Daily vs Hourly Switcher -->
             <div id="booking-interval-tabs-row" class="hidden flex bg-softMint p-1 rounded-2xl border border-gray-200">
-                <button type="button" id="tab-daily" onclick="setDetailsBookingInterval('daily')" class="flex-grow text-[11px] font-black py-2 rounded-xl bg-white shadow-sm text-luxuryGreen cursor-pointer">Daily Stay</button>
+                <button type="button" id="tab-daily" onclick="setDetailsBookingInterval('daily')" class="flex-grow text-[11px] font-black py-2 rounded-xl cursor-pointer ls-tab-on">Daily Stay</button>
                 <button type="button" id="tab-hourly" onclick="setDetailsBookingInterval('hourly')" class="flex-grow text-[11px] font-bold py-2 rounded-xl text-gray-400 cursor-pointer">Hourly Stay</button>
             </div>
 
@@ -1730,11 +1732,11 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             const hourlyBox = document.getElementById('hourly-timings-selector-box');
             if (type === 'hourly') {
                 hourlyBox.classList.remove('hidden');
-                document.getElementById('tab-hourly').className = "flex-grow text-[11px] font-black py-2 rounded-xl bg-white shadow-sm text-luxuryGreen cursor-pointer";
+                document.getElementById('tab-hourly').className = "flex-grow text-[11px] font-black py-2 rounded-xl cursor-pointer ls-tab-on";
                 document.getElementById('tab-daily').className = "flex-grow text-[11px] font-bold py-2 rounded-xl text-gray-400 cursor-pointer";
             } else {
                 hourlyBox.classList.add('hidden');
-                document.getElementById('tab-daily').className = "flex-grow text-[11px] font-black py-2 rounded-xl bg-white shadow-sm text-luxuryGreen cursor-pointer";
+                document.getElementById('tab-daily').className = "flex-grow text-[11px] font-black py-2 rounded-xl cursor-pointer ls-tab-on";
                 document.getElementById('tab-hourly').className = "flex-grow text-[11px] font-bold py-2 rounded-xl text-gray-400 cursor-pointer";
             }
             recalculateBookingTotals();
