@@ -334,6 +334,8 @@ html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGree
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
 html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
 html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
+html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
 </head>
@@ -543,25 +545,16 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
             </div>
         </div>
 
-        <!-- 7. AMENITIES -->
-        <div id="amenities-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
-            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">What this place offers</h3>
-            <div id="det-amenities-list" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2"></div>
-        </div>
-
-        <!-- 8. EXTRA SERVICES -->
-        <div id="extras-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
-            <div class="flex justify-between items-center">
-                <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
-                <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
-            </div>
-            <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
-        </div>
-
         <!-- 10. HOUSE RULES -->
         <div id="house-rules-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-1.5">
             <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">House Rules</h3>
             <div id="det-house-rules-list" class="space-y-1 text-xs text-gray-600 font-medium"></div>
+        </div>
+
+        <!-- 7. AMENITIES -->
+        <div id="amenities-card" class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-2.5">
+            <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">What this place offers</h3>
+            <div id="det-amenities-list" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2"></div>
         </div>
 
         <!-- ======================================================================= -->
@@ -583,12 +576,22 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
             <div id="details-multi-deals-section" class="hidden space-y-2 bg-gradient-to-r from-emerald-50/80 to-softMint p-3 rounded-2xl border border-emerald-200/80 shadow-xs">
                 <div class="flex justify-between items-center">
                     <span class="text-[9.5px] font-black uppercase text-luxuryGreen flex items-center space-x-1.5">
-                        <span class="spark-icon text-amber-500">⚡</span> <span>Special Stay Packages:</span>
+                        <span class="spark-icon text-amber-500">⚡</span> <span>Special Offers:</span>
                     </span>
                     <span id="details-deals-count-badge" class="text-[8px] font-black bg-luxuryGreen text-white px-2 py-0.5 rounded-full">Offer Active</span>
                 </div>
                 <div id="details-deals-list-container" class="space-y-2"></div>
             </div>
+
+            <!-- EXTRA SERVICES (paid add-ons, next to the offers) -->
+        <div id="extras-card" class="bg-white p-3 rounded-2xl border border-gray-200 space-y-2.5">
+            <div class="flex justify-between items-center">
+                <h3 class="text-[10.5px] font-black uppercase tracking-wider text-luxuryGreen">Custom Add-on Services</h3>
+                <span class="text-[8px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md font-bold">Select to Add</span>
+            </div>
+            <div id="det-extra-services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+        </div>
+
 
             <!-- Pricing Header -->
             <div class="flex justify-between items-center border-b border-gray-150 pb-2.5">
@@ -1407,7 +1410,8 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
         }
 
         // ================= ⚡ SPECIAL OFFERS =================
-        function formatDealTiming24h(d) {
+        function formatDealTiming24h(d) { return dealWhenLabel(d); }
+        function __oldFormatDealTiming24h(d) {
             const formatStr = (dateVal) => {
                 if (!dateVal) return '';
                 if (dateVal.includes('-')) {
@@ -1466,10 +1470,10 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
                         <div class="space-y-1 text-left min-w-0 pr-1">
                             <div class="flex items-center space-x-1.5">
                                 <span class="spark-icon text-amber-500 text-xs">⚡</span>
-                                <span class="text-xs font-black text-gray-800 truncate">${d.title}</span>
+                                <span class="text-xs font-black text-gray-800 truncate">Special Offer</span>
                                 <span class="${themeClass} text-[7.5px] font-black px-2 py-0.5 rounded-full">${isSelected ? 'APPLIED' : 'OFFER'}</span>
                             </div>
-                            <span class="text-[9px] font-semibold text-gray-500 block">⏱️ ${timingString}</span>
+                            <span class="text-[10px] font-semibold text-gray-500 block leading-snug">⏱️ ${timingString}</span>
                         </div>
                         <div class="text-right shrink-0">
                             <span class="text-xs font-black text-luxuryGreen block">${formattedPrice}</span>
@@ -1491,7 +1495,7 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
             } else if (deal) {
                 selectedOfferObj = deal;
                 activeBookingMode = 'offer';
-                showLuxuryToast(`⚡ Special Offer "${deal.title}" Applied!`, "🎉");
+                showLuxuryToast(`⚡ Special Offer Applied!`, "🎉");
             }
 
             renderMultiDealsSection();
@@ -1638,7 +1642,7 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
 
             if (activeBookingMode === 'offer' && selectedOfferObj) {
                 baseCost = selectedOfferObj.discountPrice || selectedOfferObj.price || 0;
-                document.getElementById('det-calc-nights-lbl').innerText = `⚡ Package: ${selectedOfferObj.title}`;
+                document.getElementById('det-calc-nights-lbl').innerText = `⚡ Special Offer`;
                 document.getElementById('det-selected-dates-text').innerText = formatDealTiming24h(selectedOfferObj);
                 document.getElementById('det-calc-discount-row').classList.add('hidden');
             } else if (activeBookingMode === 'hourly') {
@@ -1893,7 +1897,7 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
                 
                 offer: (activeBookingMode === 'offer' && selectedOfferObj) ? {
                     id: selectedOfferObj.id,
-                    title: selectedOfferObj.title || 'Special Stay Package',
+                    title: 'Special Offer',
                     price: selectedOfferObj.discountPrice || selectedOfferObj.price || 0,
                     timing: formatDealTiming24h(selectedOfferObj)
                 } : null,
@@ -2074,6 +2078,17 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
             if (!deal) return '';
             return `${formatOfferTimingLabel(deal)} • ${LikeStaysEngine.formatCompactPrice(deal.discountPrice || deal.price || 0, prop.currency || 'PKR')}`;
         }
+
+        // "4 Nov 23:04 → 5 Nov 18:00" (same-day: "4 Nov 14:00 → 18:00")
+        function dealWhenLabel(d) {
+            const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            const pt = t => { const x = parseDealTime(t); return x ? String(x[0]).padStart(2, '0') + ':' + String(x[1]).padStart(2, '0') : (t || ''); };
+            const dm = s => { const p = String(s || '').split('-'); return p.length === 3 ? `${parseInt(p[2])} ${M[parseInt(p[1]) - 1] || ''}` : (s || ''); };
+            const same = !d.endDate || d.endDate === d.startDate;
+            const sd = dm(d.startDate), ed = dm(d.endDate || d.startDate);
+            return same ? `${sd} ${pt(d.startTime)} → ${pt(d.endTime)}` : `${sd} ${pt(d.startTime)} → ${ed} ${pt(d.endTime)}`;
+        }
+
         function offerBarHTML(prop) {
             const now = new Date();
             const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
@@ -2301,7 +2316,7 @@ function renderCheckoutDetails() {
                 rawBaseCost = activeCheckoutPayload.offer.price || 0;
                 document.getElementById('sum-mode-badge').innerText = `⚡ Special Offer`;
                 document.getElementById('sum-dates-label').innerText = activeCheckoutPayload.offer.timing || 'Dates';
-                document.getElementById('bill-nights-label').innerText = activeCheckoutPayload.offer.title || 'Special Package';
+                document.getElementById('bill-nights-label').innerText = 'Special Offer';
             } else if (mode === 'hourly' && activeCheckoutPayload.hourly) {
                 const hr = activeCheckoutPayload.hourly;
                 rawBaseCost = (hr.rate || 500) * (hr.hours || 4);

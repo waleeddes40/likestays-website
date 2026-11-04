@@ -372,6 +372,7 @@
   .dual-range input[type=range]::-moz-range-thumb{pointer-events:auto;height:18px;width:18px;border-radius:50%;background:#D97757;border:2px solid #fff}
   .dual-range input[type=range]::-moz-range-track{background:transparent}
 </style>
+<style>.cd-offer-bar{flex-wrap:wrap!important;align-items:flex-start!important;row-gap:3px;line-height:1.35}.cd-offer-bar .of-t{flex:1 1 auto;min-width:0;white-space:normal;overflow-wrap:anywhere}.cd-offer-bar .of-more{flex:none;white-space:nowrap}</style>
 <style id="ls-dark-theme">
 /* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #D97757 ===== */
 html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#D97757;--soft:#2E1D16;--br:#2C2C31;--mut:#9CA3AF}
@@ -487,6 +488,8 @@ html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGree
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
 html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
 html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
+html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
 </head>
@@ -1309,6 +1312,17 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
         }
         window.addEventListener('resize', setFeedTop);
 
+
+        // "4 Nov 23:04 → 5 Nov 18:00" (same-day: "4 Nov 14:00 → 18:00")
+        function dealWhenLabel(d) {
+            const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            const pt = t => { const x = parseDealTime(t); return x ? String(x[0]).padStart(2, '0') + ':' + String(x[1]).padStart(2, '0') : (t || ''); };
+            const dm = s => { const p = String(s || '').split('-'); return p.length === 3 ? `${parseInt(p[2])} ${M[parseInt(p[1]) - 1] || ''}` : (s || ''); };
+            const same = !d.endDate || d.endDate === d.startDate;
+            const sd = dm(d.startDate), ed = dm(d.endDate || d.startDate);
+            return same ? `${sd} ${pt(d.startTime)} → ${pt(d.endTime)}` : `${sd} ${pt(d.startTime)} → ${ed} ${pt(d.endTime)}`;
+        }
+
         function offerBarHTML(prop) {
             const now = new Date();
             const deals = prop.flashDeals || (prop.flashOffer && prop.flashOffer.enabled ? [prop.flashOffer] : []);
@@ -1321,7 +1335,7 @@ html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!i
             let hrs = null;
             if (sameDay) { const a1 = tm(d.startTime), b1 = tm(d.endTime); if (a1 != null && b1 != null) { let df = b1 - a1; if (df <= 0) df += 1440; hrs = Math.round(df / 6) / 10; } }
             const price = LikeStaysEngine.formatCompactPrice(d.discountPrice || d.price || 0, prop.currency || 'PKR');
-            const label = hrs != null ? `${hrs} hr stay · ${price}` : buildOfferText(prop, d);
+            const label = `${dealWhenLabel(d)} · ${LikeStaysEngine.formatPrice(d.discountPrice || d.price || 0, prop.currency || 'PKR')}${hrs != null ? ` (${hrs} hr)` : ''}`;
             const n = live.length - 1;
             return `<span class="of-t">${escF(label)}</span>` + (n > 0 ? `<span class="of-more">+${n} more offer${n > 1 ? 's' : ''}</span>` : '');
         }
