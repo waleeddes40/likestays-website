@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root">
+<html lang="en" id="html-root" data-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#0E0E10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>LikeStays.co | Host Bookings Console</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- 🔥 REALTIME FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -24,10 +25,13 @@
             theme: {
                 extend: {
                     colors: {
-                        luxuryGreen: '#0D4E2F',
-                        luxuryLightGreen: '#1E6F45',
-                        softMint: '#F2F5F3',
-                        goldWarm: '#D4AF37'
+                        luxuryGreen: '#111827',
+                        luxuryLightGreen: '#374151',
+                        softMint: '#F6F6F7',
+                        inputBg: '#F6F6F7',
+                        softShadowDark: '#E5E7EB',
+                        softShadowLight: '#FFFFFF',
+                        goldWarm: '#D97757'
                     }
                 }
             }
@@ -63,11 +67,186 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
     </style>
+    <style>
+    /* ===== LikeStays shared theme — same look as Explore / Map / Details (Inter, white bordered cards, small radii, terracotta accent #D97757) ===== */
+    html,body{background:#fff!important;font-family:'Inter',system-ui,sans-serif!important;color:#111827}
+    body,button,input,select,textarea{font-family:'Inter',system-ui,sans-serif}
+    .font-cinzel-logo{font-family:'Inter',sans-serif!important;font-weight:800!important;letter-spacing:.02em}
+    .neu-flat,.neu-flat-white,.landing-card-shadow,.neu-logo-card,.neu-social-circle{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .landing-card-shadow{border-radius:14px!important;transform:none!important}
+    .landing-card-shadow:hover{transform:none!important;border-color:#D97757!important;box-shadow:none!important}
+    .neu-social-circle:hover{transform:none!important;border-color:#D97757!important;box-shadow:none!important}
+    .neu-inset{background:#F6F6F7!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .neu-inset:focus-within,.neu-inset:focus{border-color:#D97757!important}
+    .neu-btn-green{background:#D97757!important;box-shadow:none!important;color:#fff!important}
+    .neu-btn-green:active{transform:scale(.98)!important}
+    .neu-circle-btn{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
+    .rounded-\[36px\],.rounded-\[32px\],.rounded-\[28px\],.rounded-3xl{border-radius:16px!important}
+    .rounded-2xl{border-radius:12px!important}
+    .rounded-xl{border-radius:10px!important}
+    /* colour: no green anywhere → terracotta / warm tints */
+    .bg-luxuryGreen,.hover\:bg-luxuryGreen:hover{background-color:#D97757!important;color:#fff!important}
+    .hover\:bg-luxuryLightGreen:hover{background-color:#C2613F!important}
+    .accent-luxuryGreen{accent-color:#D97757}
+    .border-luxuryGreen,.hover\:border-luxuryGreen:hover{border-color:#D97757!important}
+    .text-goldWarm{color:#D97757!important}
+    .text-luxuryLightGreen{color:#D97757!important}
+    [class*="bg-luxuryGreen/10"],[class*="bg-luxuryGreen/15"],[class*="bg-luxuryGreen/20"]{background:#FBEAE3!important;color:#D97757!important}
+    [class*="bg-emerald-"],[class*="from-emerald-"],[class*="via-emerald-"],[class*="to-emerald-"]{background-color:#FBEAE3!important;background-image:none!important}
+    .bg-emerald-700,.bg-emerald-800{background-color:#D97757!important;color:#fff!important}
+    .hover\:bg-emerald-800:hover{background-color:#C2613F!important}
+    .hover\:bg-emerald-50:hover,.hover\:bg-emerald-100:hover{background:#FBEAE3!important}
+    [class*="text-emerald-"]{color:#B4532F!important}
+    .bg-emerald-700 *,.bg-emerald-800 *,.bg-luxuryGreen *{color:inherit}
+    a.bg-emerald-700,a.bg-emerald-800,button.bg-emerald-700{color:#fff!important}
+    [class*="border-emerald-"]{border-color:#F3CDBF!important}
+    .text-emerald-400{color:#D97757!important}
+    [class*="bg-amber-"],[class*="from-amber-"],[class*="to-amber-"]{background-color:#FBEAE3!important;background-image:none!important}
+    [class*="border-amber-"]{border-color:#F3CDBF!important}
+    [class*="text-amber-"]{color:#9A4A2A!important}
+    .bg-amber-500{background-color:#D97757!important}
+    .fill-luxuryGreen{fill:#111827}
+    .bg-gray-150{background:#f3f4f6}.border-gray-150{border-color:#eceef1}
+    header.sticky,header.bg-white{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #e5e7eb!important}
+    #toast-msg{font-weight:600}
+    [id$="toast"]{border-radius:12px!important;background:rgba(17,24,39,.95)!important}
+    input[type=range]::-webkit-slider-runnable-track{background:#e5e7eb!important}
+    input[type=range]::-webkit-slider-thumb{background:#D97757!important;box-shadow:none!important}
+    input[type=range]::-moz-range-thumb{background:#D97757!important}
+    input:focus,select:focus,textarea:focus{outline:none}
+    ::selection{background:#FBEAE3}
+    @keyframes popIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+    .animate-pop-in{animation:popIn .18s ease-out forwards}
+    /* header buttons shared (language icon + currency code) */
+    .ls-lang-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;color:#111827;cursor:pointer;flex:none}
+    .ls-lang-btn svg{width:18px;height:18px}
+    .ls-cur-btn{display:flex;align-items:center;justify-content:center;gap:4px;height:32px;padding:0 10px;border-radius:16px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:700 11px Inter,sans-serif;cursor:pointer;flex:none}
+    .ls-hdr-tools{display:flex;align-items:center;gap:6px}
+    </style>
+<style id="ls-dark-theme">
+/* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #D97757 ===== */
+html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#D97757;--soft:#2E1D16;--br:#2C2C31;--mut:#9CA3AF}
+html[data-theme=dark],html[data-theme=dark] body{background:#0E0E10!important;color:#F3F4F6!important}
+/* surfaces */
+html[data-theme=dark] .bg-white,html[data-theme=dark] .hover\:bg-white:hover,html[data-theme=dark] .neu-flat,html[data-theme=dark] .neu-flat-white,html[data-theme=dark] .landing-card-shadow,html[data-theme=dark] .neu-logo-card,html[data-theme=dark] .neu-social-circle,html[data-theme=dark] .neu-circle-btn{background:#17171A!important;border-color:#2C2C31!important;box-shadow:none!important}
+html[data-theme=dark] [class*="bg-white/"]{background:rgba(23,23,26,.92)!important}
+html[data-theme=dark] .bg-softMint,html[data-theme=dark] [class*="bg-softMint/"],html[data-theme=dark] .hover\:bg-softMint:hover,html[data-theme=dark] .neu-inset,html[data-theme=dark] .bg-gray-50,html[data-theme=dark] .bg-gray-100,html[data-theme=dark] .bg-gray-150,html[data-theme=dark] .bg-gray-200,html[data-theme=dark] .hover\:bg-gray-50:hover,html[data-theme=dark] .hover\:bg-gray-100:hover,html[data-theme=dark] .hover\:bg-gray-200:hover,html[data-theme=dark] [class*="to-softMint"],html[data-theme=dark] [class*="from-softMint"]{background:#1F1F23!important;background-image:none!important;border-color:#2C2C31!important}
+html[data-theme=dark] .neu-inset{box-shadow:none!important}
+html[data-theme=dark] .neu-inset:focus-within,html[data-theme=dark] .neu-inset:focus{border-color:#D97757!important}
+html[data-theme=dark] .bg-gray-300{background:#3a3a40!important}
+/* text */
+html[data-theme=dark] .text-luxuryGreen,html[data-theme=dark] .text-gray-900,html[data-theme=dark] .text-gray-800,html[data-theme=dark] .text-gray-700,html[data-theme=dark] .text-black,html[data-theme=dark] .hover\:text-black:hover,html[data-theme=dark] .text-slate-900,html[data-theme=dark] .text-slate-800,html[data-theme=dark] .text-slate-700{color:#F3F4F6!important}
+html[data-theme=dark] .text-gray-600,html[data-theme=dark] .text-gray-500,html[data-theme=dark] .text-gray-400,html[data-theme=dark] .text-gray-300,html[data-theme=dark] .text-slate-500,html[data-theme=dark] .text-slate-400{color:#9CA3AF!important}
+html[data-theme=dark] .text-luxuryLightGreen,html[data-theme=dark] .text-goldWarm{color:#E8896A!important}
+html[data-theme=dark] .fill-luxuryGreen{fill:#F3F4F6}
+/* borders / dividers */
+html[data-theme=dark] [class*="border-gray-"],html[data-theme=dark] .border-slate-200,html[data-theme=dark] .border-b,html[data-theme=dark] .border-t,html[data-theme=dark] .border-r,html[data-theme=dark] .border{border-color:#2C2C31!important}
+html[data-theme=dark] [class*="divide-gray-"]>*{border-color:#2C2C31!important}
+html[data-theme=dark] .border-luxuryGreen,html[data-theme=dark] .hover\:border-luxuryGreen:hover,html[data-theme=dark] .landing-card-shadow:hover{border-color:#D97757!important}
+html[data-theme=dark] [class*="border-luxuryGreen/"]{border-color:#2C2C31!important}
+/* accent buttons stay terracotta */
+html[data-theme=dark] .bg-luxuryGreen,html[data-theme=dark] .neu-btn-green,html[data-theme=dark] .bg-emerald-700,html[data-theme=dark] .bg-emerald-800,html[data-theme=dark] .bg-amber-500{background:#D97757!important;color:#fff!important;border-color:#D97757!important;box-shadow:none!important}
+html[data-theme=dark] .hover\:bg-luxuryLightGreen:hover,html[data-theme=dark] .hover\:bg-emerald-800:hover{background:#C2613F!important}
+html[data-theme=dark] .bg-luxuryGreen *,html[data-theme=dark] .neu-btn-green *{color:inherit}
+html[data-theme=dark] [class*="bg-luxuryGreen/"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] [class*="bg-emerald-"]:not(.bg-emerald-700):not(.bg-emerald-800),html[data-theme=dark] [class*="from-emerald-"],html[data-theme=dark] [class*="to-emerald-"],html[data-theme=dark] [class*="bg-amber-"]:not(.bg-amber-500),html[data-theme=dark] [class*="from-amber-"],html[data-theme=dark] [class*="to-amber-"],html[data-theme=dark] .hover\:bg-emerald-50:hover,html[data-theme=dark] .hover\:bg-emerald-100:hover{background:#2E1D16!important;background-image:none!important}
+html[data-theme=dark] [class*="text-emerald-"],html[data-theme=dark] [class*="text-amber-"]{color:#F0A585!important}
+html[data-theme=dark] [class*="border-emerald-"],html[data-theme=dark] [class*="border-amber-"]{border-color:#4A2C20!important}
+html[data-theme=dark] [class*="bg-rose-"],html[data-theme=dark] [class*="bg-red-"],html[data-theme=dark] .hover\:bg-rose-100:hover{background:#2A1517!important}
+html[data-theme=dark] [class*="text-rose-"],html[data-theme=dark] [class*="text-red-"]{color:#FCA5A5!important}
+html[data-theme=dark] [class*="border-rose-"],html[data-theme=dark] [class*="border-red-"]{border-color:#5B2A2E!important}
+html[data-theme=dark] [class*="bg-blue-"],html[data-theme=dark] [class*="bg-sky-"]{background:#16222E!important}
+html[data-theme=dark] [class*="text-blue-"],html[data-theme=dark] [class*="text-sky-"]{color:#93C5FD!important}
+/* shadows softer */
+html[data-theme=dark] .shadow-2xl,html[data-theme=dark] .shadow-xl,html[data-theme=dark] .shadow-lg,html[data-theme=dark] .shadow-md,html[data-theme=dark] .shadow-sm,html[data-theme=dark] .shadow-xs,html[data-theme=dark] .shadow-2xs{box-shadow:0 6px 24px rgba(0,0,0,.55)!important}
+/* header */
+html[data-theme=dark] header.sticky,html[data-theme=dark] header.bg-white,html[data-theme=dark] #ls-home-header{background:rgba(14,14,16,.96)!important;border-color:#2C2C31!important}
+html[data-theme=dark] #details-loading-overlay{background:#0E0E10!important}
+/* form controls */
+html[data-theme=dark] input:not([type=checkbox]):not([type=radio]):not([type=range]),html[data-theme=dark] select,html[data-theme=dark] textarea{background:#1F1F23!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] input::placeholder,html[data-theme=dark] textarea::placeholder{color:#6B7280!important;opacity:1}
+html[data-theme=dark] option{background:#1F1F23;color:#F3F4F6}
+html[data-theme=dark] input[type=range]::-webkit-slider-runnable-track{background:#3a3a40!important}
+html[data-theme=dark] input[type=date],html[data-theme=dark] input[type=time]{color-scheme:dark}
+html[data-theme=dark] ::selection{background:#4A2C20}
+html[data-theme=dark] hr{border-color:#2C2C31}
+/* ---- home / map cards ---- */
+html[data-theme=dark] .hs-bar{background:#17171A!important;border-color:#2C2C31!important;box-shadow:0 3px 14px rgba(0,0,0,.5)!important}
+html[data-theme=dark] .hs-ic{background:#2A2A2F!important;color:#F3F4F6!important}
+html[data-theme=dark] .hs-t b,html[data-theme=dark] .hs-btn,html[data-theme=dark] .hs-cur{color:#F3F4F6!important}
+html[data-theme=dark] .type-chip,html[data-theme=dark] .cat-tag{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] .type-chip.on,html[data-theme=dark] .cat-tag.on{background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+html[data-theme=dark] #explore-property-list,html[data-theme=dark] .feed-slide,html[data-theme=dark] #feed-wrap{background:transparent!important;color:#F3F4F6!important}
+html[data-theme=dark] .cd-img,html[data-theme=dark] .cd-track video{background:#1F1F23!important}
+html[data-theme=dark] .cd-fav{background:#17171A!important;color:#F3F4F6!important;box-shadow:0 1px 6px rgba(0,0,0,.5)!important}
+html[data-theme=dark] .cd-fav.on svg{fill:#D97757;stroke:#D97757}
+html[data-theme=dark] .cd-title,html[data-theme=dark] .cd-title em{color:#F3F4F6}
+html[data-theme=dark] .cd-loc,html[data-theme=dark] .cd-meta,html[data-theme=dark] .cd-loc .cd-meta{color:#9CA3AF!important}
+html[data-theme=dark] .cd-meta span+span{border-color:#2C2C31}
+html[data-theme=dark] .cd-offer-bar{border-left-color:#F3F4F6;color:#F3F4F6}
+html[data-theme=dark] .cd-offer{border-color:#F3F4F6;color:#F3F4F6}
+html[data-theme=dark] .cat-head,html[data-theme=dark] #ls-more-sheet .drawer-head{background:#17171A!important;border-color:#2C2C31!important}
+html[data-theme=dark] .drawer-title,html[data-theme=dark] .drawer-x{color:#F3F4F6!important}
+html[data-theme=dark] #ls-more-sheet{background:#17171A!important}
+html[data-theme=dark] #ls-more-sheet a{color:#E5E7EB!important}
+html[data-theme=dark] #ls-more-sheet a:hover,html[data-theme=dark] #ls-more-sheet a:active{background:#D97757!important;color:#fff!important}
+html[data-theme=dark] #ls-more-sheet .sep{background:#2C2C31}
+html[data-theme=dark] :is(#filter-modal-overlay,#airbnb-search-modal,#cat-modal,#global-currency-modal,#global-lang-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #map-empty{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #main-interactive-map{background:#0E0E10!important}
+html[data-theme=dark] .leaflet-container{background:#0E0E10!important}
+/* map tiles + popups: darken the basemap */
+html[data-theme=dark] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.9) saturate(.75)}
+html[data-theme=dark] .leaflet-popup-content-wrapper,html[data-theme=dark] .leaflet-popup-tip{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] .leaflet-bar a{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] .leaflet-control-attribution{background:rgba(14,14,16,.7)!important;color:#9CA3AF!important}
+html[data-theme=dark] .leaflet-control-attribution a{color:#E8896A!important}
+/* ---- details/checkout ---- */
+html[data-theme=dark] #details-multi-deals-section{background:#2E1D16!important;border-color:#4A2C20!important}
+html[data-theme=dark] .star-btn{color:#3a3a40}html[data-theme=dark] .star-btn.on{color:#D97757}
+/* ---- header tool buttons ---- */
+html[data-theme=dark] .ls-lang-btn,html[data-theme=dark] .ls-cur-btn{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+/* ---- generic inline-style leaks ---- */
+html[data-theme=dark] [style*="background:#fff"],html[data-theme=dark] [style*="background: #fff"],html[data-theme=dark] [style*="background:white"],html[data-theme=dark] [style*="background-color:#fff"]{background:#17171A!important}
+html[data-theme=dark] [style*="color:#111827"],html[data-theme=dark] [style*="color:#0f172a"]{color:#F3F4F6!important}
+/* ---- bottom nav (engine) ---- */
+html[data-theme=dark] #likestays-global-bottom-nav{background:#0E0E10!important;border-top:1px solid #2C2C31!important;box-shadow:none!important}
+html[data-theme=dark] #likestays-global-bottom-nav [style*="#8b93a1"]{color:#9CA3AF!important}
+html[data-theme=dark] #likestays-global-bottom-nav [style*="#FBEAE3"]{background:#2E1D16!important}
+/* ---- engine currency modal & language modal ---- */
+html[data-theme=dark] #global-currency-modal *{border-color:#2C2C31}
+html[data-theme=dark] #global-language-modal .ls-lang-panel{background:#17171A!important;box-shadow:-8px 0 30px rgba(0,0,0,.6)!important}
+html[data-theme=dark] #global-language-modal .ls-lang-head{border-color:#2C2C31!important}
+html[data-theme=dark] #global-language-modal .ls-lang-title,html[data-theme=dark] #global-language-modal .ls-lang-x,html[data-theme=dark] #lang-modal-list-container .ls-l-name{color:#F3F4F6!important}
+html[data-theme=dark] #global-language-modal .ls-lang-sub,html[data-theme=dark] #lang-modal-list-container .ls-l-native{color:#9CA3AF!important}
+html[data-theme=dark] #global-language-modal .ls-lang-search{background:#1F1F23!important;color:#F3F4F6!important;border-color:#2C2C31!important}
+html[data-theme=dark] #lang-modal-list-container button:active{background:#1F1F23!important}
+html[data-theme=dark] #lang-modal-list-container button.on{background:#2E1D16!important}
+html[data-theme=dark] #lang-modal-list-container button{color:#F3F4F6}
+/* scrollbars */
+html[data-theme=dark] *{scrollbar-color:#3a3a40 transparent}
+html[data-theme=dark] .hl-card{background:#17171A!important;border-color:#2C2C31!important}
+html[data-theme=dark] .hl-tag{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] .ls-search{background:#17171A!important;border-color:#2C2C31!important;color:#F3F4F6!important}
+html[data-theme=dark] .border-gray-150{border-color:#2C2C31!important}
+html[data-theme=dark] .text-\[\#111827\]{color:#F3F4F6!important}
+html[data-theme=dark] .bg-\[\#F6F6F7\]{background:#1F1F23!important}
+html[data-theme=dark] .sd-box,html[data-theme=dark] .sd-arrow,html[data-theme=dark] .sd-city,html[data-theme=dark] .sd-step,html[data-theme=dark] .map-tab{background:#17171A!important;border-color:#2C2C31!important;color:#F3F4F6!important;box-shadow:none!important}
+html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
+html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
+html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
+html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
+html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
+
+</style>
 </head>
 <body class="no-scrollbar bg-softMint pb-24 text-left">
 
     <!-- FLOATING TOAST -->
-    <div id="host-booking-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#0D4E2F]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
+    <div id="host-booking-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[70000] flex items-center space-x-2 bg-[#111827]/95 text-white px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-md border border-white/20 text-xs font-bold transition-all duration-300 transform -translate-y-10 opacity-0 pointer-events-none">
         <span id="toast-icon">✨</span>
         <span id="toast-msg">Notification</span>
     </div>
@@ -82,19 +261,10 @@
                 <span>◀</span> <span class="uppercase tracking-wider">Host Console</span>
             </button>
 
-            <!-- Right: 150 Currencies & 40 Languages -->
-            <div class="flex items-center space-x-2">
-                <button type="button" onclick="toggleGlobalCurrencyModal(true)" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1 text-xs font-black text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
-                    <span id="header-curr-flag">🇵🇰</span>
-                    <span id="header-curr-text">PKR</span>
-                    <span class="text-[7.5px] text-gray-400">▼</span>
-                </button>
-
-                <button type="button" onclick="toggleGlobalLangModal(true)" class="neu-flat px-2.5 py-1.5 rounded-xl bg-white border border-gray-200 flex items-center space-x-1 text-xs font-black text-luxuryGreen cursor-pointer hover:scale-105 transition-transform">
-                    <span id="header-lang-flag">🌐</span>
-                    <span id="header-lang-text">EN</span>
-                    <span class="text-[7.5px] text-gray-400">▼</span>
-                </button>
+            <!-- Right: currency + language -->
+            <div class="ls-hdr-tools">
+                <button type="button" class="ls-cur-btn" aria-label="Currency" onclick="LikeStaysEngine.openCurrencyModal()"><span class="ls-cur-code">USD</span></button>
+                <button type="button" class="ls-lang-btn" aria-label="Language" onclick="window.LanguageEngine&&LanguageEngine.openModal()"><span class="ls-lang-ico"></span></button>
             </div>
         </header>
 
@@ -276,34 +446,6 @@
     <!-- ========================================================================= -->
     <!-- 🌐 150 CURRENCIES & 40 LANGUAGES GLOBAL MODALS -->
     <!-- ========================================================================= -->
-    <div id="global-currency-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[75000] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3 animate-pop-in text-left">
-            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Select Currency</span>
-                    <p class="text-[8.5px] text-gray-400 font-bold">150 World Currencies</p>
-                </div>
-                <button type="button" onclick="toggleGlobalCurrencyModal(false)" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
-            </div>
-            <input type="text" id="currency-search-input" oninput="filterCurrenciesList()" placeholder="🔍 Search currency code or name..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
-            <div id="currencies-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
-        </div>
-    </div>
-
-    <div id="global-lang-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[75000] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[32px] p-5 shadow-2xl neu-flat border border-gray-200 space-y-3.5 animate-pop-in text-left">
-            <div class="flex justify-between items-center border-b border-gray-150 pb-2">
-                <div>
-                    <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">Select Language</span>
-                    <p class="text-[8.5px] text-gray-400 font-bold">40 Global Languages</p>
-                </div>
-                <button type="button" onclick="toggleGlobalLangModal(false)" class="text-xs font-bold text-gray-400 hover:text-black">✕</button>
-            </div>
-            <input type="text" id="lang-search-input" oninput="filterLanguagesList()" placeholder="🔍 Search language..." class="w-full text-xs font-bold p-2.5 neu-inset bg-softMint rounded-xl border-none outline-none text-luxuryGreen">
-            <div id="lang-options-list" class="max-h-64 overflow-y-auto no-scrollbar space-y-1 text-left"></div>
-        </div>
-    </div>
-
     <!-- JAVASCRIPT SYSTEM ENGINE -->
     <script>
         const firebaseConfig = {
@@ -331,41 +473,18 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             syncHeaderUI();
-            renderCurrenciesList();
-            renderLanguagesList();
 
             firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    HostBookingsState.currentHostUid = user.uid;
-                } else {
-                    try {
-                        const localP = JSON.parse(localStorage.getItem('likestays_user_profile') || localStorage.getItem('likestays_active_user') || '{}');
-                        HostBookingsState.currentHostUid = localP.uid || "host_verified_user";
-                    } catch(e) {}
-                }
+                if (!user) { window.location.href = 'auth.html'; return; }
+                HostBookingsState.currentHostUid = user.uid;
                 loadHostAndAssignedAdminBanks();
                 listenToLiveHostBookings();
             });
         });
 
-        window.addEventListener('likestays:locale_changed', () => {
-            syncHeaderUI();
-            renderHostBookingsGrid();
-        });
-
-        function syncHeaderUI() {
-            if (typeof LikeStaysEngine === 'undefined') return;
-            const locale = LikeStaysEngine.getLocale();
-            const hFlag = document.getElementById('header-curr-flag');
-            const hText = document.getElementById('header-curr-text');
-            if (hFlag) hFlag.innerText = locale.currFlag;
-            if (hText) hText.innerText = locale.currency;
-
-            const hlFlag = document.getElementById('header-lang-flag');
-            const hlText = document.getElementById('header-lang-text');
-            if (hlFlag) hlFlag.innerText = locale.langFlag;
-            if (hlText) hlText.innerText = (locale.language || 'EN').toUpperCase();
-        }
+        // changing currency (modal inside likestays-engine.js) just repaints the cards — no page reload
+        window.__lsOnLocaleChange = () => { lsPaintHeaderTools(); renderHostBookingsGrid(); };
+        function syncHeaderUI() { lsPaintHeaderTools(); }
 
         function showHostToast(msg, icon = '✨') {
             const toast = document.getElementById('host-booking-toast');
@@ -416,35 +535,33 @@
             });
         }
 
-        // ================= 🔥 ROBUST REALTIME LISTENER (ALWAYS LOADS 100%) =================
+        // ================= 🔥 REALTIME LISTENER — finds the host's bookings two ways =================
+        // (1) bookings carrying this host's uid, and (2) bookings for any of this host's properties (by property id),
+        // so a booking shows up even if its hostUid was missing/different. Results are merged live.
+        let __bkListeners = [];
+        const __bkSources = {};
+        function __bkDetach() { __bkListeners.forEach(l => { try { l.ref.off('value', l.fn); } catch (e) {} }); __bkListeners = []; for (const k in __bkSources) delete __bkSources[k]; }
+        function __bkMerge() {
+            const map = {};
+            Object.values(__bkSources).forEach(src => Object.keys(src || {}).forEach(k => { map[k] = Object.assign({ id: k }, src[k]); }));
+            HostBookingsState.bookings = Object.values(map).sort((x, y) => String(y.createdAt || y.id).localeCompare(String(x.createdAt || x.id)));
+            renderHostBookingsGrid();
+        }
+        function __bkWatch(key, ref) {
+            const fn = (snap) => { __bkSources[key] = snap.val() || {}; __bkMerge(); };
+            ref.on('value', fn, (err) => { console.error('Bookings listener failed:', key, err); __bkSources[key] = {}; __bkMerge(); });
+            __bkListeners.push({ ref, fn });
+        }
         function listenToLiveHostBookings() {
-            try {
-                const myUid = HostBookingsState.currentHostUid;
-                // ⚡ صرف اسی host کی bookings منگواتا ہے — پوری فہرست نہیں (Firebase میں hostUid پر index ضروری ہے، دیکھیں rules نوٹ)
-                const isRealHostUid = myUid && myUid !== "host_verified_user" && myUid !== "host_session";
-                const bookingsQuery = isRealHostUid
-                    ? firebase.database().ref('bookings').orderByChild('hostUid').equalTo(myUid)
-                    : firebase.database().ref('bookings'); // ٹیسٹ/خاص اکاؤنٹس کے لیے مکمل فہرست
-
-                bookingsQuery.on('value', (snap) => {
-                    const data = snap.val();
-                    if (data) {
-                        const matchedBookings = Object.keys(data).map(k => ({ id: k, ...data[k] }));
-
-                        // نوٹ: چونکہ Firebase پر ہی hostUid سے فلٹر ہو چکا ہے، صرف اسی host کی bookings واپس آتی ہیں —
-                        // یہی صحیح رویہ ہے (ایک host دوسرے host کی bookings نہ دیکھے)۔ بہت پرانی bookings جن میں
-                        // hostUid سرے سے موجود نہیں، وہ اب کسی کو نظر نہیں آئیں گی — انہیں Firebase میں دستی طور پر
-                        // درست hostUid کے ساتھ اپڈیٹ کرنا ہو گا۔
-                        HostBookingsState.bookings = matchedBookings;
-                        HostBookingsState.bookings.sort((a,b) => (b.id > a.id ? 1 : -1));
-                    } else {
-                        HostBookingsState.bookings = [];
-                    }
-                    renderHostBookingsGrid();
-                });
-            } catch(e) {
-                renderHostBookingsGrid();
-            }
+            const myUid = HostBookingsState.currentHostUid;
+            if (!myUid) return;
+            __bkDetach();
+            const db = firebase.database();
+            __bkWatch('uid', db.ref('bookings').orderByChild('hostUid').equalTo(myUid));
+            db.ref('properties').orderByChild('hostUid').equalTo(myUid).once('value').then(ps => {
+                Object.keys(ps.val() || {}).forEach(pid => __bkWatch('p_' + pid, db.ref('bookings').orderByChild('propId').equalTo(pid)));
+            }).catch(e => console.error('host properties lookup failed', e));
+            renderHostBookingsGrid();
         }
 
         function setHostBookingFilter(mode) {
@@ -493,7 +610,7 @@
                 const bookingBaseCurr = bk.currency || 'PKR';
                 const totalCost = Number(bk.totalAmount || 0);
                 const depositPaid = Number(bk.depositPaid || 0);
-                const remainingBalance = Number(bk.remainingBalance || 0);
+                const remainingBalance = Number(bk.remainingBalance != null ? bk.remainingBalance : (bk.remainingDue || 0));
 
                 // Dynamic Commission percentage (5%, 10%, 15%)
                 const commRate = Number(bk.commissionRate || bk.hostCommRate || HostBookingsState.activeHostCommRate || 10);
@@ -646,9 +763,9 @@
 
                             <div class="space-y-0.5">
                                 <span class="text-[7.5px] font-bold text-gray-400 uppercase block">Property:</span>
-                                <h3 class="text-xs font-black text-luxuryGreen truncate">${bk.propName || 'Luxury Stay'}</h3>
-                                <p class="text-[9px] text-gray-400 font-semibold truncate">📍 ${bk.propLocation || 'Location'}</p>
-                                <p class="text-[9.5px] text-emerald-800 font-black pt-0.5">📅 ${bk.durationString || 'Dates Selected'} (👥 ${bk.guests || 2} Guests)</p>
+                                <h3 class="text-xs font-black text-luxuryGreen truncate">${bk.propName || bk.propertyName || 'Luxury Stay'}</h3>
+                                <p class="text-[9px] text-gray-400 font-semibold truncate">📍 ${bk.propLocation || bk.city || 'Location'}</p>
+                                <p class="text-[9.5px] text-emerald-800 font-black pt-0.5">📅 ${bk.durationString || (bk.checkIn ? (bk.checkOut && bk.checkOut !== 'Flexible' ? bk.checkIn + ' - ' + bk.checkOut : bk.checkIn) : 'Dates Selected')} (👥 ${bk.guests || bk.guestsCount || 2} Guests)</p>
                             </div>
 
                             <!-- 💰 CLEAR FINANCIAL BREAKDOWN (150 CURRENCIES LIVE) -->
@@ -896,36 +1013,13 @@
             });
         }
 
-        // ================= 🌐 150 CURRENCIES & 40 LANGUAGES FUNCTIONS =================
-        function toggleGlobalCurrencyModal(open) { document.getElementById('global-currency-modal').classList.toggle('hidden', !open); }
-        function renderCurrenciesList() { filterCurrenciesList(); }
-        function filterCurrenciesList() {
-            const q = (document.getElementById('currency-search-input')?.value || '').toLowerCase().trim();
-            const container = document.getElementById('currencies-options-list');
-            if (!container || typeof LikeStaysEngine === 'undefined') return;
-            const filtered = LikeStaysEngine.currencies.filter(c => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q));
-            container.innerHTML = filtered.map(c => `
-                <button type="button" onclick="LikeStaysEngine.setCurrency('${c.code}'); toggleGlobalCurrencyModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700 cursor-pointer">
-                    <div class="flex items-center space-x-2"><span>${c.flag}</span><span>${c.name} (${c.code})</span></div>
-                    <span class="text-luxuryGreen font-black">${c.symbol}</span>
-                </button>
-            `).join('');
+    
+        // header tools: current currency code + language icon (selection made on Explore applies everywhere)
+        function lsPaintHeaderTools() {
+            try { document.querySelectorAll('.ls-cur-code').forEach(e => e.innerText = LikeStaysEngine.activeLocale.currency); } catch (e) {}
+            document.querySelectorAll('.ls-lang-ico').forEach(e => { e.innerHTML = (window.LanguageEngine && LanguageEngine.icon) || '🌐'; });
         }
-
-        function toggleGlobalLangModal(open) { document.getElementById('global-lang-modal').classList.toggle('hidden', !open); }
-        function renderLanguagesList() { filterLanguagesList(); }
-        function filterLanguagesList() {
-            const q = (document.getElementById('lang-search-input')?.value || '').toLowerCase().trim();
-            const container = document.getElementById('lang-options-list');
-            if (!container || typeof LikeStaysEngine === 'undefined') return;
-            const filtered = LikeStaysEngine.languages.filter(l => l.name.toLowerCase().includes(q) || l.native.toLowerCase().includes(q) || l.code.toLowerCase().includes(q));
-            container.innerHTML = filtered.map(l => `
-                <button type="button" onclick="LikeStaysEngine.setLanguage('${l.code}'); toggleGlobalLangModal(false);" class="w-full text-left p-2.5 rounded-xl hover:bg-softMint flex items-center justify-between text-xs font-bold text-gray-700 cursor-pointer">
-                    <div class="flex items-center space-x-2"><span class="text-base">${l.flag}</span><span>${l.name}</span></div>
-                    <span class="text-[10px] text-gray-400 font-semibold">${l.native}</span>
-                </button>
-            `).join('');
-        }
+        window.addEventListener('DOMContentLoaded', lsPaintHeaderTools);
     </script>
 </body>
 </html>

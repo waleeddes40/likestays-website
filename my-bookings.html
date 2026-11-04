@@ -233,7 +233,17 @@ html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#
 html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
 html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
+html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
+html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
+html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
+</style>
+<style>
+.cr-chip{width:100%;text-align:left;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;color:#111827;font:600 12px Inter,sans-serif;cursor:pointer}
+.cr-chip.on{background:#D97757;border-color:#D97757;color:#fff}
+html[data-theme=dark] .cr-chip{background:#1F1F23;border-color:#2C2C31;color:#F3F4F6}
+html[data-theme=dark] .cr-chip.on{background:#D97757;border-color:#D97757;color:#fff}
 </style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-10 text-left">
@@ -413,28 +423,20 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                 <!-- REASON SELECTION -->
                 <div class="space-y-1">
                     <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Reason for Cancellation *</label>
-                    <select id="cancel-reason-select" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none cursor-pointer">
-                        <option value="host_requested">Host requested to cancel / Accommodation unavailable</option>
-                        <option value="plans_changed">Change of travel plans or dates</option>
-                        <option value="found_other">Found alternative accommodation</option>
-                        <option value="emergency">Personal emergency / Health reasons</option>
-                        <option value="other">Other reason</option>
-                    </select>
+<input type="hidden" id="cancel-reason-select" value="plans_changed">
+                    <div id="cancel-reason-chips" class="flex flex-col gap-1.5">
+                        <button type="button" data-v="plans_changed" onclick="pickCancelReason(this)" class="cr-chip on">Change of travel plans or dates</button>
+                        <button type="button" data-v="found_other" onclick="pickCancelReason(this)" class="cr-chip">Found alternative accommodation</button>
+                        <button type="button" data-v="host_requested" onclick="pickCancelReason(this)" class="cr-chip">Host requested to cancel / Accommodation unavailable</button>
+                        <button type="button" data-v="emergency" onclick="pickCancelReason(this)" class="cr-chip">Personal emergency / Health reasons</button>
+                        <button type="button" data-v="other" onclick="pickCancelReason(this)" class="cr-chip">Other reason</button>
+                    </div>
                 </div>
 
                 <!-- OPTIONAL EXPLANATION -->
                 <div class="space-y-1">
                     <label class="text-[8px] uppercase tracking-wider text-gray-400 font-black">Additional Notes (Optional)</label>
                     <textarea id="cancel-notes-input" rows="2" placeholder="Briefly explain the issue for Host & Admin..." class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none resize-none"></textarea>
-                </div>
-
-                <!-- REFUND ACCOUNT DETAILS (INTERNATIONAL STANDARD) -->
-                <div class="space-y-1 bg-emerald-50/50 p-3 rounded-2xl border border-emerald-200/60">
-                    <label class="text-[8px] uppercase tracking-wider text-emerald-900 font-black block">Your Refund Payout Details *</label>
-                    <p class="text-[8.5px] text-gray-500 font-medium pb-1 leading-tight">
-                        Host will process the token refund directly to this account:
-                    </p>
-                    <input type="text" id="cancel-refund-account" placeholder="e.g. Bank Name, IBAN / Account #, or Wallet Address" class="w-full p-2.5 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                 </div>
 
                 <!-- ACTION BUTTONS -->
@@ -945,14 +947,24 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
             activeCancellingBooking = b;
             document.getElementById('modal-cancel-booking-code').innerText = `#${b.bookingCode || b.id}`;
             document.getElementById('cancel-notes-input').value = "";
-            document.getElementById('cancel-refund-account').value = "";
+            document.getElementById('cancel-reason-select').value = 'plans_changed';
+            document.querySelectorAll('#cancel-reason-chips .cr-chip').forEach((c, i) => c.classList.toggle('on', i === 0));
 
-            const cp = b.cancellationPolicy || { daily: { deadlineValue: 24, deadlineUnit: "Hours", fullRefundPct: 75 } };
-            const deadlineHours = cp.daily?.deadlineValue || 24;
-            document.getElementById('modal-cancel-policy-statement').innerText = 
-                `This stay allows free 100% full cancellation up to ${deadlineHours} hours before check-in date (${b.durationString || 'Arrival'}). Late cancellations receive ${cp.daily?.fullRefundPct || 75}% refund of total deposit.`;
+            const cp = b.cancellationPolicy || {};
+            const mode = (b.bookingMode === 'hourly' || b.bookingMode === 'offer') ? b.bookingMode : 'daily';
+            const pol = cp[mode] || cp.daily || { deadlineValue: 24, deadlineUnit: 'Hours', lateRefundPct: 50 };
+            const unit = mode === 'daily' ? String(pol.deadlineUnit || 'Hours').toLowerCase() : 'hours';
+            const pct = (pol.lateRefundPct ?? pol.fullRefundPct ?? 0);
+            document.getElementById('modal-cancel-policy-statement').innerText =
+                `Free cancellation up to ${pol.deadlineValue || 24} ${unit} before check-in (${b.durationString || 'arrival'}). Later cancellations receive a ${pct}% refund. Any refund is settled directly with your host.`;
 
             document.getElementById('cancel-booking-modal').classList.remove('hidden');
+        }
+
+
+        function pickCancelReason(el) {
+            document.getElementById('cancel-reason-select').value = el.dataset.v;
+            document.querySelectorAll('#cancel-reason-chips .cr-chip').forEach(c => c.classList.toggle('on', c === el));
         }
 
         function closeCancelModal() {
@@ -965,12 +977,6 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
 
             const reason = document.getElementById('cancel-reason-select').value;
             const notes = document.getElementById('cancel-notes-input').value.trim();
-            const refundAccount = document.getElementById('cancel-refund-account').value.trim();
-
-            if (!refundAccount) {
-                alert("Please provide your refund account details so the host can process your token refund.");
-                return;
-            }
 
             const btn = document.getElementById('btn-confirm-cancellation');
             btn.innerText = "⏳ Processing...";
@@ -980,14 +986,13 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                 status: "Cancelled by Guest",
                 cancellationReason: reason,
                 cancellationNotes: notes,
-                refundPayoutAccount: refundAccount,
                 cancelledAt: new Date().toISOString()
             };
 
             firebase.database().ref(`bookings/${activeCancellingBooking.id}`).update(cancelPayload)
                 .then(() => {
                     closeCancelModal();
-                    showToast("Booking cancelled. Refund request sent to Host.", "✓");
+                    showToast("Booking cancelled. Your host has been notified.", "✓");
                     btn.innerText = "Confirm Cancellation";
                     btn.disabled = false;
                 })
