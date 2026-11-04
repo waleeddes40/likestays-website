@@ -332,6 +332,8 @@ html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#
 html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
 html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
+html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
 
 </style>
 </head>
@@ -2164,7 +2166,10 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
         function renderMoreStaysByHost(allStays) {
             const container = document.getElementById('more-host-stays-grid');
             if (!container) return;
-            moreStaysList = allStays.filter(p => activeProperty && String(p.id) !== String(activeProperty.id));
+            // opened from a host's own link (name.likestays.co)? then "more stays" only shows that same host's stays
+            const __h = location.hostname.toLowerCase().split('.');
+            const __portal = (__h.length > 2 && __h[0] !== 'www' && __h[0] !== 'likestays') || new URLSearchParams(location.search).get('hotel');
+            moreStaysList = allStays.filter(p => activeProperty && String(p.id) !== String(activeProperty.id) && (!__portal || (activeProperty.hostUid && String(p.hostUid) === String(activeProperty.hostUid))));
             if (moreStaysList.length === 0) {
                 container.innerHTML = `<p class="text-[8.5px] text-gray-400 col-span-full">No other stays listed by this host.</p>`; return;
             }

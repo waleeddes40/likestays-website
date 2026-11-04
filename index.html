@@ -485,6 +485,8 @@ html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#
 html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
 html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
+html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
 
 </style>
 </head>
@@ -1207,33 +1209,34 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
             // 🌟 1. DYNAMIC SUBDOMAIN MATCHING (e.g. cozy.likestays.co)
             if (activeSubdomainSlug) {
                 const targetSub = activeSubdomainSlug.toLowerCase();
-                const matchedHotelStays = masterPropertiesList.filter(p => {
-                    const propSlug = slugify(p.name);
-                    const hostSlug = slugify(p.hostName || p.host?.name || '');
-                    const customSlug = slugify(p.slug || '');
-                    const brandSlug = slugify(p.hostBrandSlug || ''); // 🆕 ہوسٹ کا خود منتخب کردہ Brand Link
-                    return propSlug.includes(targetSub) || hostSlug.includes(targetSub) || customSlug === targetSub || brandSlug === targetSub;
-                });
+                // brand link = exact match on the host's chosen name; only if nobody owns that name do we fall back to hotel/host-name matching
+                let matchedHotelStays = masterPropertiesList.filter(p => slugify(p.hostBrandSlug || '') === targetSub);
+                if (!matchedHotelStays.length) {
+                    matchedHotelStays = masterPropertiesList.filter(p => {
+                        const propSlug = slugify(p.name);
+                        const hostSlug = slugify(p.hostName || p.host?.name || '');
+                        const customSlug = slugify(p.slug || '');
+                        return propSlug.includes(targetSub) || hostSlug.includes(targetSub) || customSlug === targetSub;
+                    });
+                }
 
-                if (matchedHotelStays.length > 0) {
-                    baseList = matchedHotelStays;
+                // 🔒 PORTAL MODE: visitors on a host's link only ever see THAT host's stays (search & filters run inside this list)
+                baseList = matchedHotelStays;
+                {
                     const featuredStay = matchedHotelStays[0];
-                    activeHotelName = featuredStay.hostName || featuredStay.host?.name || featuredStay.name;
+                    activeHotelName = featuredStay ? (featuredStay.hostName || featuredStay.host?.name || featuredStay.name) : activeSubdomainSlug;
 
                     const banner = document.getElementById('exclusive-hotel-banner');
                     document.getElementById('exclusive-hotel-title').innerText = `${activeHotelName} • Official Hotel Portal`;
                     banner.classList.remove('hidden');
+                    const exitBtn = banner.querySelector('button'); if (exitBtn) exitBtn.style.display = 'none';
 
                     document.getElementById('search-title-label').innerText = `${activeHotelName} Stays`;
-                    document.getElementById('search-subtitle-label').innerText = `Direct verified suites & luxury apartments`;
+                    document.getElementById('search-subtitle-label').innerText = `Direct verified stays`;
 
-                    // 🆕 DEDICATED HOTEL PORTAL MODE — سرچ سسٹم اور نیچے کی navigation مکمل غائب،
-                    // صرف Currency/Language ہی نظر آئیں (اوپر لوگو کی row میں)
                     document.getElementById('general-search-pill-row').classList.add('hidden');
                     const existingBottomNav = document.getElementById('likestays-global-bottom-nav');
                     if (existingBottomNav) existingBottomNav.remove();
-                } else {
-                    document.getElementById('exclusive-hotel-banner').classList.add('hidden');
                 }
             } else {
                 document.getElementById('exclusive-hotel-banner').classList.add('hidden');

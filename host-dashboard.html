@@ -254,6 +254,8 @@ html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#
 html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
 html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
+html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
 
 </style>
 </head>
@@ -407,6 +409,11 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
             </main>
 
             <!-- FOOTER -->
+            <div class="px-5 pb-6 pt-2 text-center space-y-2">
+                <p class="text-[10px] font-bold text-gray-400">Signed in as <span id="host-signed-in-email" class="text-luxuryGreen font-black">—</span></p>
+                <button type="button" onclick="hostLogout()" class="px-6 py-2.5 rounded-xl border border-gray-200 text-[11px] font-black uppercase tracking-wider cursor-pointer text-rose-700">⎋ Log out</button>
+            </div>
+
             <footer class="h-12 shrink-0 bg-white border-t border-gray-150 flex items-center justify-center text-[9px] font-black text-gray-400 uppercase tracking-widest">
                 🛡️ LIKESTAYS.CO PARTNER NETWORK
             </footer>
@@ -444,11 +451,18 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
                     return;
                 }
 
+                const em = document.getElementById('host-signed-in-email'); if (em) em.innerText = user.email || user.displayName || 'Host';
                 if (user.displayName) {
                     const label = document.getElementById('host-name-label');
                     if (label) label.innerText = user.displayName;
                 }
             });
+        }
+
+
+        function hostLogout() {
+            const clear = () => { try { ['likestays_active_user', 'likestays_user_profile', 'likestays_active_checkout_payload'].forEach(k => localStorage.removeItem(k)); } catch (e) {} window.location.href = 'auth.html'; };
+            try { firebase.auth().signOut().then(clear, clear); } catch (e) { clear(); }
         }
 
         function switchToGuestPortal() {
@@ -528,35 +542,44 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
             statusMsg.className = "text-[9px] font-bold pt-0.5 text-gray-400";
             statusMsg.innerText = "Checking availability...";
 
-            const registryRef = firebase.database().ref(`brandSlugRegistry/${slug}`);
-            registryRef.once('value').then(snap => {
+            const fail = (e) => {
+                console.error('Brand link save failed:', e);
+                const denied = e && (e.code === 'PERMISSION_DENIED' || /permission/i.test(String(e.message || e)));
+                statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
+                statusMsg.innerText = denied ? "❌ Save blocked by database rules (brandSlugRegistry / hostProfiles need write access for signed-in hosts)." : "❌ Could not save: " + ((e && e.message) || 'please try again');
+            };
+            const saveBtn = document.querySelector('#brand-link-setup-form button');
+            if (saveBtn) { saveBtn.disabled = true; saveBtn.style.opacity = '.6'; }
+            const done = () => { if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = ''; } };
+
+            const db = firebase.database();
+            db.ref(`brandSlugRegistry/${slug}`).once('value').then(snap => {
                 const existingOwner = snap.val();
                 if (existingOwner && existingOwner !== hostUid) {
                     statusMsg.className = "text-[9px] font-bold pt-0.5 text-red-600";
                     statusMsg.innerText = "❌ This name is already taken by another host — try a different one.";
                     return;
                 }
-
-                // پہلے سے موجود پرانا برانڈ نام (اگر تھا) کی رجسٹری صاف کریں
-                firebase.database().ref(`hostProfiles/${hostUid}/brandSlug`).once('value').then(oldSnap => {
+                return db.ref(`hostProfiles/${hostUid}/brandSlug`).once('value').then(oldSnap => {
                     const oldSlug = oldSnap.val();
                     const updates = {};
-                    if (oldSlug && oldSlug !== slug) {
-                        updates[`brandSlugRegistry/${oldSlug}`] = null;
-                    }
+                    if (oldSlug && oldSlug !== slug) updates[`brandSlugRegistry/${oldSlug}`] = null;
                     updates[`brandSlugRegistry/${slug}`] = hostUid;
                     updates[`hostProfiles/${hostUid}/brandSlug`] = slug;
-
-                    firebase.database().ref().update(updates).then(() => {
-                        return propagateBrandSlugToHostProperties(hostUid, slug);
-                    }).then(() => {
+                    return db.ref().update(updates).then(() => {
                         document.getElementById('brand-link-current-display').classList.remove('hidden');
-                        document.getElementById('brand-link-current-url').innerText = `${slug}.likestays.co`; document.getElementById('brand-link-open-btn').href = brandUrlFor(slug);
+                        document.getElementById('brand-link-current-url').innerText = `${slug}.likestays.co`;
+                        document.getElementById('brand-link-open-btn').href = brandUrlFor(slug);
                         statusMsg.className = "text-[9px] font-bold pt-0.5 text-emerald-700";
                         statusMsg.innerText = "✅ Saved! Your link is now live.";
+                        // tag the host's existing stays with this link (a failure here must not undo the save)
+                        return propagateBrandSlugToHostProperties(hostUid, slug).catch(e => {
+                            console.warn('propagate failed', e);
+                            statusMsg.innerText = "✅ Link saved. (Your existing stays will pick it up the next time you edit/save them.)";
+                        });
                     });
                 });
-            });
+            }).catch(fail).then(done, done);
         }
 
         // ہوسٹ کی تمام موجودہ properties میں brandSlug شامل کرنا — تاکہ index.html کا

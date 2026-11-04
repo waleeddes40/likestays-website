@@ -222,6 +222,8 @@ html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#
 html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
 html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
 html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
+html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
 
 </style>
 </head>
@@ -334,6 +336,7 @@ html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!im
         // ================= 🔴 1-CLICK GOOGLE SIGN IN =================
         function handleOneClickGoogleAuth() {
             const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' }); // always let the host pick which Google account
             provider.addScope('profile');
             provider.addScope('email');
 
