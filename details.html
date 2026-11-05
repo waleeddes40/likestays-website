@@ -2500,6 +2500,10 @@ function renderCheckoutDetails() {
                 checkIn: checkIn,
                 checkOut: checkOut,
                 guestsCount: activeCheckoutPayload ? (activeCheckoutPayload.guests || 2) : 2,
+                extras: (activeCheckoutPayload && activeCheckoutPayload.extras) ? activeCheckoutPayload.extras : [],
+                offer: (mode === 'offer' && activeCheckoutPayload && activeCheckoutPayload.offer) ? activeCheckoutPayload.offer : null,
+                nights: (mode === 'daily' && activeCheckoutPayload && activeCheckoutPayload.daily) ? (activeCheckoutPayload.daily.nights || null) : null,
+                hours: (mode === 'hourly' && activeCheckoutPayload && activeCheckoutPayload.hourly) ? (activeCheckoutPayload.hourly.hours || null) : null,
                 // amounts below are stored in the PROPERTY's (host's) currency; the guest's own view is kept alongside
                 currency: propCur,
                 totalAmount: totalProp,
