@@ -875,7 +875,7 @@ html[data-theme=dark] .portal-name{color:#F3F4F6}
             try {
                 const cachedProps = localStorage.getItem('likestays_cached_properties');
                 if (cachedProps) {
-                    masterPropertiesList = JSON.parse(cachedProps);
+                    masterPropertiesList = newestFirst(JSON.parse(cachedProps));
                     executeLiveSearch(true);
                 } else {
                     renderLoadingSkeleton();
@@ -1067,6 +1067,14 @@ html[data-theme=dark] .portal-name{color:#F3F4F6}
             setInterval(fetchPropertiesFromEdgeCache, PROPERTIES_REFRESH_INTERVAL_MS);
         }
 
+        // newest listing first: createdAt when present, otherwise Firebase push-ID (which is chronological)
+        function newestFirst(list) {
+            const A = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+            const pushTime = id => { id = String(id || ''); if (id.length < 8) return 0; let t = 0; for (let i = 0; i < 8; i++) { const k = A.indexOf(id[i]); if (k < 0) return 0; t = t * 64 + k; } return t; };
+            const stamp = p => Math.max(pushTime(p.id), Date.parse(p.createdAt) || 0, Date.parse(p.renewedAt) || 0);
+            return (list || []).slice().sort((x, y) => stamp(y) - stamp(x));
+        }
+
         async function fetchPropertiesFromEdgeCache() {
             try {
                 const res = await fetch(PROPERTIES_API_URL, { cache: "no-store" });
@@ -1074,7 +1082,7 @@ html[data-theme=dark] .portal-name{color:#F3F4F6}
                 const payload = await res.json();
                 const list = (payload && payload.properties) ? payload.properties : [];
 
-                masterPropertiesList = list;
+                masterPropertiesList = newestFirst(list);
                 try {
                     localStorage.setItem('likestays_cached_properties', JSON.stringify(masterPropertiesList));
                 } catch (e) {}
@@ -1093,9 +1101,9 @@ html[data-theme=dark] .portal-name{color:#F3F4F6}
             firebase.database().ref('properties').limitToFirst(200).once('value')
                 .then((snapshot) => {
                     const data = snapshot.val();
-                    masterPropertiesList = data
+                    masterPropertiesList = newestFirst(data
                         ? Object.keys(data).map(key => ({ id: key, ...data[key] }))
-                        : [];
+                        : []);
                     try {
                         localStorage.setItem('likestays_cached_properties', JSON.stringify(masterPropertiesList));
                     } catch (e) {}

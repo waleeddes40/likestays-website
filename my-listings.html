@@ -1314,9 +1314,12 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                             <span>⚡</span> <span>${dealStats.activeDeals.length} Offer${dealStats.activeDeals.length === 1 ? '' : 's'}</span>
                         </button>
 
-                        <div class="grid grid-cols-3 gap-1.5 text-[9px] font-black uppercase">
+                        <div class="grid grid-cols-2 gap-1.5 text-[9px] font-black uppercase">
                             <button type="button" onclick="startEditingProperty('${prop.id}')" class="py-2.5 neu-btn-green text-white rounded-xl flex items-center justify-center gap-1 cursor-pointer active:scale-95">
                                 <span>✏️</span> <span>Edit</span>
+                            </button>
+                            <button type="button" onclick="renewProperty('${prop.id}')" class="py-2.5 neu-flat bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 flex items-center justify-center gap-1 cursor-pointer active:scale-95">
+                                <span>🔄</span> <span>Renew</span>
                             </button>
                             <button type="button" onclick="toggleHideProperty('${prop.id}')" class="py-2.5 neu-flat bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 flex items-center justify-center gap-1 cursor-pointer active:scale-95">
                                 <span>${isHidden ? '✅' : '⏸️'}</span> <span>${isHidden ? 'Activate' : 'Deactivate'}</span>
@@ -1481,6 +1484,19 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
         }
 
         // ================= 👁️ HIDE / UNHIDE PROPERTY =================
+        // Renew = bring this listing back to the top of the search feed
+        function renewProperty(propId) {
+            const target = myPropertiesList.find(p => String(p.id) === String(propId));
+            if (!target) return;
+            const now = new Date().toISOString();
+            target.renewedAt = now;
+            firebase.database().ref(`properties/${target.id}/renewedAt`).set(now).then(() => {
+                fetch(`${WORKER_BASE_URL}/api/purge-properties-cache`, { method: 'POST' }).catch(() => {});
+                showToast("Renewed — your listing is back on top of the feed!", "✓");
+            }).catch(() => showToast("Could not renew. Please try again.", "⚠️"));
+            syncMyListingsToLocalStorage();
+        }
+
         function toggleHideProperty(propId) {
             const target = myPropertiesList.find(p => String(p.id) === String(propId));
             if (!target) return;
