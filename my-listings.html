@@ -343,6 +343,12 @@ html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-
 html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
 
 </style>
+<style>
+#global-currency-modal>div{display:flex!important;flex-direction:column!important;overflow:hidden!important}
+#global-currency-modal #currencies-150-list-container{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;padding-bottom:24px}
+#global-currency-modal>div>*{flex:none}
+#global-currency-modal>div>#currencies-150-list-container{flex:1 1 auto}
+</style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-48 relative">
 
@@ -1802,9 +1808,12 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
             // 🎯 PRELOAD EXISTING LISTING DATA FOR EDITING
             const urlParams = new URLSearchParams(window.location.search);
-            const editId = urlParams.get('editId') || localStorage.getItem('likestays_editing_prop_id');
+            // edit mode ONLY when the link itself carries ?editId=… (never from leftover browser storage)
+            const editId = urlParams.get('editId');
             if (editId) {
                 preloadExistingListingForEditing(editId);
+            } else {
+                try { localStorage.removeItem('likestays_editing_prop_id'); localStorage.removeItem('likestays_active_edit_payload'); } catch (e) {}
             }
         });
 
