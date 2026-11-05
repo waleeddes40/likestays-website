@@ -83,8 +83,11 @@
 
         const style = document.createElement('style');
         style.innerHTML = `
-            .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
-            body { top: 0px !important; }
+            .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame,
+            iframe.skiptranslate, body > .skiptranslate, .VIpgJd-ZVi9od-ORHb-OEVmcd, .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+            #goog-gt-tt, .VIpgJd-ZVi9od-SmfZ-OEVmcd { display: none !important; visibility: hidden !important; height: 0 !important; }
+            html, body { top: 0px !important; margin-top: 0px !important; }
+            html.translated-ltr, html.translated-rtl { margin-top: 0 !important; }
             .goog-tooltip, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
             .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
         `;
