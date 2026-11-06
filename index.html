@@ -1395,11 +1395,14 @@ html[data-theme=dark] .portal-name{color:#F3F4F6}
             const fallback = "https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&q=70&w=900";
             let photos = (prop.photos && prop.photos.length > 0) ? prop.photos : (prop.image ? [prop.image] : []);
             if (!photos.length) photos = [prop.videoPoster || fallback];
+            photos = photos.slice(0, 3); // home cards show only the first 3 photos (full set stays on the details page)
             const isFav = favs.includes(String(prop.id));
             const id = escF(prop.id);
             const hasVideo = !!prop.videoUrl;
+            // Cloudinary photos: ask for a card-sized, auto-format copy (much lighter than the original)
+            const cdn = (u) => String(u).replace(/(res\.cloudinary\.com\/[^/]+\/image\/upload\/)(v\d+\/)/, '$1f_auto,q_auto,w_800/$2');
             let imgs = photos.map((photo, idx) => {
-                const url = (photo.startsWith('http') || photo.startsWith('data:')) ? photo : `https://images.unsplash.com/${photo}?auto=format&fit=crop&q=70&w=900`;
+                const url = (photo.startsWith('http') || photo.startsWith('data:')) ? cdn(photo) : `https://images.unsplash.com/${photo}?auto=format&fit=crop&q=70&w=900`;
                 const pos = (prop.photoPositions && prop.photoPositions[idx]) || ((idx === 0 && prop.coverPosition) ? prop.coverPosition : 'center');
                 return `<img src="${escF(url)}" loading="lazy" decoding="async" style="object-position:${escF(pos)}" alt="${escF(prop.name)}">`;
             }).join('');

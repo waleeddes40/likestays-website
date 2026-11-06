@@ -2135,16 +2135,13 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             const formData = new FormData();
             formData.append('file', blob, fileName);
 
-            // Uploads to our own Cloudflare Worker, which stores the image in R2
-            // and returns back its public URL. The image never touches Firebase.
-            fetch(`${WORKER_BASE_URL}/api/upload-photo`, {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error('Upload failed with status ' + res.status);
-                    return res.json();
-                })
+            // Photos go to Cloudinary (fast global CDN, same account as the videos)
+            const cdnForm = new FormData();
+            cdnForm.append('file', blob, fileName);
+            cdnForm.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: cdnForm })
+                .then(res => { if (!res.ok) throw new Error('Cloudinary upload failed: ' + res.status); return res.json(); })
+                .then(d => { if (!d || !d.secure_url) throw new Error('No URL returned from Cloudinary'); return { url: d.secure_url }; })
                 .then(data => {
                     if (!data || !data.url) throw new Error('No URL returned from upload');
                     photoEntry.src = data.url; // replace local base64 preview with the real, short R2 URL
