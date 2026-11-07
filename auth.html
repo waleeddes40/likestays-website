@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" id="html-root" data-theme="dark">
-<head><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<head><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="robots" content="noindex, nofollow">
     <meta charset="UTF-8">
     <meta name="theme-color" content="#0E0E10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -266,7 +266,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 <span class="text-[8.5px] uppercase tracking-widest text-goldWarm font-black block">Partner Host Portal</span>
                 <h1 class="text-xl sm:text-2xl font-black text-luxuryGreen">Welcome Partner Host</h1>
                 <p class="text-xs text-gray-400 font-bold leading-relaxed max-w-xs mx-auto">
-                    Sign in with your Google account to manage listings, guest bookings, and payouts.
+                    Sign in with Google or your email to manage listings, guest bookings, and payouts.
                 </p>
             </div>
 
@@ -285,9 +285,31 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 </button>
             </div>
 
+
+            <!-- OR + CONTINUE WITH EMAIL -->
+            <div class="flex items-center gap-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                <span class="flex-1 h-px bg-gray-200"></span><span>or</span><span class="flex-1 h-px bg-gray-200"></span>
+            </div>
+            <div>
+                <button type="button" id="btn-email-toggle" onclick="toggleEmailForm()" class="w-full py-4 px-4 bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-luxuryGreen rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 7l9 6 9-6"/></svg>
+                    <span class="text-xs sm:text-sm font-black text-gray-800">Continue with Email</span>
+                </button>
+                <form id="email-form" class="hidden mt-3 space-y-3 text-left" onsubmit="handleEmailAuth(event)" novalidate>
+                    <input id="email-input" type="email" inputmode="email" autocomplete="email" autocapitalize="none" placeholder="Email address" class="w-full px-4 py-3.5 rounded-xl neu-inset text-sm font-semibold text-gray-800 outline-none">
+                    <div class="relative">
+                        <input id="password-input" type="password" autocomplete="current-password" placeholder="Password (min 6 characters)" class="w-full px-4 py-3.5 pr-16 rounded-xl neu-inset text-sm font-semibold text-gray-800 outline-none">
+                        <button type="button" onclick="togglePw()" id="pw-eye" class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-extrabold text-goldWarm px-2 py-1">Show</button>
+                    </div>
+                    <button type="submit" id="btn-email-submit" class="w-full py-3.5 rounded-xl neu-btn-green text-sm font-black active:scale-[0.98] transition-transform">Continue</button>
+                    <div class="text-center"><button type="button" onclick="handleForgotPassword()" class="text-[11px] font-bold text-gray-400 hover:underline">Forgot password?</button></div>
+                    <p class="text-[10px] text-gray-400 font-semibold text-center leading-snug">New here? Just enter your email and a password and we will create your account. Returning? Use the same email and password.</p>
+                </form>
+            </div>
+
             <div class="pt-2 border-t border-gray-150">
                 <p class="text-[9px] text-gray-400 font-semibold leading-tight">
-                    🔒 By continuing, you agree to the LikeStays Host Partner Terms & Safety Policy.
+                    🔒 By continuing, you agree to the <a href="terms.html" class="underline">Terms</a> &amp; <a href="privacy.html" class="underline">Privacy Policy</a>.
                 </p>
             </div>
 
@@ -335,6 +357,100 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             }, 3000);
         }
 
+
+        // ================= shared: create/load host profile after ANY sign-in =================
+        function completeLogin(user, newMsg) {
+            const refCode = (localStorage.getItem('likestays_captured_ref_code') || "LIKESTAYS").toUpperCase();
+            const emailName = (user.email || '').split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            const niceName = user.displayName || emailName || "Partner Host";
+            return firebase.database().ref(`hosts/${user.uid}`).once('value').then((snap) => {
+                const existingHost = snap.val();
+                if (!existingHost) {
+                    const initialProfile = {
+                        uid: user.uid, name: niceName, fullName: niceName,
+                        email: user.email || "", phone: user.phoneNumber || "", whatsapp: "", govId: "",
+                        socialLink1: "", socialLink2: "", extraContactLink: "", city: "", country: "",
+                        referralCode: refCode, adminCode: refCode, referenceCode: refCode,
+                        avatar: user.photoURL || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150",
+                        role: "host", isHost: true, isHostVerified: false,
+                        createdAt: new Date().toISOString()
+                    };
+                    firebase.database().ref(`hosts/${user.uid}`).set(initialProfile);
+                    firebase.database().ref(`users/${user.uid}`).update(initialProfile);
+                    localStorage.setItem('likestays_active_user', JSON.stringify(initialProfile));
+                    localStorage.setItem('likestays_user_profile', JSON.stringify(initialProfile));
+                    showAuthToast(newMsg || "Account created! Opening Profile...", "🎉");
+                    setTimeout(() => { window.location.href = "host-dashboard.html?openProfile=true"; }, 800);
+                } else {
+                    localStorage.setItem('likestays_active_user', JSON.stringify(existingHost));
+                    localStorage.setItem('likestays_user_profile', JSON.stringify(existingHost));
+                    showAuthToast("Welcome Back! Opening Console...", "✓");
+                    setTimeout(() => { window.location.href = "host-dashboard.html"; }, 800);
+                }
+            });
+        }
+
+        // ================= 📧 CONTINUE WITH EMAIL (email + password, no code) =================
+        function toggleEmailForm() {
+            const f = document.getElementById('email-form');
+            f.classList.toggle('hidden');
+            if (!f.classList.contains('hidden')) setTimeout(() => document.getElementById('email-input').focus(), 50);
+        }
+        function togglePw() {
+            const i = document.getElementById('password-input'), b = document.getElementById('pw-eye');
+            const show = i.type === 'password';
+            i.type = show ? 'text' : 'password';
+            b.innerText = show ? 'Hide' : 'Show';
+        }
+        function emailErrText(code) {
+            const map = {
+                'auth/invalid-email': 'Please enter a valid email address.',
+                'auth/weak-password': 'Password must be at least 6 characters.',
+                'auth/too-many-requests': 'Too many attempts. Please wait a few minutes and try again.',
+                'auth/network-request-failed': 'No internet connection. Please try again.',
+                'auth/operation-not-allowed': 'Email sign-in is not enabled yet. Please contact support.',
+                'auth/user-disabled': 'This account has been disabled.'
+            };
+            return map[code] || 'Something went wrong. Please try again.';
+        }
+        async function handleEmailAuth(ev) {
+            if (ev) ev.preventDefault();
+            const email = (document.getElementById('email-input').value || '').trim().toLowerCase();
+            const pw = document.getElementById('password-input').value || '';
+            const btn = document.getElementById('btn-email-submit');
+            if (!email || !/^\S+@\S+\.\S+$/.test(email)) { showAuthToast('Please enter a valid email address.', '⚠️'); return; }
+            if (pw.length < 6) { showAuthToast('Password must be at least 6 characters.', '⚠️'); return; }
+            btn.disabled = true; btn.innerText = 'Please wait...';
+            const auth = firebase.auth();
+            try {
+                // 1) returning user: sign in
+                const cred = await auth.signInWithEmailAndPassword(email, pw);
+                await completeLogin(cred.user);
+            } catch (e1) {
+                const notFound = ['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-login-credentials', 'auth/wrong-password'].includes(e1.code);
+                if (!notFound) { btn.disabled = false; btn.innerText = 'Continue'; showAuthToast(emailErrText(e1.code), '⚠️'); return; }
+                try {
+                    // 2) no such account: create one
+                    const cred2 = await auth.createUserWithEmailAndPassword(email, pw);
+                    await completeLogin(cred2.user, 'Account created! Opening Profile...');
+                } catch (e2) {
+                    btn.disabled = false; btn.innerText = 'Continue';
+                    if (e2.code === 'auth/email-already-in-use') {
+                        showAuthToast('Wrong password. If you signed up with Google before, use "Continue with Google".', '⚠️');
+                    } else {
+                        showAuthToast(emailErrText(e2.code), '⚠️');
+                    }
+                }
+            }
+        }
+        function handleForgotPassword() {
+            const email = (document.getElementById('email-input').value || '').trim();
+            if (!email) { showAuthToast('Enter your email first, then tap Forgot password.', '⚠️'); return; }
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(() => showAuthToast('If this email has an account, a reset link was sent.', '📧'))
+                .catch((e) => showAuthToast(emailErrText(e.code), '⚠️'));
+        }
+
         // ================= 🔴 1-CLICK GOOGLE SIGN IN =================
         function handleOneClickGoogleAuth() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -347,58 +463,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             showAuthToast("Connecting to Google...", "⏳");
 
             firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    const user = result.user;
-                    const refCode = (localStorage.getItem('likestays_captured_ref_code') || "LIKESTAYS").toUpperCase();
-
-                    firebase.database().ref(`hosts/${user.uid}`).once('value').then((snap) => {
-                        const existingHost = snap.val();
-
-                        if (!existingHost) {
-                            const initialProfile = {
-                                uid: user.uid,
-                                name: user.displayName || "Partner Host",
-                                fullName: user.displayName || "Partner Host",
-                                email: user.email || "",
-                                phone: user.phoneNumber || "",
-                                whatsapp: "",
-                                govId: "",
-                                socialLink1: "",
-                                socialLink2: "",
-                                extraContactLink: "",
-                                city: "",
-                                country: "",
-                                referralCode: refCode,
-                                adminCode: refCode,
-                                referenceCode: refCode,
-                                avatar: user.photoURL || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150",
-                                role: "host",
-                                isHost: true,
-                                isHostVerified: false,
-                                createdAt: new Date().toISOString()
-                            };
-
-                            firebase.database().ref(`hosts/${user.uid}`).set(initialProfile);
-                            firebase.database().ref(`users/${user.uid}`).update(initialProfile);
-                            
-                            localStorage.setItem('likestays_active_user', JSON.stringify(initialProfile));
-                            localStorage.setItem('likestays_user_profile', JSON.stringify(initialProfile));
-
-                            showAuthToast("Google Sign-In Successful! Opening Profile...", "🎉");
-                            setTimeout(() => {
-                                window.location.href = "host-dashboard.html?openProfile=true";
-                            }, 800);
-                        } else {
-                            localStorage.setItem('likestays_active_user', JSON.stringify(existingHost));
-                            localStorage.setItem('likestays_user_profile', JSON.stringify(existingHost));
-
-                            showAuthToast("Welcome Back! Opening Console...", "✓");
-                            setTimeout(() => {
-                                window.location.href = "host-dashboard.html";
-                            }, 800);
-                        }
-                    });
-                })
+                .then((result) => { completeLogin(result.user, 'Google Sign-In Successful! Opening Profile...'); })
                 .catch((error) => {
                     btn.disabled = false;
                     showAuthToast(error.message || "Google Sign-In failed.", "⚠️");
