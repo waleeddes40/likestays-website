@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" id="html-root" data-theme="dark">
-<head><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="robots" content="noindex, nofollow">
+<head><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><script src="no-sound.js"></script><meta name="robots" content="noindex, nofollow">
 <meta charset="UTF-8">
     <meta name="theme-color" content="#0E0E10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -1029,6 +1029,10 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
             <!-- 🔘 SUBMISSION BUTTON -->
             <div class="col-span-full max-w-md mx-auto w-full space-y-3 pt-4 pb-20">
+                <label class="flex items-start gap-2.5 p-3 rounded-xl border border-gray-200 text-left cursor-pointer">
+                    <input type="checkbox" id="own-content-confirm" class="mt-0.5 w-4 h-4 shrink-0 accent-luxuryGreen">
+                    <span class="text-[11px] font-semibold text-gray-500 leading-snug">I confirm these photos and videos are my own (or I have the owner's permission to use them), and the videos contain no copyrighted music. Videos play without sound on LikeStays. I agree to the <a href="terms.html" target="_blank" class="underline text-goldWarm">Terms</a>.</span>
+                </label>
                 <button type="submit" id="btn-submit-listing" class="w-full neu-btn-green text-white font-black text-xs sm:text-sm py-4 rounded-2xl uppercase tracking-wider cursor-pointer shadow-xl hover:scale-102 active:scale-95 transition-transform flex items-center justify-center space-x-2">
                     <span id="btn-submit-text">Upload Photos & Launch Listing Live 🚀</span>
                 </button>
@@ -2641,6 +2645,13 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
             if (pendingPhotoUploads > 0) {
                 showToast("Photos abhi upload ho rahi hain — thora intezar karein.", "⚠️");
+                return;
+            }
+
+            const ownBox = document.getElementById('own-content-confirm');
+            if (ownBox && !ownBox.checked) {
+                showToast("Please tick the box to confirm your photos & videos are your own.", "⚠️");
+                ownBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
