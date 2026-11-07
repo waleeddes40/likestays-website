@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" id="html-root" data-theme="dark">
-<head>
+<head><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta charset="UTF-8">
     <meta name="theme-color" content="#0E0E10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -2726,5 +2726,18 @@ function renderCheckoutDetails() {
             box.classList.remove('hidden');
         }
     </script>
+<script>
+/* anonymous visit counter → LikeStays daily report (no personal data) */
+(function(){try{
+  if(/bot|spider|crawl|headless|lighthouse/i.test(navigator.userAgent||''))return;
+  var k='ls_vid',v=null;try{v=localStorage.getItem(k)}catch(e){}
+  if(!v){v=Math.random().toString(36).slice(2,12)+Date.now().toString(36);try{localStorage.setItem(k,v)}catch(e){}}
+  var qs=new URLSearchParams(location.search),pid='detail';
+  if(pid==='detail'){var seg=location.pathname.split('/').filter(Boolean).pop()||'';pid=qs.get('id')||(/\.html$/.test(seg)?'':seg);}else{pid='';}
+  var body=JSON.stringify({vid:v,page:'details',propId:pid});
+  var u='https://likestays-api.waleeddes40.workers.dev/api/visit';
+  if(navigator.sendBeacon)navigator.sendBeacon(u,new Blob([body],{type:'text/plain'}));else fetch(u,{method:'POST',body:body,keepalive:true}).catch(function(){});
+}catch(e){}})();
+</script>
 </body>
 </html>
