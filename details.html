@@ -1964,7 +1964,8 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
         }
 
         function sharePropertyDetails() { 
-            navigator.clipboard.writeText(window.location.href); 
+            const _u = (/^(www\.)?likestays\.co$/.test(location.hostname) && activeProperty && activeProperty.id) ? location.origin + '/stay/p/' + encodeURIComponent(activeProperty.id) : window.location.href;
+            navigator.clipboard.writeText(_u); 
             showLuxuryToast("Link copied to clipboard!", "🔗"); 
         }
 
