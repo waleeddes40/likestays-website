@@ -2,14 +2,14 @@
 <html lang="en" id="html-root" data-theme="dark">
 <head><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><script src="no-sound.js"></script>
     <meta charset="UTF-8">
-    <meta name="theme-color" content="#0E0E10">
+    <meta name="theme-color" content="#000000">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Like Stays | Stay Details &amp; Booking</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- 🔥 REALTIME FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -34,7 +34,7 @@
                         softMint: '#F6F6F7',
                         softShadowDark: '#E5E7EB',
                         softShadowLight: '#FFFFFF',
-                        goldWarm: '#D97757'
+                        goldWarm: '#C9A24A'
                     }
                 }
             }
@@ -108,30 +108,30 @@
         }
 
         .spark-icon { display: inline-block; }
-    /* ===== LikeStays details + checkout — same look as Explore / Map (Inter, white bordered cards, terracotta accent #D97757) ===== */
+    /* ===== LikeStays details + checkout — same look as Explore / Map (Inter, white bordered cards, terracotta accent #C9A24A) ===== */
     html,body{background:#fff!important;font-family:'Inter',system-ui,sans-serif!important;color:#111827}
     body,button,input,select,textarea{font-family:'Inter',system-ui,sans-serif!important}
     .font-cinzel-logo{font-family:'Inter',sans-serif!important;font-weight:800}
     .neu-flat,.neu-flat-white{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
     .neu-inset{background:#F6F6F7!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
-    .neu-inset:focus-within,.neu-inset:focus{border-color:#D97757!important}
-    .neu-btn-green{background:#D97757!important;box-shadow:none!important;color:#fff}
+    .neu-inset:focus-within,.neu-inset:focus{border-color:#C9A24A!important}
+    .neu-btn-green{background:#C9A24A!important;box-shadow:none!important;color:#fff}
     .neu-btn-green:active{transform:scale(.98)}
     .neu-circle-btn{background:#fff!important;border:1px solid #e5e7eb!important;box-shadow:none!important}
-    .bg-luxuryGreen{background-color:#D97757!important}
-    .accent-luxuryGreen{accent-color:#D97757}
-    .border-luxuryGreen,.hover\:border-luxuryGreen:hover{border-color:#D97757!important}
+    .bg-luxuryGreen{background-color:#C9A24A!important}
+    .accent-luxuryGreen{accent-color:#C9A24A}
+    .border-luxuryGreen,.hover\:border-luxuryGreen:hover{border-color:#C9A24A!important}
     .border-luxuryGreen\/25,.border-luxuryGreen\/30{border-color:#e5e7eb!important}
-    .text-goldWarm{color:#D97757!important}
-    [class*="bg-luxuryGreen/15"],[class*="bg-luxuryGreen/20"]{background:#FBEAE3!important;color:#D97757!important}
-    .hover\:bg-emerald-50:hover{background:#FBEAE3!important}
+    .text-goldWarm{color:#C9A24A!important}
+    [class*="bg-luxuryGreen/15"],[class*="bg-luxuryGreen/20"]{background:#F1E8D2!important;color:#C9A24A!important}
+    .hover\:bg-emerald-50:hover{background:#F1E8D2!important}
     .rounded-3xl,.rounded-\[32px\]{border-radius:16px!important}
     .rounded-2xl{border-radius:12px!important}
     .rounded-xl{border-radius:10px!important}
     header.sticky{background:rgba(255,255,255,.96)!important;border-bottom:1px solid #e5e7eb!important}
     #details-loading-overlay{background:#fff!important}
-    #details-loading-overlay .ls-spin{width:38px;height:38px;border-radius:50%;border:4px solid #FBEAE3;border-top-color:#D97757;animation:lsspin .8s linear infinite}
-    #details-loading-overlay span{color:#D97757!important}
+    #details-loading-overlay .ls-spin{width:38px;height:38px;border-radius:50%;border:4px solid #F1E8D2;border-top-color:#C9A24A;animation:lsspin .8s linear infinite}
+    #details-loading-overlay span{color:#C9A24A!important}
     @keyframes lsspin{to{transform:rotate(360deg)}}
     #token-controller-box,#host-payment-accounts-section{display:none!important}
     #desktop-gallery-grid{display:none!important}
@@ -145,27 +145,27 @@
     #modal-gallery-photos-grid img{display:block;width:100%;height:auto;border-radius:12px;margin:0 0 10px;background:#f3f4f6}
     #cur-btn-hdr{display:flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border-radius:16px;border:1px solid #e5e7eb;background:#fff;color:#111827;font:700 11px Inter,sans-serif;cursor:pointer}
     #luxury-toast{border-radius:12px!important}
-    #details-multi-deals-section{background:#FBEAE3!important;background-image:none!important;border-color:#F3CDBF!important}
-    .theme-emerald{background:linear-gradient(110deg,#D97757 15%,#E8A58C 40%,#D97757 60%,#C2613F 85%);background-size:200% 100%;border:0;color:#fff}
-    [class*="bg-emerald-"],[class*="from-emerald-"]{background-color:#FBEAE3!important;background-image:none!important}
-    .bg-emerald-700,.bg-emerald-800{background-color:#D97757!important;color:#fff!important}
-    .hover\:bg-emerald-800:hover{background-color:#C2613F!important}
-    [class*="text-emerald-"]{color:#B4532F!important}
+    #details-multi-deals-section{background:#F1E8D2!important;background-image:none!important;border-color:#E4D5AE!important}
+    .theme-emerald{background:linear-gradient(110deg,#C9A24A 15%,#E8CC7C 40%,#C9A24A 60%,#9C7A2B 85%);background-size:200% 100%;border:0;color:#fff}
+    [class*="bg-emerald-"],[class*="from-emerald-"]{background-color:#F1E8D2!important;background-image:none!important}
+    .bg-emerald-700,.bg-emerald-800{background-color:#C9A24A!important;color:#fff!important}
+    .hover\:bg-emerald-800:hover{background-color:#9C7A2B!important}
+    [class*="text-emerald-"]{color:#8A6A1C!important}
     .bg-emerald-700 *,.bg-emerald-800 *{color:#fff!important}
-    [class*="border-emerald-"]{border-color:#F3CDBF!important}
-    .text-emerald-400{color:#D97757!important}
+    [class*="border-emerald-"]{border-color:#E4D5AE!important}
+    .text-emerald-400{color:#C9A24A!important}
     #sum-prop-img{object-position:center}
     .ls-lang-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;color:#111827;cursor:pointer}
     .ls-lang-btn svg{width:18px;height:18px}
     /* video hero (shown instead of photos when the host added a video) */
     .vh-tag{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.6);color:#fff;font:700 11px Inter,sans-serif;padding:4px 9px;border-radius:7px}
     .vh-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(17,24,39,.72);color:#fff;border:0;border-radius:12px;padding:11px 20px;font:700 13px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap}
-    .vh-play:active{background:#D97757}
+    .vh-play:active{background:#C9A24A}
     #det-video-viewer video{width:100%;height:100%;object-fit:contain;background:#000}
     .star-btn{font-size:30px;line-height:1;color:#d1d5db;background:none;border:0;cursor:pointer;padding:0 2px}
-    .star-btn.on{color:#D97757}
+    .star-btn.on{color:#C9A24A}
     #checkout-view,#booking-receipt-screen{min-height:60vh}
-:root{--pri:#D97757;--br:#e5e7eb;--mut:#8b93a1}
+:root{--pri:#C9A24A;--br:#e5e7eb;--mut:#8b93a1}
   .offer-cycle{position:relative;height:12px;overflow:hidden;flex:1;min-width:0}
   .offer-cycle span{position:absolute;left:0;right:0;top:0;white-space:nowrap;opacity:0}
   .offer-cycle .s1{animation:offerFade1 4s infinite}
@@ -177,7 +177,7 @@
   .price-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);border-radius:7px;font-weight:800;padding:3px 8px;width:fit-content}
   .price-stack{top:calc(env(safe-area-inset-top,0px) + 14px)!important}
   .offer-cycle{height:13px!important}
-  .offer-badge-inline{display:flex;align-items:center;background:#F5A524;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden;margin-bottom:3px;max-width:230px}
+  .offer-badge-inline{display:flex;align-items:center;background:#C9A24A;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden;margin-bottom:3px;max-width:230px}
   .feed-slide{position:relative;margin:0 0 34px;height:auto;overflow:visible;background:#fff;color:#0f172a;cursor:pointer}
   .cd-img{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb}
   .cd-track{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
@@ -208,11 +208,11 @@
   .feed-slide .price-chip.pc-d{background:rgba(15,23,42,.36)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);text-shadow:0 1px 3px rgba(0,0,0,.4)}
   .feed-slide .price-chip.pc-h{background:rgba(15,23,42,.28)!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);text-shadow:0 1px 3px rgba(0,0,0,.4)}
   .cd-offer-bar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 6px;padding:6px 10px;border-left:3px solid #000;font-size:12px;font-weight:600;color:#111827}
-  .cd-offer-bar::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
+  .cd-offer-bar::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#C9A24A;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
   @keyframes offerSweep{0%{left:0;opacity:0}10%{opacity:1}72%{left:calc(100% - 2px);opacity:1}86%,100%{left:calc(100% - 2px);opacity:0}}
-  .of-more{flex:none;font-size:10.5px;font-weight:700;color:#D97757}
+  .of-more{flex:none;font-size:10.5px;font-weight:700;color:#C9A24A}
   .cd-vtag{position:absolute;bottom:10px;right:12px;z-index:6;display:flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:7px;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);color:#fff;font:600 11px Inter,sans-serif;letter-spacing:.2px;pointer-events:none;text-shadow:0 1px 3px rgba(0,0,0,.4)}
-  .cd-vtag i{width:6px;height:6px;border-radius:50%;background:#D97757;display:block}
+  .cd-vtag i{width:6px;height:6px;border-radius:50%;background:#C9A24A;display:block}
   .feed-slide .price-chip.pc-d{background:rgba(15,23,42,.82);color:#fff}
   .price-chip.pc-h{background:rgba(15,23,42,.6)}
   .cd-loc{flex-wrap:wrap}
@@ -222,38 +222,38 @@
 <style>
 #det-extra-services-grid>*{padding-top:6px!important;padding-bottom:6px!important;font-size:11.5px!important}
 .deal-sweep{position:relative;overflow:hidden}
-.deal-sweep::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#D97757;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
+.deal-sweep::after{content:'';position:absolute;top:0;bottom:0;left:0;width:2px;background:#C9A24A;opacity:0;animation:offerSweep 3s ease-in-out infinite;pointer-events:none}
 </style>
-<style>.ls-tab-on{background:#D97757!important;color:#fff!important;box-shadow:none!important}</style>
+<style>.ls-tab-on{background:#C9A24A!important;color:#fff!important;box-shadow:none!important}</style>
 <style id="ls-dark-theme">
-/* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #D97757 ===== */
-html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#D97757;--soft:#2E1D16;--br:#2C2C31;--mut:#9CA3AF}
+/* ===== LikeStays DARK theme (guest side) — black surfaces, light text, terracotta accent #C9A24A ===== */
+html[data-theme=dark]{color-scheme:dark;--bg:#0E0E10;--s1:#17171A;--s2:#1F1F23;--bd:#2C2C31;--tx:#F3F4F6;--mu:#9CA3AF;--pri:#C9A24A;--soft:#1E1A10;--br:#2C2C31;--mut:#9CA3AF}
 html[data-theme=dark],html[data-theme=dark] body{background:#0E0E10!important;color:#F3F4F6!important}
 /* surfaces */
 html[data-theme=dark] .bg-white,html[data-theme=dark] .hover\:bg-white:hover,html[data-theme=dark] .neu-flat,html[data-theme=dark] .neu-flat-white,html[data-theme=dark] .landing-card-shadow,html[data-theme=dark] .neu-logo-card,html[data-theme=dark] .neu-social-circle,html[data-theme=dark] .neu-circle-btn{background:#17171A!important;border-color:#2C2C31!important;box-shadow:none!important}
 html[data-theme=dark] [class*="bg-white/"]{background:rgba(23,23,26,.92)!important}
 html[data-theme=dark] .bg-softMint,html[data-theme=dark] [class*="bg-softMint/"],html[data-theme=dark] .hover\:bg-softMint:hover,html[data-theme=dark] .neu-inset,html[data-theme=dark] .bg-gray-50,html[data-theme=dark] .bg-gray-100,html[data-theme=dark] .bg-gray-150,html[data-theme=dark] .bg-gray-200,html[data-theme=dark] .hover\:bg-gray-50:hover,html[data-theme=dark] .hover\:bg-gray-100:hover,html[data-theme=dark] .hover\:bg-gray-200:hover,html[data-theme=dark] [class*="to-softMint"],html[data-theme=dark] [class*="from-softMint"]{background:#1F1F23!important;background-image:none!important;border-color:#2C2C31!important}
 html[data-theme=dark] .neu-inset{box-shadow:none!important}
-html[data-theme=dark] .neu-inset:focus-within,html[data-theme=dark] .neu-inset:focus{border-color:#D97757!important}
+html[data-theme=dark] .neu-inset:focus-within,html[data-theme=dark] .neu-inset:focus{border-color:#C9A24A!important}
 html[data-theme=dark] .bg-gray-300{background:#3a3a40!important}
 /* text */
 html[data-theme=dark] .text-luxuryGreen,html[data-theme=dark] .text-gray-900,html[data-theme=dark] .text-gray-800,html[data-theme=dark] .text-gray-700,html[data-theme=dark] .text-black,html[data-theme=dark] .hover\:text-black:hover,html[data-theme=dark] .text-slate-900,html[data-theme=dark] .text-slate-800,html[data-theme=dark] .text-slate-700{color:#F3F4F6!important}
 html[data-theme=dark] .text-gray-600,html[data-theme=dark] .text-gray-500,html[data-theme=dark] .text-gray-400,html[data-theme=dark] .text-gray-300,html[data-theme=dark] .text-slate-500,html[data-theme=dark] .text-slate-400{color:#9CA3AF!important}
-html[data-theme=dark] .text-luxuryLightGreen,html[data-theme=dark] .text-goldWarm{color:#E8896A!important}
+html[data-theme=dark] .text-luxuryLightGreen,html[data-theme=dark] .text-goldWarm{color:#E3C676!important}
 html[data-theme=dark] .fill-luxuryGreen{fill:#F3F4F6}
 /* borders / dividers */
 html[data-theme=dark] [class*="border-gray-"],html[data-theme=dark] .border-slate-200,html[data-theme=dark] .border-b,html[data-theme=dark] .border-t,html[data-theme=dark] .border-r,html[data-theme=dark] .border{border-color:#2C2C31!important}
 html[data-theme=dark] [class*="divide-gray-"]>*{border-color:#2C2C31!important}
-html[data-theme=dark] .border-luxuryGreen,html[data-theme=dark] .hover\:border-luxuryGreen:hover,html[data-theme=dark] .landing-card-shadow:hover{border-color:#D97757!important}
+html[data-theme=dark] .border-luxuryGreen,html[data-theme=dark] .hover\:border-luxuryGreen:hover,html[data-theme=dark] .landing-card-shadow:hover{border-color:#C9A24A!important}
 html[data-theme=dark] [class*="border-luxuryGreen/"]{border-color:#2C2C31!important}
 /* accent buttons stay terracotta */
-html[data-theme=dark] .bg-luxuryGreen,html[data-theme=dark] .neu-btn-green,html[data-theme=dark] .bg-emerald-700,html[data-theme=dark] .bg-emerald-800,html[data-theme=dark] .bg-amber-500{background:#D97757!important;color:#fff!important;border-color:#D97757!important;box-shadow:none!important}
-html[data-theme=dark] .hover\:bg-luxuryLightGreen:hover,html[data-theme=dark] .hover\:bg-emerald-800:hover{background:#C2613F!important}
+html[data-theme=dark] .bg-luxuryGreen,html[data-theme=dark] .neu-btn-green,html[data-theme=dark] .bg-emerald-700,html[data-theme=dark] .bg-emerald-800,html[data-theme=dark] .bg-amber-500{background:#C9A24A!important;color:#fff!important;border-color:#C9A24A!important;box-shadow:none!important}
+html[data-theme=dark] .hover\:bg-luxuryLightGreen:hover,html[data-theme=dark] .hover\:bg-emerald-800:hover{background:#9C7A2B!important}
 html[data-theme=dark] .bg-luxuryGreen *,html[data-theme=dark] .neu-btn-green *{color:inherit}
-html[data-theme=dark] [class*="bg-luxuryGreen/"]{background:#2E1D16!important;color:#F0A585!important}
-html[data-theme=dark] [class*="bg-emerald-"]:not(.bg-emerald-700):not(.bg-emerald-800),html[data-theme=dark] [class*="from-emerald-"],html[data-theme=dark] [class*="to-emerald-"],html[data-theme=dark] [class*="bg-amber-"]:not(.bg-amber-500),html[data-theme=dark] [class*="from-amber-"],html[data-theme=dark] [class*="to-amber-"],html[data-theme=dark] .hover\:bg-emerald-50:hover,html[data-theme=dark] .hover\:bg-emerald-100:hover{background:#2E1D16!important;background-image:none!important}
-html[data-theme=dark] [class*="text-emerald-"],html[data-theme=dark] [class*="text-amber-"]{color:#F0A585!important}
-html[data-theme=dark] [class*="border-emerald-"],html[data-theme=dark] [class*="border-amber-"]{border-color:#4A2C20!important}
+html[data-theme=dark] [class*="bg-luxuryGreen/"]{background:#1E1A10!important;color:#E3C676!important}
+html[data-theme=dark] [class*="bg-emerald-"]:not(.bg-emerald-700):not(.bg-emerald-800),html[data-theme=dark] [class*="from-emerald-"],html[data-theme=dark] [class*="to-emerald-"],html[data-theme=dark] [class*="bg-amber-"]:not(.bg-amber-500),html[data-theme=dark] [class*="from-amber-"],html[data-theme=dark] [class*="to-amber-"],html[data-theme=dark] .hover\:bg-emerald-50:hover,html[data-theme=dark] .hover\:bg-emerald-100:hover{background:#1E1A10!important;background-image:none!important}
+html[data-theme=dark] [class*="text-emerald-"],html[data-theme=dark] [class*="text-amber-"]{color:#E3C676!important}
+html[data-theme=dark] [class*="border-emerald-"],html[data-theme=dark] [class*="border-amber-"]{border-color:#3A3118!important}
 html[data-theme=dark] [class*="bg-rose-"],html[data-theme=dark] [class*="bg-red-"],html[data-theme=dark] .hover\:bg-rose-100:hover{background:#2A1517!important}
 html[data-theme=dark] [class*="text-rose-"],html[data-theme=dark] [class*="text-red-"]{color:#FCA5A5!important}
 html[data-theme=dark] [class*="border-rose-"],html[data-theme=dark] [class*="border-red-"]{border-color:#5B2A2E!important}
@@ -270,18 +270,18 @@ html[data-theme=dark] input::placeholder,html[data-theme=dark] textarea::placeho
 html[data-theme=dark] option{background:#1F1F23;color:#F3F4F6}
 html[data-theme=dark] input[type=range]::-webkit-slider-runnable-track{background:#3a3a40!important}
 html[data-theme=dark] input[type=date],html[data-theme=dark] input[type=time]{color-scheme:dark}
-html[data-theme=dark] ::selection{background:#4A2C20}
+html[data-theme=dark] ::selection{background:#3A3118}
 html[data-theme=dark] hr{border-color:#2C2C31}
 /* ---- home / map cards ---- */
 html[data-theme=dark] .hs-bar{background:#17171A!important;border-color:#2C2C31!important;box-shadow:0 3px 14px rgba(0,0,0,.5)!important}
 html[data-theme=dark] .hs-ic{background:#2A2A2F!important;color:#F3F4F6!important}
 html[data-theme=dark] .hs-t b,html[data-theme=dark] .hs-btn,html[data-theme=dark] .hs-cur{color:#F3F4F6!important}
 html[data-theme=dark] .type-chip,html[data-theme=dark] .cat-tag{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
-html[data-theme=dark] .type-chip.on,html[data-theme=dark] .cat-tag.on{background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+html[data-theme=dark] .type-chip.on,html[data-theme=dark] .cat-tag.on{background:#C9A24A!important;border-color:#C9A24A!important;color:#fff!important}
 html[data-theme=dark] #explore-property-list,html[data-theme=dark] .feed-slide,html[data-theme=dark] #feed-wrap{background:transparent!important;color:#F3F4F6!important}
 html[data-theme=dark] .cd-img,html[data-theme=dark] .cd-track video{background:#1F1F23!important}
 html[data-theme=dark] .cd-fav{background:#17171A!important;color:#F3F4F6!important;box-shadow:0 1px 6px rgba(0,0,0,.5)!important}
-html[data-theme=dark] .cd-fav.on svg{fill:#D97757;stroke:#D97757}
+html[data-theme=dark] .cd-fav.on svg{fill:#C9A24A;stroke:#C9A24A}
 html[data-theme=dark] .cd-title,html[data-theme=dark] .cd-title em{color:#F3F4F6}
 html[data-theme=dark] .cd-loc,html[data-theme=dark] .cd-meta,html[data-theme=dark] .cd-loc .cd-meta{color:#9CA3AF!important}
 html[data-theme=dark] .cd-meta span+span{border-color:#2C2C31}
@@ -291,7 +291,7 @@ html[data-theme=dark] .cat-head,html[data-theme=dark] #ls-more-sheet .drawer-hea
 html[data-theme=dark] .drawer-title,html[data-theme=dark] .drawer-x{color:#F3F4F6!important}
 html[data-theme=dark] #ls-more-sheet{background:#17171A!important}
 html[data-theme=dark] #ls-more-sheet a{color:#E5E7EB!important}
-html[data-theme=dark] #ls-more-sheet a:hover,html[data-theme=dark] #ls-more-sheet a:active{background:#D97757!important;color:#fff!important}
+html[data-theme=dark] #ls-more-sheet a:hover,html[data-theme=dark] #ls-more-sheet a:active{background:#C9A24A!important;color:#fff!important}
 html[data-theme=dark] #ls-more-sheet .sep{background:#2C2C31}
 html[data-theme=dark] :is(#filter-modal-overlay,#airbnb-search-modal,#cat-modal,#global-currency-modal,#global-lang-modal)>div{background:#17171A!important;color:#F3F4F6!important}
 html[data-theme=dark] #map-empty{background:#17171A!important;color:#F3F4F6!important}
@@ -302,10 +302,10 @@ html[data-theme=dark] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) bri
 html[data-theme=dark] .leaflet-popup-content-wrapper,html[data-theme=dark] .leaflet-popup-tip{background:#17171A!important;color:#F3F4F6!important}
 html[data-theme=dark] .leaflet-bar a{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
 html[data-theme=dark] .leaflet-control-attribution{background:rgba(14,14,16,.7)!important;color:#9CA3AF!important}
-html[data-theme=dark] .leaflet-control-attribution a{color:#E8896A!important}
+html[data-theme=dark] .leaflet-control-attribution a{color:#E3C676!important}
 /* ---- details/checkout ---- */
-html[data-theme=dark] #details-multi-deals-section{background:#2E1D16!important;border-color:#4A2C20!important}
-html[data-theme=dark] .star-btn{color:#3a3a40}html[data-theme=dark] .star-btn.on{color:#D97757}
+html[data-theme=dark] #details-multi-deals-section{background:#1E1A10!important;border-color:#3A3118!important}
+html[data-theme=dark] .star-btn{color:#3a3a40}html[data-theme=dark] .star-btn.on{color:#C9A24A}
 /* ---- header tool buttons ---- */
 html[data-theme=dark] .ls-lang-btn,html[data-theme=dark] .ls-cur-btn{background:#17171A!important;color:#F3F4F6!important;border-color:#2C2C31!important}
 /* ---- generic inline-style leaks ---- */
@@ -314,7 +314,7 @@ html[data-theme=dark] [style*="color:#111827"],html[data-theme=dark] [style*="co
 /* ---- bottom nav (engine) ---- */
 html[data-theme=dark] #likestays-global-bottom-nav{background:#0E0E10!important;border-top:1px solid #2C2C31!important;box-shadow:none!important}
 html[data-theme=dark] #likestays-global-bottom-nav [style*="#8b93a1"]{color:#9CA3AF!important}
-html[data-theme=dark] #likestays-global-bottom-nav [style*="#FBEAE3"]{background:#2E1D16!important}
+html[data-theme=dark] #likestays-global-bottom-nav [style*="#F1E8D2"]{background:#1E1A10!important}
 /* ---- engine currency modal & language modal ---- */
 html[data-theme=dark] #global-currency-modal *{border-color:#2C2C31}
 html[data-theme=dark] #global-language-modal .ls-lang-panel{background:#17171A!important;box-shadow:-8px 0 30px rgba(0,0,0,.6)!important}
@@ -323,26 +323,248 @@ html[data-theme=dark] #global-language-modal .ls-lang-title,html[data-theme=dark
 html[data-theme=dark] #global-language-modal .ls-lang-sub,html[data-theme=dark] #lang-modal-list-container .ls-l-native{color:#9CA3AF!important}
 html[data-theme=dark] #global-language-modal .ls-lang-search{background:#1F1F23!important;color:#F3F4F6!important;border-color:#2C2C31!important}
 html[data-theme=dark] #lang-modal-list-container button:active{background:#1F1F23!important}
-html[data-theme=dark] #lang-modal-list-container button.on{background:#2E1D16!important}
+html[data-theme=dark] #lang-modal-list-container button.on{background:#1E1A10!important}
 html[data-theme=dark] #lang-modal-list-container button{color:#F3F4F6}
 /* scrollbars */
 html[data-theme=dark] *{scrollbar-color:#3a3a40 transparent}
 html[data-theme=dark] .hl-card{background:#17171A!important;border-color:#2C2C31!important}
-html[data-theme=dark] .hl-tag{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] .hl-tag{background:#1E1A10!important;color:#E3C676!important}
 html[data-theme=dark] .ls-search{background:#17171A!important;border-color:#2C2C31!important;color:#F3F4F6!important}
 html[data-theme=dark] .border-gray-150{border-color:#2C2C31!important}
 html[data-theme=dark] .text-\[\#111827\]{color:#F3F4F6!important}
 html[data-theme=dark] .bg-\[\#F6F6F7\]{background:#1F1F23!important}
 html[data-theme=dark] .sd-box,html[data-theme=dark] .sd-arrow,html[data-theme=dark] .sd-city,html[data-theme=dark] .sd-step,html[data-theme=dark] .map-tab{background:#17171A!important;border-color:#2C2C31!important;color:#F3F4F6!important;box-shadow:none!important}
-html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#D97757!important;border-color:#D97757!important;color:#fff!important}
+html[data-theme=dark] .sd-city.on,html[data-theme=dark] .map-tab.on{background:#C9A24A!important;border-color:#C9A24A!important;color:#fff!important}
 html[data-theme=dark] .sd-val,html[data-theme=dark] .sd-foot,html[data-theme=dark] .sd-mid #home-calendar-month-label,html[data-theme=dark] #modal-guests-num,html[data-theme=dark] #sd-cal #home-calendar-days-container button{color:#F3F4F6!important}
 html[data-theme=dark] #sd-cal #home-calendar-days-container button.bg-luxuryGreen{color:#fff!important}
-html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#2E1D16!important;color:#F0A585!important}
+html[data-theme=dark] #sd-cal [class*="bg-luxuryGreen/20"]{background:#1E1A10!important;color:#E3C676!important}
 html[data-theme=dark] body.bg-softMint,html[data-theme=dark] #app-layout-wrapper{background:#0E0E10!important}
 html[data-theme=dark] footer{background:#0E0E10!important;border-color:#2C2C31!important}
 html[data-theme=dark] :is(#global-currency-modal,#cover-crop-modal,#video-cover-modal,#flash-deal-config-modal,#global-lang-modal,#map-modal)>div{background:#17171A!important;color:#F3F4F6!important}
-html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#2E1D16!important}
+html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background:#1E1A10!important}
 
+</style>
+<style id="ls-gold-theme">
+/* ===== LikeStays details page — black + pale sage + gold, serif headings (Noto Serif), Roboto body ===== */
+html[data-theme=dark]{--pri:#C9A24A;--pg:#E5ECEA;--pale:#D8E1DF;--ink:#0A0A0A;--ink2:#151515;--ink3:#1D1D1D;--gold:#C9A24A;--gold-hi:#E8CC7C;--gold-lo:#9C7A2B;--goldgrad:linear-gradient(100deg,#9C7A2B 0%,#E8CC7C 48%,#B8902F 100%)}
+html[data-theme=dark],html[data-theme=dark] body,html[data-theme=dark] body.bg-softMint{background:var(--pg)!important;color:#0A0A0A!important;font-family:'Roboto','Inter',system-ui,sans-serif!important}
+html[data-theme=dark] body,html[data-theme=dark] button,html[data-theme=dark] input,html[data-theme=dark] select,html[data-theme=dark] textarea{font-family:'Roboto','Inter',system-ui,sans-serif!important}
+html[data-theme=dark] #details-loading-overlay{background:#E5ECEA!important}
+html[data-theme=dark] #details-loading-overlay .ls-spin{border-color:#cfd9d6;border-top-color:#C9A24A}
+html[data-theme=dark] #details-loading-overlay span{color:#0A0A0A!important}
+
+/* header */
+html[data-theme=dark] header.sticky{background:#000!important;border-bottom:1px solid #1e1e1e!important;box-shadow:0 2px 0 rgba(201,162,74,.55)}
+html[data-theme=dark] header .neu-circle-btn,html[data-theme=dark] header .ls-lang-btn,html[data-theme=dark] header #cur-btn-hdr{background:#141414!important;border:1px solid #2b2b2b!important;color:#fff!important}
+html[data-theme=dark] header .neu-circle-btn *{color:inherit}
+
+/* cards: black, soft big radius */
+html[data-theme=dark] main#details-view>.neu-flat-white,html[data-theme=dark] main#details-view>.neu-flat{background:var(--ink)!important;border:1px solid #1d1d1d!important;border-radius:26px!important;box-shadow:0 8px 24px rgba(0,0,0,.14)!important;padding:20px!important}
+html[data-theme=dark] #main-booking-reservation-card{border:1px solid rgba(201,162,74,.55)!important;border-radius:28px!important;padding:22px!important;box-shadow:0 12px 34px rgba(0,0,0,.22)!important}
+html[data-theme=dark] #gallery-container>div{border-radius:26px!important}
+html[data-theme=dark] #mobile-carousel-wrap,html[data-theme=dark] #video-hero{border:0!important;border-radius:26px!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important}
+html[data-theme=dark] #location-preview-card{border-radius:18px!important;border-color:#2a2a2a!important}
+
+/* pale info cards */
+html[data-theme=dark] main#details-view #livingbar-card,html[data-theme=dark] main#details-view #timings-row>div{background:var(--pale)!important;border:1px solid #c6d2cf!important;box-shadow:none!important;border-radius:20px!important;padding:14px 10px!important}
+html[data-theme=dark] #livingbar-card *,html[data-theme=dark] #timings-row>div *{color:#0A0A0A!important}
+html[data-theme=dark] #livingbar-card [class*="text-gray"],html[data-theme=dark] #timings-row>div [class*="text-gray"]{color:#4B5A57!important}
+html[data-theme=dark] main#details-view #reviews-card{background:var(--pale)!important;border:1px solid #c6d2cf!important;box-shadow:none!important}
+html[data-theme=dark] #reviews-card *{color:#0A0A0A!important}
+html[data-theme=dark] #reviews-card [class*="text-gray"]{color:#4B5A57!important}
+html[data-theme=dark] #reviews-card .bg-softMint,html[data-theme=dark] #reviews-card .neu-inset{background:#E9EFED!important;border-color:#c6d2cf!important}
+html[data-theme=dark] #reviews-feed-container>*{background:#F3F7F6!important;border:1px solid #c6d2cf!important;border-radius:18px!important}
+html[data-theme=dark] #reviews-card [class*="text-amber"],html[data-theme=dark] #reviews-card .star-btn.on{color:#B8902F!important}
+html[data-theme=dark] main#details-view #write-review-card,html[data-theme=dark] main#details-view #review-thanks-card{background:var(--ink)!important;border:1px solid #1d1d1d!important;border-radius:26px!important}
+
+
+html[data-theme=dark] #mobile-carousel-wrap,html[data-theme=dark] #desktop-gallery-grid,html[data-theme=dark] main#details-view #gallery-container .neu-flat{padding:0!important;background:#0A0A0A!important;border:0!important}
+html[data-theme=dark] #mobile-carousel-wrap{border-radius:26px!important;overflow:hidden}
+html[data-theme=dark] #main-booking-reservation-card button.neu-flat{background:transparent!important;border:1px solid rgba(201,162,74,.6)!important;color:#E8CC7C!important;box-shadow:none!important}
+html[data-theme=dark] #main-booking-reservation-card button.neu-flat *{color:#E8CC7C!important}
+html[data-theme=dark] #det-amenities-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+html[data-theme=dark] #det-amenities-list *{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+html[data-theme=dark] #reviews-card>.flex:first-child{flex-wrap:wrap;gap:8px}
+html[data-theme=dark] #reviews-card h3{font-size:20px!important}
+
+/* serif headings + gold underline */
+html[data-theme=dark] h1,html[data-theme=dark] h2,html[data-theme=dark] h3,html[data-theme=dark] #det-title{font-family:'Noto Serif',Georgia,'Times New Roman',serif!important;font-weight:700!important;letter-spacing:0!important}
+html[data-theme=dark] #det-title{font-size:25px!important;line-height:1.28!important;margin-top:4px}
+html[data-theme=dark] #about-card h3,html[data-theme=dark] #availability-calendar-section h3,html[data-theme=dark] #house-rules-card h3,html[data-theme=dark] #amenities-card h3,html[data-theme=dark] #extras-card h3,html[data-theme=dark] #reviews-card h3,html[data-theme=dark] #more-stays-wrap h3,html[data-theme=dark] #write-review-card h3,html[data-theme=dark] #main-booking-reservation-card h2,html[data-theme=dark] .ls-gt-title{text-transform:none!important;font-size:22px!important;line-height:1.25!important;letter-spacing:0!important}
+html[data-theme=dark] #about-card h3::after,html[data-theme=dark] #availability-calendar-section h3::after,html[data-theme=dark] #house-rules-card h3::after,html[data-theme=dark] #amenities-card h3::after,html[data-theme=dark] #extras-card h3::after,html[data-theme=dark] #reviews-card h3::after,html[data-theme=dark] #more-stays-wrap h3::after,html[data-theme=dark] #write-review-card h3::after,html[data-theme=dark] #main-booking-reservation-card h2::after{content:'';display:block;width:84px;height:3px;border-radius:3px;margin-top:9px;background:var(--goldgrad)}
+html[data-theme=dark] #more-stays-wrap h3,html[data-theme=dark] #more-stays-wrap .text-gray-400{color:#0A0A0A!important}
+html[data-theme=dark] #more-stays-wrap .text-gray-400{color:#4B5A57!important}
+html[data-theme=dark] #reviews-card h3{color:#0A0A0A!important}
+html[data-theme=dark] #det-description{font-size:15px!important;line-height:1.8!important;color:#E7E7E7!important}
+html[data-theme=dark] #det-house-rules-list{font-size:13.5px!important;line-height:1.7!important}
+
+/* gold accent instead of terracotta */
+html[data-theme=dark] .bg-luxuryGreen,html[data-theme=dark] .neu-btn-green,html[data-theme=dark] .ls-tab-on,html[data-theme=dark] .bg-emerald-700,html[data-theme=dark] .bg-emerald-800,html[data-theme=dark] .bg-amber-500{background:var(--goldgrad)!important;color:#0A0A0A!important;box-shadow:none!important}
+html[data-theme=dark] .neu-btn-green *,html[data-theme=dark] .ls-tab-on *,html[data-theme=dark] .bg-luxuryGreen *{color:#0A0A0A!important}
+html[data-theme=dark] .text-goldWarm,html[data-theme=dark] .text-luxuryLightGreen,html[data-theme=dark] [class*="text-emerald-"]:not(.bg-emerald-700):not(.bg-emerald-800),html[data-theme=dark] [class*="text-amber-"]{color:#E3C676!important}
+html[data-theme=dark] [class*="bg-emerald-"]:not(.bg-emerald-700):not(.bg-emerald-800),html[data-theme=dark] [class*="bg-luxuryGreen/"]{background:rgba(201,162,74,.14)!important;color:#E3C676!important}
+html[data-theme=dark] [class*="border-emerald-"],html[data-theme=dark] [class*="border-amber-"]{border-color:rgba(201,162,74,.38)!important}
+html[data-theme=dark] #details-multi-deals-section{background:rgba(201,162,74,.10)!important;border-color:rgba(201,162,74,.4)!important}
+html[data-theme=dark] .border-luxuryGreen,html[data-theme=dark] .hover\:border-luxuryGreen:hover,html[data-theme=dark] .neu-inset:focus-within{border-color:var(--gold)!important}
+html[data-theme=dark] .star-btn.on{color:var(--gold)}
+html[data-theme=dark] ::selection{background:rgba(201,162,74,.35)}
+html[data-theme=dark] .theme-emerald{background:linear-gradient(110deg,#9C7A2B 15%,#E8CC7C 45%,#B8902F 80%)!important;color:#0A0A0A!important}
+/* inputs inside black cards */
+html[data-theme=dark] main#details-view input:not([type=checkbox]):not([type=radio]),html[data-theme=dark] main#details-view textarea,html[data-theme=dark] main#details-view select{background:#171717!important;border:1px solid #262626!important;color:#fff!important;border-radius:14px!important}
+
+/* ---- GET IN TOUCH inline form ---- */
+.ls-gt{margin-top:6px;padding-top:6px;display:flex;flex-direction:column;gap:14px}
+.ls-gt-head{margin-bottom:2px}
+.ls-gt-title{color:#fff;margin:0}
+.ls-gold-bar{width:96px;height:3px;border-radius:3px;margin-top:9px;background:var(--goldgrad)}
+.ls-summary{border:1px solid rgba(201,162,74,.35);background:rgba(201,162,74,.07);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.ls-sum-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px;color:#B9BDBB}
+.ls-sum-row b{color:#fff;font-weight:600;text-align:right}
+.ls-sum-total{border-top:1px solid rgba(201,162,74,.3);padding-top:8px;margin-top:2px;font-size:14px}
+.ls-sum-total b{color:#E8CC7C;font-size:17px;font-weight:700}
+.ls-field{display:flex;flex-direction:column;gap:7px}
+.ls-field label{color:#fff;font-size:14px;font-weight:500}
+.ls-field label small{color:#8f9593;font-weight:400;font-size:11.5px}
+.ls-field input{width:100%;padding:15px 16px;font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s}
+.ls-field input:focus{border-color:#7da6e6!important;box-shadow:0 0 0 2px rgba(125,166,230,.28)}
+.ls-field input.ls-bad{border-color:#e5645a!important;box-shadow:0 0 0 2px rgba(229,100,90,.25)}
+.ls-check{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:#B9BDBB;cursor:pointer}
+.ls-check input{margin-top:2px;width:18px;height:18px;accent-color:#C9A24A;flex:none}
+.ls-send{width:100%;padding:16px;border:0;border-radius:16px;background:var(--goldgrad);color:#0A0A0A;font-weight:700;font-size:15px;letter-spacing:.02em;cursor:pointer;transition:transform .12s,opacity .15s}
+.ls-send:active{transform:scale(.985)}
+.ls-send:disabled{opacity:.7;cursor:default}
+.ls-send.ls-sent{background:#1f3d2b;color:#9be7b4}
+.ls-note{font-size:11.5px;line-height:1.5;color:#8f9593;text-align:center;margin:0}
+.ls-done{display:flex;gap:12px;align-items:center;border:1px solid rgba(155,231,180,.35);background:rgba(155,231,180,.08);border-radius:16px;padding:12px 14px;color:#cfeedd;font-size:13px}
+.ls-done.hidden{display:none}
+.ls-done b{display:inline;color:#fff}
+.ls-done span{color:#9be7b4;font-family:ui-monospace,monospace}
+.ls-done a{display:block;margin-top:3px;color:#E8CC7C;font-weight:600;text-decoration:none}
+.ls-done-tick{width:34px;height:34px;border-radius:50%;background:#1f3d2b;color:#9be7b4;display:grid;place-items:center;font-weight:700;flex:none}
+
+/* ---- host floating buttons ---- */
+.ls-fab{position:fixed;right:16px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;z-index:900;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.32);text-decoration:none;-webkit-tap-highlight-color:transparent;transition:opacity .2s,transform .12s}
+.ls-fab:active{transform:scale(.94)}
+.ls-fab.hidden{display:none}
+#ls-fab-call{bottom:88px;background:#0A0A0A;border:1px solid #2a2a2a}
+#ls-fab-wa{bottom:20px;background:#25D366}
+.ls-fab.locked{opacity:.62;filter:saturate(.55)}
+.ls-fab .ls-lock{position:absolute;top:-3px;right:-3px;width:22px;height:22px;border-radius:50%;background:#fff;color:#000;font-style:normal;font-size:11px;display:none;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.ls-fab.locked .ls-lock{display:grid}
+html[data-theme=dark] main#details-view{padding-bottom:150px}
+
+/* toast */
+html[data-theme=dark] #luxury-toast{width:max-content;min-width:250px;background:#0A0A0A!important;border:1px solid #C9A24A!important;color:#fff!important;max-width:92vw;white-space:normal;text-align:center}
+
+/* more stays on pale page: dark text */
+html[data-theme=dark] #more-stays-wrap .feed-slide,html[data-theme=dark] #more-stays-wrap .cd-title,html[data-theme=dark] #more-stays-wrap .cd-title em{color:#0A0A0A!important}
+html[data-theme=dark] #more-stays-wrap .cd-loc,html[data-theme=dark] #more-stays-wrap .cd-meta,html[data-theme=dark] #more-stays-wrap .cd-loc .cd-meta{color:#4B5A57!important}
+html[data-theme=dark] #more-stays-wrap .cd-img{background:#cfd9d6!important;border-radius:22px}
+html[data-theme=dark] #more-stays-wrap .cd-offer-bar,html[data-theme=dark] #more-stays-wrap .cd-offer{border-color:#0A0A0A;color:#0A0A0A}
+html[data-theme=dark] #more-stays-wrap .of-more{color:#8a6a1c}
+</style>
+
+<style id="ls-gold-theme-2">
+/* ===== round 2: calmer shapes, bigger clearer text, fewer colours (black / pale / gold only) ===== */
+/* smaller corner radius */
+html[data-theme=dark] main#details-view>.neu-flat-white,html[data-theme=dark] main#details-view>.neu-flat,html[data-theme=dark] main#details-view #write-review-card,html[data-theme=dark] main#details-view #review-thanks-card{border-radius:14px!important;box-shadow:none!important;padding:20px 18px!important}
+html[data-theme=dark] #main-booking-reservation-card{border-radius:14px!important;padding:22px 18px!important;box-shadow:none!important}
+html[data-theme=dark] main#details-view #livingbar-card,html[data-theme=dark] main#details-view #timings-row>div{border-radius:12px!important}
+html[data-theme=dark] main#details-view #reviews-card{border-radius:14px!important}
+html[data-theme=dark] #mobile-carousel-wrap,html[data-theme=dark] #video-hero,html[data-theme=dark] #gallery-container>div,html[data-theme=dark] #desktop-gallery-grid,html[data-theme=dark] #desktop-gallery-grid>*{border-radius:14px!important}
+html[data-theme=dark] #location-preview-card{border-radius:10px!important}
+html[data-theme=dark] main#details-view .rounded-2xl,html[data-theme=dark] main#details-view .rounded-xl,html[data-theme=dark] main#details-view .rounded-3xl,html[data-theme=dark] main#details-view .rounded-\[32px\]{border-radius:10px!important}
+html[data-theme=dark] main#details-view .rounded-full{border-radius:999px!important}
+html[data-theme=dark] main#details-view input:not([type=checkbox]):not([type=radio]),html[data-theme=dark] main#details-view textarea,html[data-theme=dark] main#details-view select{border-radius:10px!important}
+html[data-theme=dark] .ls-summary,html[data-theme=dark] .ls-done{border-radius:10px}
+html[data-theme=dark] .ls-send{border-radius:10px}
+html[data-theme=dark] #more-stays-wrap .cd-img{border-radius:12px!important}
+html[data-theme=dark] #reviews-feed-container>*{border-radius:10px!important}
+html[data-theme=dark] #det-amenities-list>*{border-radius:10px!important}
+
+/* bigger, clearer text */
+html[data-theme=dark] main#details-view{font-size:15px;line-height:1.6}
+html[data-theme=dark] main#details-view [class*="text-[7"],html[data-theme=dark] main#details-view [class*="text-[8"],html[data-theme=dark] main#details-view [class*="text-[9"]{font-size:12.5px!important;line-height:1.45!important}
+html[data-theme=dark] main#details-view [class*="text-[10"]{font-size:13.5px!important;line-height:1.5!important}
+html[data-theme=dark] main#details-view [class*="text-[11"]{font-size:14px!important}
+html[data-theme=dark] main#details-view .text-xs{font-size:14.5px!important;line-height:1.6!important}
+html[data-theme=dark] main#details-view .text-sm{font-size:16px!important}
+html[data-theme=dark] main#details-view .text-base{font-size:17px!important}
+html[data-theme=dark] main#details-view .uppercase{text-transform:none!important;letter-spacing:0!important}
+html[data-theme=dark] main#details-view [class*="tracking-"]{letter-spacing:0!important}
+html[data-theme=dark] main#details-view .font-black{font-weight:700!important}
+html[data-theme=dark] main#details-view .text-gray-400,html[data-theme=dark] main#details-view .text-gray-500,html[data-theme=dark] main#details-view .text-gray-600{color:#C3C7C5!important}
+html[data-theme=dark] main#details-view h3.text-xs,html[data-theme=dark] main#details-view h3{line-height:1.3!important}
+html[data-theme=dark] #det-title{font-size:26px!important}
+html[data-theme=dark] #det-location{font-size:14.5px!important}
+html[data-theme=dark] #det-description{font-size:16px!important;line-height:1.85!important;color:#F1F1F1!important}
+html[data-theme=dark] #det-house-rules-list,html[data-theme=dark] #det-house-rules-list *{font-size:15px!important;line-height:1.8!important;color:#E9E9E9!important}
+html[data-theme=dark] #det-amenities-list>*{padding:12px 12px!important;font-size:14.5px!important}
+html[data-theme=dark] #det-amenities-list *{font-size:14.5px!important}
+html[data-theme=dark] #det-extra-services-grid>*{padding-top:12px!important;padding-bottom:12px!important;font-size:14.5px!important}
+html[data-theme=dark] #det-extra-services-grid *{font-size:14.5px!important}
+html[data-theme=dark] #livingbar-card *,html[data-theme=dark] #timings-row>div *{font-size:13.5px!important}
+html[data-theme=dark] #livingbar-card strong,html[data-theme=dark] #timings-row>div strong,html[data-theme=dark] #timings-row>div .text-sm{font-size:17px!important;font-weight:700!important}
+html[data-theme=dark] #details-cal-days-container>*{font-size:14px!important;border-radius:8px!important;min-height:36px}
+html[data-theme=dark] #details-cal-month-label{font-size:15px!important}
+html[data-theme=dark] .ls-field label{font-size:15px}
+html[data-theme=dark] .ls-field input{font-size:16px;padding:15px 14px}
+html[data-theme=dark] .ls-sum-row{font-size:14.5px}
+html[data-theme=dark] .ls-sum-total b{font-size:19px}
+html[data-theme=dark] .ls-check{font-size:13.5px}
+html[data-theme=dark] .ls-note{font-size:13px}
+html[data-theme=dark] .ls-send{font-size:16px;padding:17px}
+html[data-theme=dark] #main-booking-reservation-card h2{font-size:24px!important}
+html[data-theme=dark] #cancel-policy-box *{font-size:13.5px!important;line-height:1.6!important;color:#E6E6E6!important}
+html[data-theme=dark] #reviews-feed-container *{font-size:14px!important}
+html[data-theme=dark] #reviews-card [class*="text-gray"],html[data-theme=dark] #reviews-card p{color:#33403D!important}
+html[data-theme=dark] #livingbar-card [class*="text-gray"],html[data-theme=dark] #timings-row>div [class*="text-gray"]{color:#33403D!important}
+html[data-theme=dark] #more-stays-wrap .cd-title{font-size:16px!important}
+html[data-theme=dark] #more-stays-wrap .cd-loc,html[data-theme=dark] #more-stays-wrap .cd-meta{font-size:13.5px!important}
+
+/* only black / pale / gold — no red, green, blue, amber chips */
+html[data-theme=dark] main#details-view [class*="bg-red-"],html[data-theme=dark] main#details-view [class*="bg-rose-"],html[data-theme=dark] main#details-view [class*="bg-blue-"],html[data-theme=dark] main#details-view [class*="bg-sky-"]{background:#1B1B1B!important}
+html[data-theme=dark] main#details-view [class*="text-red-"],html[data-theme=dark] main#details-view [class*="text-rose-"],html[data-theme=dark] main#details-view [class*="text-blue-"],html[data-theme=dark] main#details-view [class*="text-sky-"]{color:#D9D9D9!important}
+html[data-theme=dark] main#details-view [class*="border-red-"],html[data-theme=dark] main#details-view [class*="border-rose-"]{border-color:#3A3A3A!important}
+html[data-theme=dark] #cancel-policy-badge{background:rgba(201,162,74,.14)!important;border-color:rgba(201,162,74,.5)!important;color:#E8CC7C!important}
+html[data-theme=dark] #main-booking-reservation-card [class*="bg-emerald-"],html[data-theme=dark] #main-booking-reservation-card [class*="bg-luxuryGreen/"]{background:transparent!important;border:1px solid rgba(201,162,74,.45)!important}
+html[data-theme=dark] #details-cal-days-container>*{background:#161616!important;color:#fff!important;border:0!important}
+html[data-theme=dark] #details-cal-days-container>*[style*="line-through"],html[data-theme=dark] #details-cal-days-container .line-through{background:transparent!important;color:#6b6b6b!important}
+html[data-theme=dark] #details-cal-days-container>[class*="luxuryGreen"],html[data-theme=dark] #details-cal-days-container>[style*="C9A24A"]{background:var(--goldgrad)!important;color:#0A0A0A!important}
+html[data-theme=dark] #availability-calendar-section [class*="text-emerald"],html[data-theme=dark] #availability-calendar-section [class*="text-red"]{color:#C3C7C5!important;background:transparent!important}
+html[data-theme=dark] #cal-helper-text-details{color:#E8CC7C!important}
+html[data-theme=dark] #main-booking-reservation-card .bg-softMint,html[data-theme=dark] #main-booking-reservation-card .neu-inset{background:#141414!important;border-color:#262626!important}
+html[data-theme=dark] #main-booking-reservation-card .neu-circle-btn{background:#232323!important;border:1px solid #333!important;color:#fff!important;border-radius:8px!important}
+html[data-theme=dark] .ls-send.ls-sent{background:#1B1B1B;color:#E8CC7C;border:1px solid rgba(201,162,74,.55)}
+html[data-theme=dark] .ls-done{border-color:rgba(201,162,74,.45);background:rgba(201,162,74,.08);color:#EDEDED}
+html[data-theme=dark] .ls-done span{color:#E8CC7C}
+html[data-theme=dark] .ls-done-tick{background:#C9A24A;color:#0A0A0A}
+html[data-theme=dark] #more-stays-wrap .cd-fav{background:#0A0A0A!important}
+html[data-theme=dark] main#details-view .pt-4 button[onclick*="openReportPropertyModal"]{background:#0A0A0A!important;border:1px solid #2a2a2a!important;color:#fff!important}
+html[data-theme=dark] main#details-view .pt-4 button[onclick*="openReportPropertyModal"] *{color:#fff!important;font-size:14px!important}
+html[data-theme=dark] main#details-view .pt-4 p{color:#4B5A57!important;font-size:12.5px!important}
+/* emoji icons in grey, not rainbow */
+html[data-theme=dark] #livingbar-grid>div>span:first-child,html[data-theme=dark] #det-amenities-list span:first-child,html[data-theme=dark] #det-extra-services-grid span:first-child{filter:grayscale(1)}
+html[data-theme=dark] #livingbar-grid>div>span:first-child{filter:grayscale(1) contrast(1.2)}
+/* loading spinner: gold, never orange */
+html[data-theme=dark] #details-loading-overlay .ls-spin{width:44px;height:44px;border:4px solid #cfd9d6;border-top-color:#0A0A0A;border-right-color:#C9A24A}
+/* round 2b: specificity fixes */
+html[data-theme=dark] main#details-view #about-card h3,html[data-theme=dark] main#details-view #availability-calendar-section h3,html[data-theme=dark] main#details-view #house-rules-card h3,html[data-theme=dark] main#details-view #amenities-card h3,html[data-theme=dark] main#details-view #extras-card h3,html[data-theme=dark] main#details-view #write-review-card h3,html[data-theme=dark] main#details-view #more-stays-wrap h3{font-size:23px!important;line-height:1.25!important;font-weight:700!important}
+html[data-theme=dark] main#details-view #reviews-card h3{font-size:21px!important;color:#0A0A0A!important}
+html[data-theme=dark] main#details-view #reviews-card,html[data-theme=dark] main#details-view #reviews-card *{color:#0A0A0A!important}
+html[data-theme=dark] main#details-view #reviews-card [class*="text-gray"],html[data-theme=dark] main#details-view #reviews-card p,html[data-theme=dark] main#details-view #reviews-card .italic{color:#2E3B38!important}
+html[data-theme=dark] main#details-view #reviews-card #reviews-feed-container *{font-size:14.5px!important}
+html[data-theme=dark] main#details-view #reviews-card [class*="rounded-full"]{background:#EDF2F1!important;border:1px solid #b9c6c2!important}
+html[data-theme=dark] main#details-view #livingbar-card [class*="text-gray"],html[data-theme=dark] main#details-view #timings-row>div [class*="text-gray"],html[data-theme=dark] main#details-view #livingbar-card span{color:#2E3B38!important}
+html[data-theme=dark] main#details-view #livingbar-card [class*="border-"]{border-color:#b3c1bd!important}
+html[data-theme=dark] main#details-view #more-stays-wrap .text-gray-400,html[data-theme=dark] main#details-view #more-stays-wrap [class*="text-gray"]{color:#2E3B38!important;font-size:13.5px!important}
+html[data-theme=dark] main#details-view #more-stays-wrap h3{color:#0A0A0A!important}
+html[data-theme=dark] main#details-view [class*="theme-"]{background:#C9A24A!important;color:#0A0A0A!important}
+html[data-theme=dark] main#details-view #details-multi-deals-section .deal-sweep{background:#141414!important;border:1px solid rgba(201,162,74,.35)!important}
+html[data-theme=dark] main#details-view .pt-4 p{color:#2E3B38!important}
+html[data-theme=dark] main#details-view #availability-calendar-section h3{font-size:21px!important}
+html[data-theme=dark] main#details-view #availability-calendar-section>div:first-child{flex-wrap:wrap;gap:8px}
+html[data-theme=dark] main#details-view #availability-calendar-section [class*="rounded-full"],html[data-theme=dark] main#details-view #availability-calendar-section [class*="text-["]{white-space:nowrap}
 </style>
 </head>
 <body class="no-scrollbar bg-softMint text-gray-800 pb-28 relative">
@@ -701,12 +923,62 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                 </div>
             </div>
 
-            <!-- Action Button -->
-            <button type="button" onclick="proceedToBookingConfirmation()" class="w-full neu-btn-green py-3.5 rounded-2xl text-white font-black text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center space-x-1.5 shadow-lg hover:scale-101 active:scale-98 transition-transform">
-                <span>Reserve & Book Now</span>
-                <span>➔</span>
-            </button>
-            <p class="text-[8px] text-gray-400 text-center font-semibold">🔒 No Extra Charges • 100% Free Service Fee Included</p>
+            <!-- ✉️ INLINE BOOKING FORM (Get In Touch) — no separate checkout page -->
+            <div id="inline-booking-form" class="ls-gt">
+                <div class="ls-gt-head">
+                    <h3 class="ls-gt-title">Get In Touch</h3>
+                    <div class="ls-gold-bar"></div>
+                </div>
+
+                <!-- what the guest chose -->
+                <div id="inline-summary" class="ls-summary">
+                    <div class="ls-sum-row"><span>Booking</span><b id="isum-type">Daily Stay</b></div>
+                    <div class="ls-sum-row"><span id="isum-l1">Check-in</span><b id="isum-v1">-</b></div>
+                    <div class="ls-sum-row"><span id="isum-l2">Check-out</span><b id="isum-v2">-</b></div>
+                    <div class="ls-sum-row"><span>Guests</span><b id="isum-guests">2</b></div>
+                    <div class="ls-sum-row ls-sum-total"><span>Total</span><b id="isum-total">-</b></div>
+                </div>
+
+                <div class="ls-field">
+                    <label for="guest-input-name">Name*</label>
+                    <input type="text" id="guest-input-name" autocomplete="name" placeholder="Your full name">
+                </div>
+                <div class="ls-field">
+                    <label for="guest-input-email">Email*</label>
+                    <input type="email" id="guest-input-email" autocomplete="email" placeholder="name@email.com">
+                </div>
+                <div class="ls-field">
+                    <label for="guest-input-phone">Phone Number* <small>(with country code)</small></label>
+                    <input type="tel" id="guest-input-phone" autocomplete="tel" placeholder="+92 300 1234567">
+                </div>
+                <div class="ls-field">
+                    <label for="guest-input-link1">WhatsApp / Telegram <small>(optional)</small></label>
+                    <input type="text" id="guest-input-link1" placeholder="WhatsApp / Telegram link or @username">
+                </div>
+                <div class="ls-field">
+                    <label for="guest-input-link2">Other contact <small>(optional)</small></label>
+                    <input type="text" id="guest-input-link2" placeholder="Instagram link or other chat ID">
+                </div>
+
+                <label class="ls-check" for="check-accept-rules">
+                    <input type="checkbox" id="check-accept-rules" checked>
+                    <span>I agree to the House Rules and cancellation policy, and that the full amount is paid directly to the host at the property.</span>
+                </label>
+
+                <button type="button" id="btn-submit-booking" onclick="submitBookingRequest()" class="ls-send">
+                    <span id="btn-submit-label">Send Booking Request</span>
+                </button>
+                <p id="inline-form-note" class="ls-note">🔒 No advance payment • No service fee. The host and our team are notified instantly. The host's WhatsApp and Call buttons unlock after you send.</p>
+
+                <div id="inline-booking-done" class="ls-done hidden">
+                    <div class="ls-done-tick">✓</div>
+                    <div>
+                        <b>Booking confirmed</b>
+                        <span id="inline-done-id"></span>
+                        <a href="my-bookings.html">View my trips ➔</a>
+                    </div>
+                </div>
+            </div>
 
             <!-- ❌ CANCELLATION POLICY — follows what the guest is booking (daily / hourly / offer) -->
             <div id="cancel-policy-box" class="hidden rounded-2xl p-3 bg-softMint border border-gray-200 space-y-1.5">
@@ -733,7 +1005,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
         </div>
 
         <!-- 13. MORE STAYS BY THIS HOST -->
-        <div class="space-y-3 pt-2">
+        <div id="more-stays-wrap" class="space-y-3 pt-2">
             <div class="flex items-center justify-between px-1">
                 <h3 class="text-xs font-black uppercase tracking-wider text-luxuryGreen">More Stays by this Host</h3>
                 <span class="text-[9px] text-gray-400 font-bold">Verified Portfolio</span>
@@ -768,6 +1040,17 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
         </div>
 
     </main>
+
+
+    <!-- 📞 HOST FLOATING BUTTONS — locked until the guest sends the booking form -->
+    <a id="ls-fab-call" class="ls-fab locked" href="#" aria-label="Call host" onclick="return hostFabClick('call', event)">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1z"/></svg>
+        <i class="ls-lock">🔒</i>
+    </a>
+    <a id="ls-fab-wa" class="ls-fab locked" href="#" target="_blank" rel="noopener" aria-label="WhatsApp host" onclick="return hostFabClick('wa', event)">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0012 0C5.4 0 .1 5.3.1 11.9c0 2.1.5 4.1 1.6 5.9L0 24l6.4-1.7a11.9 11.9 0 005.6 1.4h.1c6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.5-8.3zM12 21.7c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a9.8 9.8 0 01-1.5-5.2C2.1 6.5 6.5 2.1 12 2.1c2.6 0 5.1 1 6.9 2.9 1.9 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zm5.4-7.3c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.1c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.7.5-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+        <i class="ls-lock">🔒</i>
+    </a>
 
     <!-- ================= ✅ CHECKOUT (merged from booking-confirmation) ================= -->
     <main id="checkout-view" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-4 text-left">
@@ -808,44 +1091,6 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                     </div>
                 </div>
 
-                <!-- 🌟 2. GUEST DETAILS FORM (5 COMPREHENSIVE FIELDS) -->
-                <div class="neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
-                        <span class="text-xs font-black uppercase tracking-wider text-luxuryGreen">1. Guest Details & Contact Channels</span>
-                        <span class="text-[8px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">No Account Required</span>
-                    </div>
-
-                    <!-- Name & Phone -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="space-y-0.5">
-                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Guest Full Name *</label>
-                            <input type="text" id="guest-input-name" required placeholder="Full name" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
-                        </div>
-                        <div class="space-y-0.5">
-                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Phone Number (with country code) *</label>
-                            <input type="tel" id="guest-input-phone" required placeholder="+1 202 555 0123" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
-                        </div>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="space-y-0.5">
-                        <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Email Address *</label>
-                        <input type="email" id="guest-input-email" required placeholder="name@email.com" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
-                    </div>
-
-                    <!-- 2 Extra Links -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-gray-100">
-                        <div class="space-y-0.5">
-                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Contact Link 1 (WhatsApp / Telegram)</label>
-                            <input type="text" id="guest-input-link1" placeholder="WhatsApp / Telegram link or @username" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
-                        </div>
-                        <div class="space-y-0.5">
-                            <label class="text-[8px] uppercase tracking-wider text-gray-400 font-bold">Contact Link 2 (Instagram / WeChat / IMO)</label>
-                            <input type="text" id="guest-input-link2" placeholder="Instagram link or other chat ID" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-medium border-none">
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 🌟 3. DYNAMIC HOST PAYMENT ACCOUNTS (SHOWS 1, 2, 3 OR 4 DEPENDING ON AVAILABILITY) -->
                 <div id="host-payment-accounts-section" class="hidden neu-flat-white bg-white p-4 sm:p-5 rounded-3xl border border-gray-150 space-y-3">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
@@ -873,13 +1118,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                     </p>
                 </div>
 
-                <!-- 4. RULES AGREEMENT CHECKBOX -->
-                <div class="neu-flat-white bg-white p-3.5 rounded-2xl border border-gray-150 flex items-start space-x-2.5">
-                    <input type="checkbox" id="check-accept-rules" required class="w-4 h-4 accent-luxuryGreen mt-0.5 cursor-pointer" checked>
-                    <label for="check-accept-rules" class="text-[9.5px] text-gray-600 font-medium leading-tight cursor-pointer">
-                        I agree to the House Rules, cancellation policies, and acknowledge that the full amount is payable directly to the host at the property.
-                    </label>
-                </div>
+                
 
             </div>
 
@@ -940,9 +1179,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                     </div>
 
                     <!-- SUBMISSION BUTTON -->
-                    <button type="button" onclick="submitBookingRequest()" id="btn-submit-booking" class="w-full neu-btn-green py-4 rounded-2xl text-white font-black text-xs sm:text-sm uppercase tracking-wider cursor-pointer shadow-xl hover:opacity-95 active:scale-98 transition-all flex items-center justify-center">
-                        Confirm & Lock Reservation
-                    </button>
+                    
                     
                     <p class="text-[8px] text-gray-400 text-center font-semibold leading-tight">
                         🛡️ Direct connection to Host & Admin.
@@ -1189,10 +1426,11 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
                     hideLoadingOverlay();
                     loadMoreStaysByHost(data.hostUid, propId);
                     setupReviewCard();
+                    try { initInlineBooking(); } catch (e) { console.log('inline booking init', e); }
                     if (autoOpenCheckout) {
                         autoOpenCheckout = false;
                         try { activeCheckoutPayload = JSON.parse(localStorage.getItem('likestays_active_checkout_payload') || 'null'); } catch (e) {}
-                        if (activeCheckoutPayload && String(activeCheckoutPayload.propId) === String(propId)) openCheckoutView(true);
+                        if (activeCheckoutPayload && String(activeCheckoutPayload.propId) === String(propId)) setTimeout(scrollToInlineForm, 400);
                     }
                 }, () => showPropertyNotFound());
             } catch(e) { showPropertyNotFound(); }
@@ -1254,7 +1492,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
         }
 
         let toastTimeout = null;
-        function showLuxuryToast(msg, icon = '✨') {
+        function showLuxuryToast(msg, icon = '✨', dur = 2000) {
             const toast = document.getElementById('luxury-toast');
             document.getElementById('toast-msg').innerText = msg;
             document.getElementById('toast-icon').innerText = icon;
@@ -1264,7 +1502,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('opacity-100', 'translate-y-0');
                 toast.classList.add('opacity-0', '-translate-y-10', 'pointer-events-none');
-            }, 2000);
+            }, dur);
         }
 
         // ================= RENDER DETAILS =================
@@ -1875,7 +2113,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
         }
 
         // ================= 🎯 CHECKOUT HANDSHAKE =================
-        function proceedToBookingConfirmation() {
+        function buildCheckoutPayload() {
             const sTime = document.getElementById('book-hourly-start')?.value || '12:00';
             const eTime = document.getElementById('book-hourly-end')?.value || '16:00';
             const sMName = detailsStartDate ? MONTH_NAMES[detailsStartDate.getMonth()].slice(0,3) : 'Aug';
@@ -1935,7 +2173,7 @@ html[data-theme=dark] #flash-deal-config-modal [class*="bg-gradient"]{background
 
             try { localStorage.setItem('likestays_active_checkout_payload', JSON.stringify(checkoutPayload)); } catch (e) {}
             activeCheckoutPayload = checkoutPayload;
-            openCheckoutView();
+            return checkoutPayload;
         }
 
         function syncFavoriteStatus() {
@@ -2442,6 +2680,9 @@ function renderCheckoutDetails() {
 
         // ================= 🚀 SUBMIT BOOKING (WITH 5 GUEST FIELDS & 4 HOST CHANNELS) =================
         async function submitBookingRequest() {
+            if (!activeProperty) return;
+            buildCheckoutPayload();
+            renderCheckoutDetails();   // fills the totals (convertedTotalAmount) from the current selection
             const name = document.getElementById('guest-input-name').value.trim();
             const phone = document.getElementById('guest-input-phone').value.trim();
             const email = document.getElementById('guest-input-email').value.trim();
@@ -2450,13 +2691,25 @@ function renderCheckoutDetails() {
             const depositPaid = 0;
 
             if (!name || !phone || !email) {
-                showBookingToast("Please enter your name, phone number and email.", "⚠️");
+                ['guest-input-name','guest-input-phone','guest-input-email'].forEach(id => {
+                    const el = document.getElementById(id); if (el) el.classList.toggle('ls-bad', !el.value.trim());
+                });
+                showBookingToast("Please fill in your name, phone number and email.", "⚠️");
+                const firstBad = document.querySelector('#inline-booking-form .ls-bad'); if (firstBad) { try { firstBad.focus(); } catch (e) {} }
                 return;
             }
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                const el = document.getElementById('guest-input-email'); if (el) el.classList.add('ls-bad');
+                showBookingToast("Please enter a valid email address.", "⚠️");
+                return;
+            }
+            const rulesBox = document.getElementById('check-accept-rules');
+            if (rulesBox && !rulesBox.checked) { showBookingToast("Please accept the house rules to continue.", "⚠️"); return; }
 
             const submitBtn = document.getElementById('btn-submit-booking');
+            const submitLbl = document.getElementById('btn-submit-label');
             submitBtn.disabled = true;
-            submitBtn.innerText = "⏳ Booking in progress...";
+            submitLbl.innerText = "⏳ Sending...";
 
             const uniqueCodeNum = Math.floor(100000 + Math.random() * 900000);
             const globalBookingKey = `LS-BK-${uniqueCodeNum}`;
@@ -2558,36 +2811,16 @@ function renderCheckoutDetails() {
                     body: JSON.stringify(Object.assign({}, bookingPayload, { guestTotalFormatted: fmtV(convertedTotalAmount), source: 'details-confirm' }, hostContactForAlert()))
                 }).catch(e => console.log("Telegram Worker Alert dispatched."));
 
-                // 3. واؤچر اسکرین دکھائیں
-                showView('receipt');
-
-                document.getElementById('rcpt-booking-id').innerText = `#${globalBookingKey}`;
-                document.getElementById('rcpt-guest-name').innerText = name;
-                document.getElementById('rcpt-guest-phone').innerText = phone;
-                document.getElementById('rcpt-stay-duration').innerText = `${checkIn} - ${checkOut}`;
-                document.getElementById('rcpt-total-bill').innerText = fmtV(convertedTotalAmount);
-
-                // host contact details — shown openly, with Call and WhatsApp buttons
-                const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v || '-'; };
-                const setRow = (rowId, v) => { const r = document.getElementById(rowId); if (r) r.classList.toggle('hidden', !v); };
-                setTxt('rcpt-host-name', hostName);
-                setTxt('rcpt-host-phone', hostPhone);
-                setRow('rcpt-row-phone', hostPhone);
-                const cleanPhone = hostPhone.replace(/[^0-9+]/g, '');
-                document.getElementById('rcpt-host-call-btn').href = cleanPhone ? `tel:${cleanPhone}` : '#';
-                const waUrl = waLinkOf(hostLink1);
-                setTxt('rcpt-host-wa', hostLink1); setRow('rcpt-row-wa', hostLink1);
-                document.getElementById('rcpt-host-wa-btn').href = waUrl || '#';
-                setTxt('rcpt-host-email', hostEmail); setRow('rcpt-row-email', hostEmail);
-                const em = document.getElementById('rcpt-host-email'); if (em) em.href = hostEmail ? `mailto:${hostEmail}` : '#';
-                setTxt('rcpt-host-extra', hostLink2); setRow('rcpt-row-extra', hostLink2);
-                const ex = document.getElementById('rcpt-host-extra'); if (ex) ex.href = webLinkOf(hostLink2) || '#';
+                // 3. صفحہ وہیں رہے — اوپر چھوٹا سا نوٹیفکیشن، ہوسٹ کے بٹن کھل جائیں
+                markInlineBookingDone(globalBookingKey);
+                unlockHostContact();
+                showLuxuryToast('Booking confirmed — the host has been notified', '✅', 4500);
 
             } catch (err) {
                 console.error("Booking Error:", err);
                 showBookingToast("Something went wrong, please try again.", "⚠️");
                 submitBtn.disabled = false;
-                submitBtn.innerText = "Confirm & Lock Reservation";
+                submitLbl.innerText = "Send Booking Request";
             }
         }
         // ======================================================================
@@ -2674,6 +2907,90 @@ function renderCheckoutDetails() {
 
 
         // host contact details (saved by my-listings as hostContact.{name,phone,email,link1(WhatsApp),link2(extra)})
+
+        // ======================================================================
+        //  ✉️ INLINE BOOKING FORM (one page — no separate checkout screen)
+        // ======================================================================
+        let hostContactUnlocked = false;
+        let inlineInitDone = false;
+        const fmtDay = (d) => d ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : '-';
+
+        function scrollToInlineForm() {
+            const f = document.getElementById('inline-booking-form');
+            if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function proceedToBookingConfirmation() { scrollToInlineForm(); }
+
+        function updateInlineSummary() {
+            if (!activeProperty || !document.getElementById('isum-type')) return;
+            const set = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
+            const setL = (id, v) => { const el = document.getElementById(id); if (el) el.innerText = v; };
+            const mode = (typeof activeBookingMode !== 'undefined') ? activeBookingMode : 'daily';
+            const nights = (detailsStartDate && detailsEndDate) ? Math.max(1, Math.round((detailsEndDate.getTime() - detailsStartDate.getTime()) / 86400000)) : 1;
+            const row2 = document.getElementById('isum-l2') && document.getElementById('isum-l2').parentElement;
+            if (row2) row2.style.display = (mode === 'offer' && selectedOfferObj) ? 'none' : '';
+            if (mode === 'offer' && selectedOfferObj) {
+                set('isum-type', '⚡ Special Offer');
+                setL('isum-l1', 'Offer'); set('isum-v1', (typeof formatDealTiming24h === 'function') ? formatDealTiming24h(selectedOfferObj) : 'Special offer');
+                setL('isum-l2', 'Date'); set('isum-v2', fmtDay(detailsStartDate));
+            } else if (mode === 'hourly') {
+                const sT = document.getElementById('book-hourly-start')?.value || '12:00';
+                const eT = document.getElementById('book-hourly-end')?.value || '16:00';
+                set('isum-type', 'Hourly Stay · ' + hourlyDurationHours + (hourlyDurationHours === 1 ? ' hour' : ' hours'));
+                setL('isum-l1', 'Date'); set('isum-v1', fmtDay(detailsStartDate));
+                setL('isum-l2', 'Time'); set('isum-v2', sT + ' – ' + eT);
+            } else {
+                set('isum-type', 'Daily Stay · ' + nights + (nights === 1 ? ' night' : ' nights'));
+                setL('isum-l1', 'Check-in'); set('isum-v1', fmtDay(detailsStartDate) + (activeProperty.checkinTime ? ' · ' + activeProperty.checkinTime : ''));
+                setL('isum-l2', 'Check-out'); set('isum-v2', fmtDay(detailsEndDate) + (activeProperty.checkoutTime ? ' · ' + activeProperty.checkoutTime : ''));
+            }
+            set('isum-guests', guestsBookingCount + (guestsBookingCount === 1 ? ' Guest' : ' Guests'));
+            const tot = document.getElementById('det-calc-grand-total');
+            set('isum-total', tot ? tot.innerText : '-');
+        }
+
+        function updateHostFabs() {
+            const h = getHostInfo();
+            const call = document.getElementById('ls-fab-call'), wa = document.getElementById('ls-fab-wa');
+            const tel = String(h.phone || '').replace(/[^0-9+]/g, '');
+            const waUrl = waLinkOf(h.wa);
+            if (call) { call.classList.toggle('hidden', !tel); call.dataset.href = tel ? 'tel:' + tel : ''; }
+            if (wa) { wa.classList.toggle('hidden', !waUrl); wa.dataset.href = waUrl || ''; }
+            [call, wa].forEach(a => { if (!a) return; a.classList.toggle('locked', !hostContactUnlocked); a.setAttribute('href', hostContactUnlocked ? (a.dataset.href || '#') : '#'); });
+        }
+        function unlockHostContact() { hostContactUnlocked = true; updateHostFabs(); }
+        function hostFabClick(kind, ev) {
+            if (!hostContactUnlocked) {
+                if (ev) ev.preventDefault();
+                showLuxuryToast('Fill in your details and send the booking first', '🔒', 3000);
+                scrollToInlineForm();
+                return false;
+            }
+            return true;
+        }
+        function markInlineBookingDone(bookingId) {
+            const btn = document.getElementById('btn-submit-booking'), lbl = document.getElementById('btn-submit-label');
+            if (btn) { btn.disabled = true; btn.classList.add('ls-sent'); }
+            if (lbl) lbl.innerText = 'Booking sent ✓';
+            const d = document.getElementById('inline-booking-done'); if (d) d.classList.remove('hidden');
+            const i = document.getElementById('inline-done-id'); if (i) i.innerText = ' #' + bookingId;
+            const n = document.getElementById('inline-form-note'); if (n) n.classList.add('hidden');
+        }
+        function initInlineBooking() {
+            if (!activeProperty) return;
+            if (!inlineInitDone) { inlineInitDone = true; prefillGuestFromLastBooking(); }
+            // a guest who already booked this stay keeps the host buttons unlocked
+            try { if (!hostContactUnlocked && myBookingsForProperty(activeProperty.id).length) hostContactUnlocked = true; } catch (e) {}
+            updateHostFabs();
+            updateInlineSummary();
+        }
+        // keep the summary in sync whenever prices / dates / guests are recalculated
+        (function () {
+            const _r = recalculateBookingTotals;
+            recalculateBookingTotals = function () { const x = _r.apply(this, arguments); try { updateInlineSummary(); } catch (e) {} return x; };
+        })();
+        document.addEventListener('input', (e) => { if (e.target && e.target.classList) e.target.classList.remove('ls-bad'); });
+
         function getHostInfo() {
             const c = (activeProperty && activeProperty.hostContact) || {};
             const g = (a, b) => String(c[a] || (activeProperty && activeProperty[b]) || '').trim();
