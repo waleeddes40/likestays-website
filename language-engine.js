@@ -65,15 +65,15 @@
             #global-language-modal .ls-lang-x{width:34px;height:34px;border:0;background:none;font-size:18px;font-weight:700;color:#111827;cursor:pointer;border-radius:8px}
             #global-language-modal .ls-lang-sub{font:500 11px Inter,sans-serif;color:#6b7280;margin:2px 0 0 31px}
             #global-language-modal .ls-lang-search{margin:12px 14px 6px;padding:11px 12px;border:1px solid #e5e7eb;border-radius:10px;font:500 13px Inter,sans-serif;color:#111827;outline:none;background:#fff}
-            #global-language-modal .ls-lang-search:focus{border-color:#D97757}
+            #global-language-modal .ls-lang-search:focus{border-color:#2E6F65}
             #lang-modal-list-container{flex:1;overflow-y:auto;padding:4px 10px 24px}
             #lang-modal-list-container button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 10px;border:0;background:none;border-radius:10px;cursor:pointer;font-family:Inter,sans-serif;text-align:left}
             #lang-modal-list-container button:active{background:#f3f4f6}
-            #lang-modal-list-container button.on{background:#FBEAE3}
+            #lang-modal-list-container button.on{background:#D3E3E0}
             #lang-modal-list-container .ls-l-name{display:block;font:600 14px Inter,sans-serif;color:#111827;line-height:1.2}
             #lang-modal-list-container .ls-l-native{display:block;font:500 11.5px Inter,sans-serif;color:#6b7280;margin-top:1px}
             #lang-modal-list-container .ls-l-flag{font-size:20px}
-            #lang-modal-list-container .ls-l-tick{color:#D97757;font-weight:800;font-size:15px}
+            #lang-modal-list-container .ls-l-tick{color:#2E6F65;font-weight:800;font-size:15px}
         `;
         document.head.appendChild(st);
     }

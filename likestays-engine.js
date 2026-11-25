@@ -266,9 +266,9 @@
                 { id: 'map', url: 'map.html', label: labels.map },
                 { id: 'highlights', url: 'highlights.html', label: labels.highlights }
             ];
-            const tStyle = (on) => `text-decoration:none;background:${on ? '#2E1D16' : 'none'};border:0;padding:3px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#E8896A' : '#9CA3AF'};font-size:10.5px;font-weight:${on ? '600' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
+            const tStyle = (on) => `text-decoration:none;background:${on ? '#D3E3E0' : 'none'};border:0;padding:3px 12px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:1px;color:${on ? '#2E6F65' : '#3F4D4A'};font-size:11.5px;font-weight:${on ? '700' : '500'};cursor:pointer;font-family:Inter,'Plus Jakarta Sans',sans-serif`;
             const html3 = `
-                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#0E0E10;border-top:1px solid #2C2C31;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 4px);display:flex;justify-content:space-around;align-items:center">
+                <div id="likestays-global-bottom-nav" style="position:fixed;left:0;right:0;bottom:0;z-index:210;background:#F4F8F7;border-top:1px solid #C5D2CF;padding:4px 8px calc(env(safe-area-inset-bottom,0px) + 4px);display:flex;justify-content:space-around;align-items:center">
                     ${tabs.map(t => t.onclick ? `
                         <button type="button" onclick="${t.onclick}" style="${tStyle(false)}">${ic[t.id]}<span class="notranslate">${t.label}</span></button>` : `
                         <a href="${t.url}" style="${tStyle(t.id === activeTab)}">${ic[t.id]}<span class="notranslate">${t.label}</span></a>`).join('')}
@@ -300,7 +300,7 @@
                                 ${t.icon}<span class="notranslate" style="text-transform:uppercase">${t.label}</span>
                             </a>`).join('')}
                     </div>
-                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:10px;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:11px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#D97757,#C2613F);color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)">Book Now</button>
+                    <button type="button" id="ls-book-now-btn" ${window.__lsBookNowDisabled ? 'disabled' : ''} onclick="window.__lsBookNow && window.__lsBookNow()" style="opacity:${window.__lsBookNowDisabled ? '.45' : '1'};margin-left:10px;padding:11px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:11px;font-weight:800;letter-spacing:.3px;background:linear-gradient(135deg,#2E6F65,#245A52);color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)">Book Now</button>
                 </div>`;
             document.body.insertAdjacentHTML('beforeend', html);
             return;
