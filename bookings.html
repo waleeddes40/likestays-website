@@ -385,7 +385,31 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
         </div>
     </div>
 
-    <!-- 🛡️ HOST LIKE STAYS VIP SUPPORT MODAL -->
+    
+    <!-- 🛡️ HOST SUPPORT FORM → Telegram -->
+    <div id="host-ticket-modal" class="hidden fixed inset-0 bg-black/50 z-[65001] flex items-center justify-center p-4">
+        <div class="w-full max-w-md max-h-[92vh] overflow-y-auto rounded-[28px] p-5 shadow-2xl border space-y-3 text-left" style="background:#E6EEEC;border-color:#C5D2CF">
+            <div class="flex justify-between items-center">
+                <div><h3 class="text-sm font-black text-luxuryGreen">🛡️ LikeStays Support</h3><span id="ht-badge" class="text-[10px] text-gray-500 font-mono font-bold"></span></div>
+                <button type="button" onclick="closeHostTicket()" class="text-sm font-bold text-gray-500 px-2">✕</button>
+            </div>
+            <label class="block text-[10px] font-black uppercase text-gray-500">Booking ID<input id="ht-booking" type="text" class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-bold normal-case"></label>
+            <label class="block text-[10px] font-black uppercase text-gray-500">Your phone (with country code)<input id="ht-host-phone" type="tel" placeholder="+92 300 1234567" class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-bold normal-case"></label>
+            <label class="block text-[10px] font-black uppercase text-gray-500">Guest phone<input id="ht-guest-phone" type="tel" class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-bold normal-case"></label>
+            <label class="block text-[10px] font-black uppercase text-gray-500">Your email<input id="ht-email" type="email" class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-bold normal-case"></label>
+            <label class="block text-[10px] font-black uppercase text-gray-500">Message<textarea id="ht-msg" rows="4" maxlength="1500" placeholder="Tell us what you need…" class="w-full mt-1 px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-semibold normal-case"></textarea></label>
+            <div>
+                <label for="ht-photo" class="block w-full text-center py-2.5 rounded-xl border border-dashed border-gray-300 bg-white text-[11px] font-black text-luxuryGreen cursor-pointer" id="ht-photo-t">＋ Add a picture</label>
+                <input id="ht-photo" type="file" accept="image/*" class="hidden" onchange="htPhoto(this)">
+                <img id="ht-prev" alt="" class="hidden w-full rounded-xl mt-2 border border-gray-200">
+            </div>
+            <input id="ht-trap" type="text" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0">
+            <button type="button" id="ht-send" onclick="submitHostTicket()" class="w-full py-3 neu-btn-green text-white text-xs font-black uppercase rounded-2xl cursor-pointer">Send to LikeStays Support</button>
+            <p id="ht-status" class="text-[11px] font-bold min-h-[16px]"></p>
+        </div>
+    </div>
+
+<!-- 🛡️ HOST LIKE STAYS VIP SUPPORT MODAL -->
     <div id="host-admin-support-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[65000] flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-[32px] p-6 shadow-2xl border border-gray-200 space-y-4 text-left animate-fade-in">
             
@@ -634,6 +658,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             if (!container) return;
 
             const filtered = HostBookingsState.bookings.filter(bk => {
+                if (bkIsExpired(bk)) return false;
                 const isConf = bk.status === 'Confirmed' || bk.status === 'Accepted';
                 if (HostBookingsState.activeFilter === 'PENDING') return !isConf;
                 if (HostBookingsState.activeFilter === 'CONFIRMED') return isConf;
@@ -749,19 +774,9 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         </div>
 
                         <div class="space-y-2 pt-2 border-t border-gray-100">
-                            ${(!isConfirmed && !isCancelled) ? `
-                                <button onclick="hostConfirmBookingPayment('${esc(bk.id)}')" class="w-full py-3 neu-btn-green text-white text-[10px] font-black uppercase tracking-wider rounded-2xl cursor-pointer hover:opacity-95 shadow-md flex items-center justify-center space-x-1.5 transition-all">
-                                    <span>✅</span> <span>Confirm Booking</span>
-                                </button>
-                                <div class="grid grid-cols-2 gap-1.5">
-                                    <button onclick="openHostCancelModal('${esc(bk.id)}')" class="py-2 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 rounded-xl text-[8.5px] font-black uppercase cursor-pointer">✕ Reject / Cancel</button>
-                                    <button onclick="openHostAdminSupportModal('${esc(bk.id)}')" class="py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-xl text-[8.5px] font-black uppercase cursor-pointer">🛡️ LikeStays Support</button>
-                                </div>
-                            ` : `
-                                <button onclick="openHostAdminSupportModal('${esc(bk.id)}')" class="w-full py-2 bg-softMint hover:bg-gray-100 text-luxuryGreen border border-gray-200 rounded-xl text-[9px] font-black uppercase cursor-pointer flex items-center justify-center space-x-1">
+                            <button onclick="openHostAdminSupportModal('${esc(bk.id)}')" class="w-full py-2 bg-softMint hover:bg-gray-100 text-luxuryGreen border border-gray-200 rounded-xl text-[9px] font-black uppercase cursor-pointer flex items-center justify-center space-x-1">
                                     <span>🛡️</span> <span>LikeStays Support</span>
                                 </button>
-                            `}
                         </div>
                     </div>
                 `;
@@ -826,7 +841,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
         }
 
         // ================= 🛡️ HOST LIKE STAYS SUPPORT MODAL =================
-        function openHostAdminSupportModal(bookingId) {
+        function openHostAdminSupportModalOld(bookingId) {
             const b = HostBookingsState.bookings.find(bk => bk.id === bookingId);
             if (!b) return;
 
@@ -887,6 +902,90 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             });
         }
 
+
+        // ================= 🛡️ HOST SUPPORT FORM (same as the Contact page → Telegram) =================
+        const LS_WORKER = 'https://likestays-api.waleeddes40.workers.dev';
+        let __htFile = null, __htBk = null;
+        function openHostAdminSupportModal(bookingId) {
+            const b = HostBookingsState.bookings.find(bk => bk.id === bookingId);
+            if (!b) return;
+            __htBk = b; __htFile = null;
+            const code = b.bookingId || b.bookingCode || b.id;
+            document.getElementById('ht-badge').innerText = '#' + String(code).replace(/^#/, '') + (b.propName ? ' · ' + b.propName : '');
+            document.getElementById('ht-booking').value = String(code).replace(/^#/, '');
+            document.getElementById('ht-guest-phone').value = b.guestPhone || '';
+            document.getElementById('ht-host-phone').value = b.hostPhone || '';
+            let em = b.hostEmail || ''; try { const u = firebase.auth().currentUser; if (u && u.email) em = u.email; } catch (e) {}
+            document.getElementById('ht-email').value = em;
+            document.getElementById('ht-msg').value = '';
+            document.getElementById('ht-prev').classList.add('hidden');
+            document.getElementById('ht-photo-t').textContent = '＋ Add a picture';
+            document.getElementById('ht-status').textContent = '';
+            document.getElementById('host-ticket-modal').classList.remove('hidden');
+        }
+        function closeHostTicket() { document.getElementById('host-ticket-modal').classList.add('hidden'); }
+        function htPhoto(inp) {
+            const f = inp.files && inp.files[0]; if (!f) return;
+            __htFile = f; document.getElementById('ht-photo-t').textContent = '✓ ' + f.name + ' — tap to change';
+            const pv = document.getElementById('ht-prev'); pv.src = URL.createObjectURL(f); pv.classList.remove('hidden');
+        }
+        function htCompress(file) {
+            return new Promise(res => {
+                const img = new Image(); img.onload = () => {
+                    const r = Math.min(1, 1600 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+                    c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    c.toBlob(bl => res(bl || file), 'image/jpeg', 0.82);
+                }; img.onerror = () => res(file); img.src = URL.createObjectURL(file);
+            });
+        }
+        async function submitHostTicket() {
+            const st = document.getElementById('ht-status'), btn = document.getElementById('ht-send');
+            if (document.getElementById('ht-trap').value) return;
+            const msg = document.getElementById('ht-msg').value.trim();
+            const hp = document.getElementById('ht-host-phone').value.trim();
+            const gp = document.getElementById('ht-guest-phone').value.trim();
+            if (!msg || !(hp || gp)) { st.style.color = '#B91C1C'; st.textContent = 'Please add your phone number and a message.'; return; }
+            btn.disabled = true; btn.style.opacity = '.6'; st.style.color = '#3F4D4A'; st.textContent = 'Sending…';
+            try {
+                let imageUrl = '';
+                if (__htFile) {
+                    st.textContent = 'Uploading picture…';
+                    const blob = await htCompress(__htFile), fd = new FormData(); fd.append('file', blob, 'support.jpg');
+                    const up = await fetch(LS_WORKER + '/api/upload-photo', { method: 'POST', body: fd }).then(r => r.json());
+                    if (up && up.ok && up.url) imageUrl = up.url; else throw new Error('Picture upload failed');
+                    st.textContent = 'Sending…';
+                }
+                const b = __htBk || {};
+                const r = await fetch(LS_WORKER + '/api/support-ticket', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+                    from: 'host', email: document.getElementById('ht-email').value.trim(),
+                    guestPhone: gp || hp, hostPhone: hp, bookingId: document.getElementById('ht-booking').value.trim(),
+                    message: msg, imageUrl, property: b.propName || '', propertyId: b.propId || '', page: location.href }) }).then(x => x.json());
+                if (!r || !r.ok) throw new Error((r && r.error) || 'Could not send');
+                st.style.color = '#2E6F65'; st.textContent = '✓ Sent. Our team will contact you.';
+                setTimeout(closeHostTicket, 1800);
+            } catch (err) { st.style.color = '#B91C1C'; st.textContent = '⚠️ ' + (err.message || 'Something went wrong') + ' — please try again.'; }
+            btn.disabled = false; btn.style.opacity = '';
+        }
+
+        // ================= 🧹 hide a booking card 5 days after check-out =================
+        function bkCheckoutDate(bk) {
+            const MON = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11 };
+            const base = new Date(bk.createdAt || Date.now()); if (isNaN(base)) return null;
+            const txt = [bk.checkOut, bk.durationString].filter(Boolean).join(' | ');
+            const re = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})\b/gi;
+            let m, best = null;
+            while ((m = re.exec(txt))) {
+                let d = new Date(base.getFullYear(), MON[m[1].toLowerCase()], +m[2], 23, 59, 59);
+                if (d < new Date(base.getTime() - 3 * 864e5)) d = new Date(base.getFullYear() + 1, MON[m[1].toLowerCase()], +m[2], 23, 59, 59);
+                if (!best || d > best) best = d;
+            }
+            return best;
+        }
+        function bkIsExpired(bk) {
+            const d = bkCheckoutDate(bk);
+            return !!d && Date.now() > d.getTime() + 5 * 864e5;
+        }
         function closeHostAdminSupportModal() {
             document.getElementById('host-admin-support-modal').classList.add('hidden');
         }

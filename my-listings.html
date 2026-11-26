@@ -1958,7 +1958,9 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             document.getElementById('map-coords-label').innerText = `Lat: ${p.lat || 31.5204}, Lng: ${p.lng || 74.3587}`;
 
             // 3. Photos Preload
-            const rawPhotos = p.photos || (p.image ? [p.image] : []);
+            const __PH = 'photo-1580587771525-78b9dba3b914';
+            let rawPhotos = (p.photos || (p.image ? [p.image] : [])).filter(u => u && String(u).indexOf(__PH) === -1);
+            if (p.videoUrl) rawPhotos = []; // video listing: the stored picture is only a placeholder, not a real photo
             const savedPos = Array.isArray(p.photoPositions) ? p.photoPositions : [];
             compressedPhotoUrls = rawPhotos.map((url, i) => ({ src: url, kb: 45, pos: savedPos[i] || (i === 0 && p.coverPosition) || '50% 50%' }));
 
