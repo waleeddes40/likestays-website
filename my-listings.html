@@ -667,39 +667,41 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
 
                 <!-- 2. LOCATION & SMART MAP PIN -->
                 <div class="neu-flat bg-white rounded-3xl p-5 border border-gray-150 space-y-3.5 text-xs font-bold text-gray-600">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-1.5">
+                    <div class="border-b border-gray-100 pb-1.5">
                         <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen">2. Location & Exact Map Pin</span>
-                        <button type="button" onclick="openMapPinPickerModal()" class="text-[9px] font-black text-red-600 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-lg border border-red-100 flex items-center space-x-1 cursor-pointer">
-                            <span>📍</span> <span>Pin on Map</span>
-                        </button>
                     </div>
 
                     <div class="space-y-1">
-                        <label class="text-[9px] uppercase tracking-wider text-gray-400">Full Street Address *</label>
-                        <input type="text" id="new-prop-address" required placeholder="Enter street address / building name" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                        <label class="text-[9px] uppercase tracking-wider text-gray-400">Full Location *</label>
+                        <input type="text" id="new-prop-address" required placeholder="Street address / building name" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5">
-                        <div class="space-y-1">
-                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Area / Locality</label>
-                            <input type="text" id="new-prop-locality" placeholder="e.g. Downtown / Beachfront" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
-                        </div>
                         <div class="space-y-1">
                             <label class="text-[9px] uppercase tracking-wider text-gray-400">City *</label>
-                            <input type="text" id="new-prop-city" required placeholder="e.g. London, Dubai, Lahore" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                            <input type="text" id="new-prop-city" required placeholder="e.g. Lahore" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Town</label>
+                            <input type="text" id="new-prop-locality" placeholder="e.g. Gulberg" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5">
+                        <div class="space-y-1">
+                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Zip Code</label>
+                            <input type="text" id="new-prop-zip" placeholder="Postal / ZIP code" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                        </div>
                         <div class="space-y-1">
                             <label class="text-[9px] uppercase tracking-wider text-gray-400">Country</label>
                             <input type="text" id="new-prop-country" placeholder="e.g. Pakistan" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                         </div>
-                        <div class="space-y-1">
-                        <label class="text-[9px] uppercase tracking-wider text-gray-400">Zip / Postal Code</label>
-                        <input type="text" id="new-prop-zip" placeholder="Postal / ZIP code" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                     </div>
-                    </div>
+
+                    <button type="button" onclick="openMapPinPickerModal()" class="w-full py-3 text-[11px] font-black text-red-600 bg-red-50 hover:bg-red-100 rounded-xl border border-red-100 flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>📍</span> <span>Pin on Map</span>
+                    </button>
+                    <p id="pin-saved-note" class="text-[10px] font-semibold text-gray-400 -mt-1">The pin only saves the exact map spot — it never changes the fields above.</p>
 
                     <input type="hidden" id="new-prop-lat" value="31.5204">
                     <input type="hidden" id="new-prop-lng" value="74.3587">
@@ -856,11 +858,11 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     <div class="grid grid-cols-2 gap-2.5 pt-1 border-t border-gray-100">
                         <div class="space-y-1">
                             <label class="text-[8.5px] uppercase tracking-wider text-gray-400">Check-In Time (24h)</label>
-                            <input type="time" id="new-prop-checkin-time" value="14:00" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                            <input type="time" id="new-prop-checkin-time" value="12:00" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
                         <div class="space-y-1">
                             <label class="text-[8.5px] uppercase tracking-wider text-gray-400">Check-Out Time (24h)</label>
-                            <input type="time" id="new-prop-checkout-time" value="11:00" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
+                            <input type="time" id="new-prop-checkout-time" value="11:45" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
                     </div>
 
@@ -924,7 +926,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen">7. Extra Services Add-ons (15 Options)</span>
                         <span class="text-[8px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">Paid or Free Options</span>
                     </div>
-                    <div class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto no-scrollbar" id="new-listing-extra-services-checklist"></div>
+                    <div class="grid grid-cols-1 gap-2" id="new-listing-extra-services-checklist"></div>
                 </div>
 
                 <!-- 8. MULTI-MONTH AVAILABILITY CALENDAR -->
@@ -974,14 +976,14 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                             <div class="space-y-1">
                                 <label class="text-[8px] uppercase tracking-wider text-gray-500">Free Cancel Deadline</label>
                                 <div class="flex items-center neu-inset bg-white rounded-xl px-2">
-                                    <input type="number" id="offer-policy-deadline-val" value="48" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                    <input type="number" id="offer-policy-deadline-val" value="" placeholder="—" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
                                     <span class="text-[8.5px] text-gray-400 font-bold shrink-0">Hours Before</span>
                                 </div>
                             </div>
                             <div class="space-y-1">
                                 <label class="text-[8px] uppercase tracking-wider text-gray-500">Late Cancel Refund %</label>
                                 <div class="flex items-center neu-inset bg-white rounded-xl px-2">
-                                    <input type="number" id="offer-policy-late-refund" value="25" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                    <input type="number" id="offer-policy-late-refund" value="" placeholder="—" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
                                     <span class="text-xs text-gray-400 font-black">%</span>
                                 </div>
                             </div>
@@ -995,14 +997,14 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                             <div class="space-y-1">
                                 <label class="text-[8px] uppercase tracking-wider text-gray-400">Free Cancel Deadline</label>
                                 <div class="flex items-center neu-inset bg-white rounded-xl px-2">
-                                    <input type="number" id="hourly-policy-deadline-val" value="2" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                    <input type="number" id="hourly-policy-deadline-val" value="" placeholder="—" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
                                     <span class="text-[8.5px] text-gray-400 font-bold shrink-0">Hours Before</span>
                                 </div>
                             </div>
                             <div class="space-y-1">
                                 <label class="text-[8px] uppercase tracking-wider text-gray-400">Late Cancel Refund %</label>
                                 <div class="flex items-center neu-inset bg-white rounded-xl px-2">
-                                    <input type="number" id="hourly-policy-late-refund" value="50" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                    <input type="number" id="hourly-policy-late-refund" value="" placeholder="—" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
                                     <span class="text-xs text-gray-400 font-black">%</span>
                                 </div>
                             </div>
@@ -1015,20 +1017,17 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         <div class="grid grid-cols-2 gap-2">
                             <div class="space-y-1">
                                 <label class="text-[8px] uppercase tracking-wider text-gray-400">Free Cancel Deadline</label>
-                                <input type="number" id="daily-policy-deadline-val" value="24" class="w-full p-2 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                                <input type="number" id="daily-policy-deadline-val" value="" placeholder="—" class="w-full p-2 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                             </div>
                             <div class="space-y-1">
-                                <label class="text-[8px] uppercase tracking-wider text-gray-400">Time Unit</label>
-                                <select id="daily-policy-deadline-unit" class="w-full p-2 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
-                                    <option value="Hours">Hours Before</option>
-                                    <option value="Days">Days Before</option>
-                                </select>
+                                <label class="text-[8px] uppercase tracking-wider text-gray-400">&nbsp;</label>
+                                <div class="p-2 text-[10px] font-black text-gray-500">Hours before check-in</div>
                             </div>
                         </div>
                         <div class="space-y-1 pt-1">
                             <label class="text-[8px] uppercase tracking-wider text-gray-400">Late Cancel Refund %</label>
                             <div class="flex items-center neu-inset bg-white rounded-xl px-2">
-                                <input type="number" id="daily-policy-late-refund" value="50" min="0" max="100" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                <input type="number" id="daily-policy-late-refund" value="" placeholder="—" min="0" max="100" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
                                 <span class="text-xs text-gray-400 font-black">%</span>
                             </div>
                         </div>
@@ -1046,7 +1045,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         </label>
                         <label class="flex justify-between items-center p-2 rounded-xl bg-softMint/40 cursor-pointer">
                             <span class="text-[10px] text-gray-700">🐾 Pets Allowed?</span>
-                            <input type="checkbox" id="rule-pets" class="w-4 h-4 accent-luxuryGreen" checked>
+                            <input type="checkbox" id="rule-pets" class="w-4 h-4 accent-luxuryGreen">
                         </label>
                         <label class="flex justify-between items-center p-2 rounded-xl bg-softMint/40 cursor-pointer">
                             <span class="text-[10px] text-gray-700">🎉 Parties / Events Allowed?</span>
@@ -1054,7 +1053,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         </label>
                         <label class="flex justify-between items-center p-2 rounded-xl bg-softMint/40 cursor-pointer">
                             <span class="text-[10px] text-gray-700">📸 Professional Photo Shoots Allowed?</span>
-                            <input type="checkbox" id="rule-shoots" class="w-4 h-4 accent-luxuryGreen" checked>
+                            <input type="checkbox" id="rule-shoots" class="w-4 h-4 accent-luxuryGreen">
                         </label>
                     </div>
 
@@ -1397,10 +1396,14 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                                 isHidden ? 'bg-gray-500 text-white' : 'bg-gray-900 text-white'
                             }">${prop.status === 'Pending' ? '⏳ Pending' : (prop.status || 'Active')}</span>
                         </div>
-
-                        <button type="button" onclick="openFlashDealModal('${prop.id}')" class="w-full py-2 neu-flat bg-softMint hover:bg-emerald-50 text-luxuryGreen rounded-xl border border-gray-200 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 text-[9.5px] font-black uppercase">
-                            <span>⚡</span> <span>${dealStats.activeDeals.length} Offer${dealStats.activeDeals.length === 1 ? '' : 's'}</span>
-                        </button>
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <button type="button" onclick="openFlashDealModal('${prop.id}')" class="py-1.5 neu-flat bg-softMint hover:bg-emerald-50 text-luxuryGreen rounded-lg border border-gray-200 flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-[9px] font-black uppercase">
+                                <span>⚡</span> <span>${dealStats.activeDeals.length} Offer${dealStats.activeDeals.length === 1 ? '' : 's'}</span>
+                            </button>
+                            <button type="button" onclick="copyProperty('${prop.id}', this)" class="py-1.5 neu-flat bg-softMint hover:bg-emerald-50 text-luxuryGreen rounded-lg border border-gray-200 flex items-center justify-center gap-1 cursor-pointer active:scale-95 text-[9px] font-black uppercase">
+                                <span>📋</span> <span>Copy Property</span>
+                            </button>
+                        </div>
 
                         <div class="grid grid-cols-2 gap-1.5 text-[9px] font-black uppercase">
                             <button type="button" onclick="startEditingProperty('${prop.id}')" class="py-2.5 neu-btn-green text-white rounded-xl flex items-center justify-center gap-1 cursor-pointer active:scale-95">
@@ -1419,6 +1422,42 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     </div>
                 `;
             });
+        }
+
+
+        // ================= 📋 COPY PROPERTY (photos, description, everything) =================
+        let __copying = false;
+        async function copyProperty(propId, btn) {
+            if (__copying) return;
+            const src = myPropertiesList.find(p => String(p.id) === String(propId));
+            if (!src) return;
+            __copying = true;
+            const lbl = btn && btn.querySelector('span:last-child'); const old = lbl ? lbl.innerText : '';
+            if (lbl) lbl.innerText = 'Copying…';
+            try {
+                const db = firebase.database();
+                const newId = db.ref('properties').push().key;
+                const c = JSON.parse(JSON.stringify(src));
+                ['renewedAt','rating','reviewCount','reviewsCount','reviews','views','likes','favCount','approvedAt','rejectionReason','blockedDates','calendarAvailability'].forEach(k => delete c[k]);
+                const now = new Date().toISOString();
+                c.id = newId;
+                c.name = String(src.name || 'Property') + ' (Copy)';
+                c.slug = slugify(c.name) + '-' + newId.slice(-5).toLowerCase();
+                c.status = 'Pending';
+                c.createdAt = now; c.updatedAt = now;
+                c.blockedDates = []; c.calendarAvailability = [];
+                await db.ref('properties/' + newId).set(c);
+                myPropertiesList.unshift(c);
+                try { syncMyListingsToLocalStorage(); } catch (e) {}
+                fetch(`${WORKER_BASE_URL}/api/purge-properties-cache`, { method: 'POST' }).catch(() => {});
+                showToast('Copied! Opening the copy so you can edit it…', '✓');
+                setTimeout(() => startEditingProperty(newId), 900);
+            } catch (err) {
+                console.error('Copy failed', err);
+                showToast('Could not copy: ' + (err.message || 'try again'), '⚠️');
+                if (lbl) lbl.innerText = old;
+            }
+            __copying = false;
         }
 
         // ================= ⚡ MANAGE ADVANCE OFFERS MODAL =================
@@ -1992,8 +2031,8 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                 document.getElementById('new-prop-hourly').value = p.hourlyPrice;
                 document.getElementById('new-prop-min-hours').value = p.minHours || 3;
             }
-            document.getElementById('new-prop-checkin-time').value = p.checkinTime || "14:00";
-            document.getElementById('new-prop-checkout-time').value = p.checkoutTime || "11:00";
+            document.getElementById('new-prop-checkin-time').value = p.checkinTime || "12:00";
+            document.getElementById('new-prop-checkout-time').value = p.checkoutTime || "11:45";
 
             if (p.selfCheckin && p.selfCheckin.enabled) {
                 document.getElementById('toggle-self-checkin').checked = true;
@@ -2023,7 +2062,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     const checkEl = document.getElementById(`srv-check-${targetCat.id}`);
                     const priceEl = document.getElementById(`srv-price-${targetCat.id}`);
                     if (checkEl) checkEl.checked = true;
-                    if (priceEl) priceEl.value = srv.price || 0;
+                    if (priceEl) priceEl.value = srv.price ? srv.price : '';
                     if (srv.isFree) toggleServiceFreeDirect(targetCat.id);
                 }
             });
@@ -2035,17 +2074,17 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             // 9. Cancellation Policies Preload (3 Tiers: Offer, Hourly, Daily)
             if (p.cancellationPolicy) {
                 if (p.cancellationPolicy.offer) {
-                    document.getElementById('offer-policy-deadline-val').value = p.cancellationPolicy.offer.deadlineValue || 48;
-                    document.getElementById('offer-policy-late-refund').value = p.cancellationPolicy.offer.lateRefundPct || 25;
+                    document.getElementById('offer-policy-deadline-val').value = p.cancellationPolicy.offer.deadlineValue ?? '';
+                    document.getElementById('offer-policy-late-refund').value = p.cancellationPolicy.offer.lateRefundPct ?? '';
                 }
                 if (p.cancellationPolicy.hourly) {
-                    document.getElementById('hourly-policy-deadline-val').value = p.cancellationPolicy.hourly.deadlineValue || 2;
-                    document.getElementById('hourly-policy-late-refund').value = p.cancellationPolicy.hourly.lateRefundPct || 50;
+                    document.getElementById('hourly-policy-deadline-val').value = p.cancellationPolicy.hourly.deadlineValue ?? '';
+                    document.getElementById('hourly-policy-late-refund').value = p.cancellationPolicy.hourly.lateRefundPct ?? '';
                 }
                 if (p.cancellationPolicy.daily) {
-                    document.getElementById('daily-policy-deadline-val').value = p.cancellationPolicy.daily.deadlineValue || 24;
-                    document.getElementById('daily-policy-deadline-unit').value = p.cancellationPolicy.daily.deadlineUnit || "Hours";
-                    document.getElementById('daily-policy-late-refund').value = p.cancellationPolicy.daily.lateRefundPct ?? p.cancellationPolicy.daily.fullRefundPct ?? 50;
+                    { const d = p.cancellationPolicy.daily; let dv = d.deadlineValue; if (dv != null && dv !== '' && d.deadlineUnit === 'Days') dv = Number(dv) * 24; // saved in days before → shown in hours
+                      document.getElementById('daily-policy-deadline-val').value = (dv == null ? '' : dv); }
+                    document.getElementById('daily-policy-late-refund').value = p.cancellationPolicy.daily.lateRefundPct ?? p.cancellationPolicy.daily.fullRefundPct ?? '';
                 }
             }
 
@@ -2135,9 +2174,10 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
         }
 
 
-        // 📍 pin → address, area, city and postal code fill in automatically (still editable)
+        // 📍 pin only sets the map coordinates (address fields are typed by the host)
         let __revTimer = null;
         function reverseFillFromPin(lat, lng) {
+            return; // pin never touches the typed address fields
             clearTimeout(__revTimer);
             __revTimer = setTimeout(() => {
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en&lat=${lat}&lon=${lng}`)
@@ -2638,7 +2678,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         </button>
                         <div id="srv-price-box-${srv.id}" class="ex-price ${srv.isFree ? 'opacity-40 pointer-events-none' : ''}">
                             <span class="currency-symbol-tag">${activeSelectedCurrency.symbol}</span>
-                            <input type="number" id="srv-price-${srv.id}" value="${srv.isFree ? 0 : srv.price}">
+                            <input type="number" inputmode="decimal" min="0" id="srv-price-${srv.id}" value="" placeholder="Price">
                         </div>
                     </div>
                 </div>
@@ -2654,8 +2694,8 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             const priceBox = document.getElementById(`srv-price-box-${srv.id}`);
             const priceInput = document.getElementById(`srv-price-${srv.id}`);
             if (btn) btn.innerText = srv.isFree ? '✓ Free' : 'Make Free';
-            if (priceBox) priceBox.className = `flex items-center space-x-1 neu-inset bg-white px-2 py-1 rounded-lg ${srv.isFree ? 'opacity-40 pointer-events-none' : ''}`;
-            if (priceInput) priceInput.value = srv.isFree ? 0 : srv.price;
+            if (priceBox) priceBox.className = `ex-price ${srv.isFree ? 'opacity-40 pointer-events-none' : ''}`;
+            if (priceInput) priceInput.value = srv.isFree ? '0' : '';
         }
 
         function toggleSelfCheckinFields(checked) {
@@ -2770,8 +2810,8 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             const kitchens = Number(getSafeVal('new-prop-kitchens', '1')) || 1;
             const lounge = Number(getSafeVal('new-prop-lounge', '1')) || 1;
             const sofaBeds = Number(getSafeVal('new-prop-sofa-beds', '2')) || 2;
-            const checkinTime = getSafeVal('new-prop-checkin-time', "14:00");
-            const checkoutTime = getSafeVal('new-prop-checkout-time', "11:00");
+            const checkinTime = getSafeVal('new-prop-checkin-time', "12:00");
+            const checkoutTime = getSafeVal('new-prop-checkout-time', "11:45");
             const discWeekly = Number(getSafeVal('new-prop-disc-weekly', '0')) || 0;
             const discMonthly = Number(getSafeVal('new-prop-disc-monthly', '0')) || 0;
             const lat = parseFloat(getSafeVal('new-prop-lat', '31.5204')) || 31.5204;
@@ -2803,9 +2843,11 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             document.querySelectorAll('.prop-amenity-checkbox:checked').forEach(cb => selectedAmenities.push(cb.value));
 
             const selectedServices = [];
+            const missingSrvPrice = [];
             EXTRA_SERVICES_CATALOG.forEach(srv => {
                 if (document.getElementById(`srv-check-${srv.id}`)?.checked) {
                     const priceVal = Number(document.getElementById(`srv-price-${srv.id}`)?.value) || 0;
+                    if (!srv.isFree && priceVal <= 0) missingSrvPrice.push(srv.name);
                     selectedServices.push({ 
                         name: srv.name, 
                         price: srv.isFree ? 0 : priceVal,
@@ -2813,6 +2855,12 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     });
                 }
             });
+
+            if (missingSrvPrice.length) {
+                submitBtn.disabled = false; if (originalSubmitBtnText !== null) submitBtnText.innerText = originalSubmitBtnText;
+                showToast('Add a price (or tap Make Free) for: ' + missingSrvPrice.join(', '), '⚠️');
+                return;
+            }
 
             const houseRulesPayload = {
                 smoking: document.getElementById('rule-smoking')?.checked || false,
@@ -2825,17 +2873,17 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             // 3-TIER CANCELLATION POLICIES (Offer, Hourly, Daily)
             const cancellationPayload = {
                 offer: {
-                    deadlineValue: Number(getSafeVal('offer-policy-deadline-val', '48')),
-                    lateRefundPct: Number(getSafeVal('offer-policy-late-refund', '25'))
+                    deadlineValue: Number(getSafeVal('offer-policy-deadline-val', '0')) || 0,
+                    lateRefundPct: Number(getSafeVal('offer-policy-late-refund', '0')) || 0
                 },
                 hourly: {
-                    deadlineValue: Number(getSafeVal('hourly-policy-deadline-val', '2')),
-                    lateRefundPct: Number(getSafeVal('hourly-policy-late-refund', '50'))
+                    deadlineValue: Number(getSafeVal('hourly-policy-deadline-val', '0')) || 0,
+                    lateRefundPct: Number(getSafeVal('hourly-policy-late-refund', '0')) || 0
                 },
                 daily: {
-                    deadlineValue: Number(getSafeVal('daily-policy-deadline-val', '24')),
-                    deadlineUnit: getSafeVal('daily-policy-deadline-unit', 'Hours'),
-                    lateRefundPct: Number(getSafeVal('daily-policy-late-refund', '50'))
+                    deadlineValue: Number(getSafeVal('daily-policy-deadline-val', '0')) || 0,
+                    deadlineUnit: 'Hours',
+                    lateRefundPct: Number(getSafeVal('daily-policy-late-refund', '0')) || 0
                 }
             };
 
