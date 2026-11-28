@@ -179,7 +179,7 @@
   .offer-cycle{height:13px!important}
   .offer-badge-inline{display:flex;align-items:center;background:#2E6F65;color:#3a2500;font-size:9.5px;font-weight:800;padding:4px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;overflow:hidden;margin-bottom:3px;max-width:230px}
   .feed-slide{position:relative;margin:0 0 34px;height:auto;overflow:visible;background:#fff;color:#0f172a;cursor:pointer}
-  .cd-img{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb}
+  .cd-img{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:#e5e7eb}
   .cd-track{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
   .cd-track::-webkit-scrollbar{display:none}
   .cd-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;display:block}
@@ -498,7 +498,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                 <span class="vh-tag">▶ Video</span>
                 <button type="button" class="vh-play" aria-label="Play video"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg><span>Play video</span></button>
             </div>
-            <div id="desktop-gallery-grid" class="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[380px] rounded-3xl overflow-hidden neu-flat p-2 bg-white border border-gray-150 cursor-pointer" onclick="openPhotoGalleryModal()">
+            <div id="desktop-gallery-grid" class="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[560px] rounded-3xl overflow-hidden neu-flat p-2 bg-white border border-gray-150 cursor-pointer" onclick="openPhotoGalleryModal()">
                 <div class="col-span-2 row-span-2 relative rounded-2xl overflow-hidden group bg-gray-100">
                     <img id="dt-img-0" src="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Stay Image">
                 </div>
@@ -520,7 +520,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             </div>
 
             <!-- Mobile Swipeable Carousel -->
-            <div id="mobile-carousel-wrap" class="md:hidden relative w-full aspect-[4/3] rounded-2xl overflow-hidden neu-flat bg-white border border-gray-150 cursor-pointer" onclick="openPhotoGalleryModal()">
+            <div id="mobile-carousel-wrap" class="md:hidden relative w-full aspect-[3/4] rounded-2xl overflow-hidden neu-flat bg-white border border-gray-150 cursor-pointer" onclick="openPhotoGalleryModal()">
                 <div id="details-carousel-slides" onscroll="handleDetailsCarouselScroll()" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth"></div>
                 <div id="details-carousel-dots" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1 z-10 pointer-events-none"></div>
             </div>

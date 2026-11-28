@@ -219,7 +219,7 @@
   #feed-wrap{position:static;max-width:480px;margin:0 auto;padding:6px 14px 0}
   #explore-property-list{display:block!important;height:auto;overflow:visible;background:#fff}
   .feed-slide{position:relative;margin:0 0 34px;height:auto;overflow:visible;background:#fff;color:#0f172a;cursor:pointer}
-  .cd-img{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#e5e7eb}
+  .cd-img{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:#e5e7eb}
   .cd-track{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
   .cd-track::-webkit-scrollbar{display:none}
   .cd-track img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:center;display:block}
@@ -1665,7 +1665,7 @@ function buildSearchPromptSlide() {
             document.getElementById('host-sheet-title').textContent = `${name} • ${list.length} ${list.length === 1 ? 'property' : 'properties'}`;
             document.getElementById('host-sheet-list').innerHTML = list.map(p => {
                 const img = (p.photos && p.photos[0]) || p.image || '';
-                return `<div onclick="navigateToDetailsPage('${escF(p.id)}')" style="cursor:pointer"><img src="${escF(img)}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;background:#eee"><div style="font-size:11px;font-weight:800;margin-top:4px">${escF(p.name)}</div></div>`;
+                return `<div onclick="navigateToDetailsPage('${escF(p.id)}')" style="cursor:pointer"><img src="${escF(img)}" loading="lazy" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;background:#eee"><div style="font-size:11px;font-weight:800;margin-top:4px">${escF(p.name)}</div></div>`;
             }).join('');
             document.getElementById('host-sheet').classList.add('open');
         }
