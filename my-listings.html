@@ -678,30 +678,30 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
 
                     <div class="grid grid-cols-2 gap-2.5">
                         <div class="space-y-1">
-                            <label class="text-[9px] uppercase tracking-wider text-gray-400">City *</label>
-                            <input type="text" id="new-prop-city" required placeholder="e.g. Lahore" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Town</label>
+                            <input type="text" id="new-prop-locality" placeholder="e.g. Bahria Town" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Town</label>
-                            <input type="text" id="new-prop-locality" placeholder="e.g. Gulberg" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                            <label class="text-[9px] uppercase tracking-wider text-gray-400">City *</label>
+                            <input type="text" id="new-prop-city" required placeholder="e.g. Lahore" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5">
                         <div class="space-y-1">
-                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Zip Code</label>
-                            <input type="text" id="new-prop-zip" placeholder="Postal / ZIP code" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
-                        </div>
-                        <div class="space-y-1">
                             <label class="text-[9px] uppercase tracking-wider text-gray-400">Country</label>
                             <input type="text" id="new-prop-country" placeholder="e.g. Pakistan" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] uppercase tracking-wider text-gray-400">Zip Code</label>
+                            <input type="text" id="new-prop-zip" placeholder="Postal / ZIP code" class="w-full p-3 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
                         </div>
                     </div>
 
                     <button type="button" onclick="openMapPinPickerModal()" class="w-full py-3 text-[11px] font-black text-red-600 bg-red-50 hover:bg-red-100 rounded-xl border border-red-100 flex items-center justify-center gap-1.5 cursor-pointer">
                         <span>📍</span> <span>Pin on Map</span>
                     </button>
-                    <p id="pin-saved-note" class="text-[10px] font-semibold text-gray-400 -mt-1">The pin only saves the exact map spot — it never changes the fields above.</p>
+                    <p id="pin-saved-note" class="text-[10px] font-semibold text-gray-400 -mt-1">The map opens near the place you typed above. Move the pin to the exact spot — it never changes the fields above.</p>
 
                     <input type="hidden" id="new-prop-lat" value="31.5204">
                     <input type="hidden" id="new-prop-lng" value="74.3587">
@@ -772,31 +772,31 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     <span class="text-[10px] font-black uppercase tracking-wider text-luxuryGreen block border-b border-gray-100 pb-1.5">4. Capacity & Detailed Spaces</span>
                     
                     <div class="grid grid-cols-3 gap-2">
-                        <div class="space-y-1">
-                            <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-black">👥 Max Guests *</label>
+                        <div class="flex flex-col justify-end gap-1 min-w-0">
+                            <label class="h-7 flex items-end leading-tight text-[8.5px] uppercase tracking-wider text-gray-400 font-black">👥 Max Guests *</label>
                             <input type="number" id="new-prop-max-guests" required min="1" placeholder="—" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🛏️ Bedrooms *</label>
+                        <div class="flex flex-col justify-end gap-1 min-w-0">
+                            <label class="h-7 flex items-end leading-tight text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🛏️ Bedrooms *</label>
                             <input type="number" id="new-prop-bedrooms" required min="1" placeholder="—" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🚿 Bathrooms *</label>
+                        <div class="flex flex-col justify-end gap-1 min-w-0">
+                            <label class="h-7 flex items-end leading-tight text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🚿 Bathrooms *</label>
                             <input type="number" id="new-prop-bathrooms" required min="1" placeholder="—" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 pt-1 border-t border-gray-100">
-                        <div class="space-y-1">
-                            <label class="text-[8.5px] uppercase tracking-wider text-gray-400">🍳 Kitchens</label>
+                        <div class="flex flex-col justify-end gap-1 min-w-0">
+                            <label class="h-7 flex items-end leading-tight text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🍳 Kitchens</label>
                             <input type="number" id="new-prop-kitchens" min="0" placeholder="—" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8.5px] uppercase tracking-wider text-gray-400">🛋️ Living Lounge</label>
+                        <div class="flex flex-col justify-end gap-1 min-w-0">
+                            <label class="h-7 flex items-end leading-tight text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🛋️ Living Lounge</label>
                             <input type="number" id="new-prop-lounge" min="0" placeholder="—" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[8.5px] uppercase tracking-wider text-gray-400">🛌 Sofa Beds</label>
+                        <div class="flex flex-col justify-end gap-1 min-w-0">
+                            <label class="h-7 flex items-end leading-tight text-[8.5px] uppercase tracking-wider text-gray-400 font-black">🛌 Sofa Beds</label>
                             <input type="number" id="new-prop-sofa-beds" min="0" placeholder="—" class="w-full p-2.5 neu-inset bg-softMint rounded-xl outline-none text-luxuryGreen text-xs font-black border-none">
                         </div>
                     </div>
@@ -1017,18 +1017,17 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                         <div class="grid grid-cols-2 gap-2">
                             <div class="space-y-1">
                                 <label class="text-[8px] uppercase tracking-wider text-gray-400">Free Cancel Deadline</label>
-                                <input type="number" id="daily-policy-deadline-val" value="" placeholder="—" class="w-full p-2 neu-inset bg-white rounded-xl outline-none text-luxuryGreen text-xs font-bold border-none">
+                                <div class="flex items-center neu-inset bg-white rounded-xl px-2">
+                                    <input type="number" id="daily-policy-deadline-val" value="" placeholder="—" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                    <span class="text-[8.5px] text-gray-400 font-bold shrink-0">Hours Before</span>
+                                </div>
                             </div>
                             <div class="space-y-1">
-                                <label class="text-[8px] uppercase tracking-wider text-gray-400">&nbsp;</label>
-                                <div class="p-2 text-[10px] font-black text-gray-500">Hours before check-in</div>
-                            </div>
-                        </div>
-                        <div class="space-y-1 pt-1">
-                            <label class="text-[8px] uppercase tracking-wider text-gray-400">Late Cancel Refund %</label>
-                            <div class="flex items-center neu-inset bg-white rounded-xl px-2">
-                                <input type="number" id="daily-policy-late-refund" value="" placeholder="—" min="0" max="100" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
-                                <span class="text-xs text-gray-400 font-black">%</span>
+                                <label class="text-[8px] uppercase tracking-wider text-gray-400">Late Cancel Refund %</label>
+                                <div class="flex items-center neu-inset bg-white rounded-xl px-2">
+                                    <input type="number" id="daily-policy-late-refund" value="" placeholder="—" min="0" max="100" class="w-full p-2 bg-transparent outline-none text-luxuryGreen text-xs font-bold border-none">
+                                    <span class="text-xs text-gray-400 font-black">%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1992,6 +1991,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             document.getElementById('new-prop-zip').value = p.zip || '';
             { const _d = document.getElementById('new-prop-desc'); if (_d) setTimeout(() => autoGrowDesc(_d), 50); }
             { const _c = document.getElementById('new-prop-country'); if (_c) _c.value = p.country || ''; }
+            setTimeout(() => { if (p.lat != null && p.lng != null) window.__pinSig = __locSig(); }, 0);
             document.getElementById('new-prop-lat').value = p.lat || 31.5204;
             document.getElementById('new-prop-lng').value = p.lng || 74.3587;
             document.getElementById('map-coords-label').innerText = `Lat: ${p.lat || 31.5204}, Lng: ${p.lng || 74.3587}`;
@@ -2109,31 +2109,70 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     }
 
         // ================= 📍 SMART CITY-TO-MAP =================
-        function openMapPinPickerModal() {
-            document.getElementById('map-modal').classList.remove('hidden');
-            const typedCity = document.getElementById('new-prop-city').value.trim();
+        function __locFields() {
+            const g = id => (document.getElementById(id)?.value || '').trim();
+            return { address: g('new-prop-address'), town: g('new-prop-locality'), city: g('new-prop-city'), country: g('new-prop-country'), zip: g('new-prop-zip') };
+        }
+        function __locSig() { const f = __locFields(); return [f.address, f.town, f.city, f.country, f.zip].join('|').toLowerCase(); }
+        window.__pinSig = null; // typed-address signature the current pin was set for
 
-            // ⚠️ نوٹ: Lahore (31.5204, 74.3587) صرف آخری fallback کے طور پر — اصل کوشش ہمیشہ
-            // host کی اپنی موجودہ location یا پہلے سے محفوظ coordinates استعمال کرنے کی ہوتی ہے
+        async function __geocodeTyped() {
+            const f = __locFields();
+            const tries = [
+                { q: [f.address, f.town, f.city, f.country], z: 16, need: f.address },
+                { q: [f.town, f.city, f.country], z: 14, need: f.town },
+                { q: [f.city, f.country], z: 12, need: f.city },
+                { q: [f.country], z: 5, need: f.country }
+            ];
+            const seen = {};
+            for (const t of tries) {
+                const q = t.q.filter(Boolean).join(', ');
+                if (!t.need || !q || seen[q]) continue; seen[q] = 1;
+                try {
+                    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=en&q=${encodeURIComponent(q)}`).then(x => x.json());
+                    if (r && r[0]) return { lat: parseFloat(r[0].lat), lng: parseFloat(r[0].lon), zoom: t.z };
+                } catch (e) {}
+            }
+            return null;
+        }
+
+        async function openMapPinPickerModal() {
+            document.getElementById('map-modal').classList.remove('hidden');
             const savedLat = parseFloat(document.getElementById('new-prop-lat').value);
             const savedLng = parseFloat(document.getElementById('new-prop-lng').value);
             const hasSavedLocation = !isNaN(savedLat) && !isNaN(savedLng) && (savedLat !== 31.5204 || savedLng !== 74.3587);
+            const sig = __locSig();
+            const hasTyped = sig.replace(/\|/g, '').length > 0;
+            const lbl = document.getElementById('map-coords-label');
 
+            // 1) the pin was already set for exactly this typed address → keep it where it is
+            if (hasSavedLocation && window.__pinSig === sig) { initMapPinPicker(savedLat, savedLng, 16, false); return; }
+
+            // 2) host typed an address/town/city/country → open the map right there
+            if (hasTyped) {
+                if (lbl) lbl.innerText = 'Finding the place you typed…';
+                const hit = await __geocodeTyped();
+                if (hit) { initMapPinPicker(hit.lat, hit.lng, hit.zoom, true); return; }
+                if (hasSavedLocation) { initMapPinPicker(savedLat, savedLng, 14, false); return; }
+            }
+
+            // 3) nothing typed → saved pin, else the phone's location, else Lahore as last resort
             if (!hasSavedLocation && navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (pos) => initMapPinPicker(pos.coords.latitude, pos.coords.longitude),
-                    () => initMapPinPicker(31.5204, 74.3587), // permission denied/fail → Lahore صرف آخری chara
+                    (pos) => initMapPinPicker(pos.coords.latitude, pos.coords.longitude, 12, false),
+                    () => initMapPinPicker(31.5204, 74.3587, 12, false),
                     { timeout: 5000 }
                 );
             } else {
-                initMapPinPicker(hasSavedLocation ? savedLat : 31.5204, hasSavedLocation ? savedLng : 74.3587);
+                initMapPinPicker(hasSavedLocation ? savedLat : 31.5204, hasSavedLocation ? savedLng : 74.3587, 14, false);
             }
         }
 
-        function initMapPinPicker(currentLat, currentLng) {
+        function initMapPinPicker(currentLat, currentLng, zoom, setPin) {
+            zoom = zoom || 13;
             setTimeout(() => {
                 if (!mapInstance) {
-                    mapInstance = L.map('leaflet-map-picker').setView([currentLat, currentLng], 12);
+                    mapInstance = L.map('leaflet-map-picker').setView([currentLat, currentLng], zoom);
                     L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=MOxpRpKBHrWYcJ4BVchk', {
                         attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                         maxZoom: 20
@@ -2146,27 +2185,17 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     updateCoordinates(currentLat, currentLng);
                 } else {
                     mapInstance.invalidateSize();
-                    mapInstance.setView([currentLat, currentLng], 13);
+                    mapInstance.setView([currentLat, currentLng], zoom);
                     if (mapMarker) mapMarker.setLatLng([currentLat, currentLng]);
                 }
 
-                if (document.getElementById('new-prop-city').value.trim() && !activeEditingListingId) {
-                    const typedCity = document.getElementById('new-prop-city').value.trim();
-                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(typedCity)}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data && data.length > 0) {
-                                const lat = parseFloat(data[0].lat);
-                                const lon = parseFloat(data[0].lon);
-                                mapInstance.setView([lat, lon], 13);
-                                updateCoordinates(lat, lon);
-                            }
-                        }).catch(() => {});
-                }
+                if (setPin) updateCoordinates(currentLat, currentLng); // pin starts near the typed place
+                else { const l = document.getElementById('map-coords-label'); if (l) l.innerText = `Lat: ${(+currentLat).toFixed(4)}, Lng: ${(+currentLng).toFixed(4)}`; }
             }, 200);
         }
 
         function updateCoordinates(lat, lng) {
+            window.__pinSig = __locSig();
             document.getElementById('new-prop-lat').value = lat.toFixed(4);
             document.getElementById('new-prop-lng').value = lng.toFixed(4);
             document.getElementById('map-coords-label').innerText = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
