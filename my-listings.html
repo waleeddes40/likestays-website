@@ -1200,11 +1200,15 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                 <div class="flex justify-between text-[10px] uppercase tracking-wider text-gray-400 font-bold"><span>🎞 Moment</span><span id="vcover-time-label">0.0 s</span></div>
                 <input type="range" id="vcover-time" min="0" max="30" step="0.1" value="0" oninput="onVideoCoverTime(this.value)" class="w-full accent-luxuryGreen">
             </div>
+            <div id="vcover-row-x" class="space-y-1">
+                <label class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">↔ Left / Right</label>
+                <input type="range" id="vcover-slider-x" min="0" max="100" value="50" oninput="onVideoCoverSlider()" class="w-full accent-luxuryGreen">
+            </div>
             <div id="vcover-row-y" class="space-y-1">
                 <label class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">↕ Up / Down</label>
                 <input type="range" id="vcover-slider-y" min="0" max="100" value="50" oninput="onVideoCoverSlider()" class="w-full accent-luxuryGreen">
             </div>
-            <p class="text-[11px] text-gray-500 font-medium leading-relaxed">Slide to the best moment of your video. This frame is shown on the homepage card and map. Tapping the card plays the video.</p>
+            <p class="text-[11px] text-gray-500 font-medium leading-relaxed">Slide to the best moment of your video. This tall frame is exactly what guests see on the homepage card, the map and the property page. Tapping the card plays the video.</p>
             <button type="button" onclick="closeVideoCoverModal(true)" class="w-full neu-btn-green text-white text-xs font-bold py-3 rounded-xl">Save cover</button>
         </div>
     </div>
@@ -2640,15 +2644,17 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
             try { vid.currentTime = vcDraft.t; } catch (e) {}
         }
         function onVideoCoverSlider() {
-            vcDraft.pos = { x: vcDraft.pos.x, y: Number(document.getElementById('vcover-slider-y').value) };
+            vcDraft.pos = { x: Number(document.getElementById('vcover-slider-x').value), y: Number(document.getElementById('vcover-slider-y').value) };
             applyVideoCoverPos();
         }
         function applyVideoCoverPos() {
             const vid = document.getElementById('vcover-video');
             vid.style.objectPosition = `${vcDraft.pos.x}% ${vcDraft.pos.y}%`;
             document.getElementById('vcover-slider-y').value = vcDraft.pos.y;
+            document.getElementById('vcover-slider-x').value = vcDraft.pos.x;
             const o = coverOverflow(document.getElementById('vcover-frame'), vid.videoWidth, vid.videoHeight);
             document.getElementById('vcover-row-y').style.display = (!vid.videoWidth || o.oy > 1) ? '' : 'none';
+            document.getElementById('vcover-row-x').style.display = (!vid.videoWidth || o.ox > 1) ? '' : 'none';
         }
         function closeVideoCoverModal(save) {
             const vid = document.getElementById('vcover-video');
