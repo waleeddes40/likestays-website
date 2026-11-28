@@ -1139,7 +1139,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                             </div>
 
                             <!-- 4 1-CLICK ACTION BUTTONS + IN-APP CHAT -->
-                            <div class="grid grid-cols-4 gap-1.5 pt-1 border-t border-emerald-200/60">
+                            <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-emerald-200/60">
                                 ${hostPhone ? `
                                     <a href="tel:${hostPhone}" class="py-1.5 bg-white border border-gray-200 text-luxuryGreen rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-gray-50">
                                         <span>📞</span> <span>Call</span>
@@ -1150,11 +1150,7 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                                     <span>💬</span> <span>WhatsApp</span>
                                 </a>
 
-                                ${hostExtraLink ? `
-                                    <a href="${hostExtraLink.startsWith('http') ? hostExtraLink : 'https://' + hostExtraLink}" target="_blank" class="py-1.5 bg-luxuryGreen text-white rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen truncate px-1">
-                                        <span>🌐</span> <span>4th Link</span>
-                                    </a>
-                                ` : '<span class="py-1.5 bg-gray-100 text-gray-400 rounded-xl text-[8.5px] text-center font-bold">No 4th</span>'}
+                                <!-- 4th/other contact is private: shown only in the Telegram booking card -->
 
                                 <a href="mailto:${hostEmail}" class="py-1.5 bg-luxuryGreen text-white rounded-xl text-[8.5px] font-black flex items-center justify-center space-x-1 hover:bg-luxuryLightGreen">
                                     <span>📧</span> <span>Email</span>
