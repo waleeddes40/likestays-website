@@ -839,8 +839,12 @@ html[data-theme=light] .neu-logo-card{background:#EEF3F2!important;border:1px so
                     <input type="text" id="guest-input-link1" placeholder="WhatsApp / Telegram link or @username">
                 </div>
                 <div class="ls-field">
-                    <label for="guest-input-link2">Other contact <small>(optional)</small></label>
-                    <input type="text" id="guest-input-link2" placeholder="Instagram link or other chat ID">
+                    <label for="guest-input-link2">Other contact number <small>(optional)</small></label>
+                    <input type="text" id="guest-input-link2" placeholder="Another number, Instagram link or chat ID">
+                </div>
+                <div class="ls-field">
+                    <label for="guest-input-msg">Message <small>(optional — goes to our team)</small></label>
+                    <textarea id="guest-input-msg" rows="3" maxlength="500" placeholder="Anything you want us to know about this booking" style="width:100%;resize:vertical;font:inherit;padding:12px;border-radius:10px;border:1px solid var(--bd);background:var(--card2);color:var(--ink)"></textarea>
                 </div>
 
                 <label class="ls-check" for="check-accept-rules">
@@ -2687,6 +2691,7 @@ function renderCheckoutDetails() {
                 guestEmail: email,
                 guestContactLink1: link1,
                 guestContactLink2: link2,
+                guestMessage: (document.getElementById('guest-input-msg') ? document.getElementById('guest-input-msg').value.trim().slice(0, 500) : ''),
                 guestWhatsapp: link1.includes('wa.me') ? link1 : phone,
                 guestTelegram: link1.includes('t.me') ? link1 : (link2.includes('t.me') ? link2 : ""),
 
